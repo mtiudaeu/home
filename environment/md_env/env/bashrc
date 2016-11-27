@@ -1,0 +1,6 @@
+if [ -f $MD_ENV_PATH/env/bash_env ]; then
+    . $MD_ENV_PATH/env/bash_env
+fi
+if [ -f $MD_ENV_PATH/env/bash_aliases ]; then
+    . $MD_ENV_PATH/env/bash_aliases
+fi
