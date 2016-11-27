@@ -51,6 +51,7 @@ def vim_build(install_path, vim_git_path=""):
   if vim_git_path is "" :
     tmp_dir = tempfile.mkdtemp()
     print( "INFO : cloning vim repository under " + tmp_dir )
+    os.chdir( tmp_dir )
     process_call(["git", "clone", "https://github.com/vim/vim.git" ])
     vim_git_path = tmp_dir + "/vim"
 
