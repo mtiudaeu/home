@@ -3,4 +3,3 @@ export VIMRUNTIME=$MD_ENV_PATH/share/vim/runtime
 
 
 export PATH=$PATH:$MD_ENV_PATH/env
-export RR="tee $MD_ENV_PATH/env/last_command"

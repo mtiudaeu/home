@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # Usage example
 #   python vim-client.py "ex" "e alloc.h"

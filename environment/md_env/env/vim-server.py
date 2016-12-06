@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 # This is a modified version of a demo socket server provide
 # in vim 8.0.
@@ -41,36 +41,41 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 SEND_TO_VIM = "send_to_vim"
 HOST, PORT = "localhost", 8765
 socket_array = [];
+DEBUG = False
+
+def LOG_DEBUG(msg):
+    if DEBUG:
+        print(msg)
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
-        print("=== socket opened ===")
+        LOG_DEBUG("=== socket opened ===")
         global socket_array
         socket_array.append(self.request)
         while True:
             try:
                 data = self.request.recv(4096).decode('utf-8')
             except socket.error:
-                print("=== socket error ===")
+                LOG_DEBUG("=== socket error ===")
                 break
             except IOError:
-                print("=== socket closed ===")
+                LOG_DEBUG("=== socket closed ===")
                 break
             if data == '':
-                print("=== socket closed ===")
+                LOG_DEBUG("=== socket closed ===")
                 break
-            print("received: {0}".format(data))
+            LOG_DEBUG("received: {0}".format(data))
             try:
                 decoded = json.loads(data)
             except ValueError:
-                print("json decoding failed")
+                LOG_DEBUG("json decoding failed")
                 decoded = [-1, '']
 
             if decoded[0] == SEND_TO_VIM:
                 # Sending to vim
                 encoded = json.dumps([decoded[1],decoded[2]])
-                print("sending {0}".format(encoded))
+                LOG_DEBUG("sending {0}".format(encoded))
                 for s in socket_array:
                     s.sendall(encoded.encode('utf-8'))
             elif decoded[0] >= 0:
@@ -82,12 +87,12 @@ class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
                 else:
                     response = "what?"
                 encoded = json.dumps([decoded[0], response])
-                print("sending {0}".format(encoded))
+                LOG_DEBUG("sending {0}".format(encoded))
                 self.request.sendall(encoded.encode('utf-8'))
 
         socket_array.remove(self.request)
 
-def run_vim_server(debug):
+def run_vim_server():
     server = ThreadedTCPServer((HOST, PORT), ThreadedTCPRequestHandler)
     ip, port = server.server_address
 
@@ -98,16 +103,16 @@ def run_vim_server(debug):
     # Exit the server thread when the main thread terminates
     server_thread.daemon = True
     server_thread.start()
-    print("Server loop running in thread: ", server_thread.name)
+    LOG_DEBUG("Server loop running in thread: " +  server_thread.name)
 
-    print("Listening on port {0}".format(PORT))
+    LOG_DEBUG("Listening on port {0}".format(PORT))
     while True:
-        if debug is True:
+        if DEBUG is True:
             typed = sys.stdin.readline()
             if "quit" in typed:
-                print("Goodbye!")
+                LOG_DEBUG("Goodbye!")
                 break
-            print("sending {0}".format(typed))
+            LOG_DEBUG("sending {0}".format(typed))
             for s in socket_array:
                 s.sendall(typed.encode('utf-8'))
         else:
@@ -122,7 +127,6 @@ def args_print_usage():
     print("--debug : Enable debugging and manually send command to vim")
 
 def args_read(argv):
-   debug = False;
    try:
       opts, args = getopt.getopt(argv,"h",["debug"])
    except getopt.GetoptError:
@@ -133,13 +137,11 @@ def args_read(argv):
          args_print_usage()
          sys.exit()
       elif opt in ("--debug"):
-         debug = True
-
-   return debug
+         DEBUG = True
 
 if __name__ == "__main__":
-   debug = args_read(sys.argv[1:]) 
-   run_vim_server(debug) 
+   args_read(sys.argv[1:]) 
+   run_vim_server() 
 
 # TODO List
 # -In args_read : Add -p option to chose port.

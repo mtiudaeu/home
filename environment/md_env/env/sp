@@ -1,3 +1,0 @@
-#!/bin/bash
-
-$@ `cat $MD_ENV_PATH/env/last_command`
