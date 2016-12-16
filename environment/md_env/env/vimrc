@@ -22,7 +22,7 @@ set laststatus=2
 " ---------- HOTKEYS ----------
 
 " Switch between header and source file.
-" map <F4> :e %:p:s,.h$,.X123X,:s,.C$,.h,:s,.X123X$,.C,<CR>
+map <F4> :e %:p:s,.h$,.X123X,:s,.c$,.h,:s,.X123X$,.c,<CR>
 
 map <F7> :let handle = ch_open('localhost:8765')<CR>
 map <F8> O//MDTMP

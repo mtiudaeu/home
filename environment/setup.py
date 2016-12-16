@@ -58,6 +58,11 @@ def vim_build(install_path, vim_git_path=""):
 
   os.chdir( vim_git_path + "/src" )
   # dependancy -> apt-get install ncurses-dev build-essential gettext
+  process_call( [
+    "./configure",
+    "--with-features=normal",
+    "--enable-gui",
+    "--with-x" ] )
   process_call( ["make", "-j4"] )
 
   process_call( ["mkdir", "-p", install_path.bin ] )
