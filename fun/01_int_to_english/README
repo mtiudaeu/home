@@ -1,0 +1,6 @@
+Little C challenge
+------------------
+No dependancy exept a C compiler.
+
+translator.c : Convert unsigned int to the number in english language.
+array.c : Small dynamic array object which wasn't used after all.
