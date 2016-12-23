@@ -70,9 +70,9 @@ bool init_resources() {
 	GLfloat cube_texcoords[2*4*6] = {
 		// front
 		0.0, 0.0,
-		1.0, 0.0,
-		1.0, 1.0,
-		0.0, 1.0,
+		0.5, 0.0,
+		0.5, 0.5,
+		0.0, 0.5,
 	};
 	for (int i = 1; i < 6; i++)
 		memcpy(&cube_texcoords[i*4*2], &cube_texcoords[0], 2*4*sizeof(GLfloat));
@@ -109,6 +109,9 @@ bool init_resources() {
 		cerr << "IMG_Load: " << SDL_GetError() << endl;
 		return false;
 	}
+ cout << res_texture->w << std::endl;
+ cout << res_texture->h << std::endl;
+
 	glGenTextures(1, &texture_id);
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
