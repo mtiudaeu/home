@@ -1,6 +1,8 @@
 #ifndef TEST_H
 #define TEST_H
 
+#ifdef INCLUDE_RUN_TEST
+
 #define TEST_ASSERT_EQUAL_STR(a, b) \
   test_assert_equal_str(a, b, __FILE__, __LINE__);
 void test_assert_equal_str(const char* a, const char* b, const char* file_name,
@@ -11,8 +13,15 @@ void test_assert_equal_str(const char* a, const char* b, const char* file_name,
 void test_assert_equal_uint(unsigned int a, unsigned int b,
                             const char* file_name, int line);
 
+#define TEST_ASSERT_TRUE(a) \
+  test_assert_true(a, __FILE__, __LINE__);
+void test_assert_true(int a, const char* file_name, int line);
+
+
 #define TEST_ASSERT_MSG(msg) \
   test_assert_msg(msg, __FILE__, __LINE__);
 void test_assert_msg(const char* msg, const char* file_name, int line);
+
+#endif // INCLUDE_RUN_TEST
 
 #endif  // TEST_H

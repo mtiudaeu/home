@@ -1,7 +1,10 @@
+#ifdef INCLUDE_RUN_TEST
+
 #include <stdio.h>
 #include <string.h>
 
-#include "test.h"
+#include "test/test.h"
+
 
 void test_assert_equal_str(const char* a, const char* b, const char* file_name,
                            int line) {
@@ -23,7 +26,21 @@ void test_assert_equal_uint(unsigned int a, unsigned int b,
   }
 }
 
+void test_assert_true(int a, const char* file_name, int line)
+{
+  if (!a) {
+    printf("Error : %s:%d\n", file_name, line);
+    printf("   Should be true : %d", a);
+  } else {
+    printf("Success\n");
+  }
+
+}
+
+
 void test_assert_msg(const char* msg, const char* file_name, int line) {
   printf("Error : %s:%d\n", file_name, line);
   printf("   %s", msg);
 }
+
+#endif // INCLUDE_RUN_TEST

@@ -1,5 +1,6 @@
 CFLAGS = -g -DINCLUDE_RUN_TEST
-CXX = gcc $(CFLAGS)
+#CFLAGS = -g 
+CXX = gcc -I. $(CFLAGS)
 
 all: test_array
 
@@ -14,8 +15,8 @@ array.o : array.h array.c test.o
 	$(CXX) -c array.c 
 
 # ---- test ----
-test.o : test.h test.c
-	$(CXX) -c test.c
+test.o : test/test.h test/test.c
+	$(CXX) -c test/test.c
 
 # ---- clean ----
 clean : 
