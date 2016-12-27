@@ -1,14 +1,11 @@
 #ifndef GRAPHICS_CONTEXT_H
 #define GRAPHICS_CONTEXT_H
 
-#include <GL/glew.h>
+//MDTMP return error?
+void graphics_context_global_init();
+void graphics_context_global_uninit();
 
-typedef struct {
-  GLuint program_id;
-} GraphicsContext;
-
-GraphicsContext* graphics_context_malloc();
-void graphics_context_free(GraphicsContext* graphics_context);
+void graphics_context_global_run();
 
 #endif // GRAPHICS_CONTEXT_H
 

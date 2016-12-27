@@ -5,7 +5,6 @@
 
 #include "test/test.h"
 
-
 //--------------------------------------------------------------------------------
 void test_assert_equal_str(const char* a, const char* b, const char* file_name,
                            int line) {

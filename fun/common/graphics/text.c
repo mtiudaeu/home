@@ -2,27 +2,27 @@
 
 #include "test/test.h"
 
+#include "log.h"
+
 #include "SDL2/SDL_image.h"
 
 #include <stdlib.h>
 #include <assert.h>
 
-// MDTMP Add all include and link.
-
+//--------------------------------------------------------------------------------
 GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
   SDL_Surface* tileset_texture = IMG_Load(filename);
   {  // Validate inputs
     if (!tileset_texture) {
-      // MDTMP log error
-      // MDTMP cerr << "IMG_Load: " << SDL_GetError() << endl;
+      LOG_ERROR("IMG_Load: %s", SDL_GetError());
       return 0x0;
     }
     if (!tileset_texture->format) {
-      // MDTMP log error
+      LOG_ERROR("tileset_texture->format");
       return 0x0;
     }
     if (tileset_texture->format->BytesPerPixel != 3) {
-      // MDTMP log error
+      LOG_ERROR("tileset_texture->format->BytesPerPixel != 3");
       return 0x0;
     }
   }
@@ -50,6 +50,7 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
   }
 }
 
+//--------------------------------------------------------------------------------
 void graphics_text_free(GraphicsText* graphics_text) {
   assert(graphics_text);
   glDeleteTextures(1, &graphics_text->texture_id);
@@ -57,6 +58,7 @@ void graphics_text_free(GraphicsText* graphics_text) {
 }
 
 #ifdef INCLUDE_RUN_TEST
+//--------------------------------------------------------------------------------
 int graphics_text_test_run() {
   GraphicsText* graphics_text = graphics_text_from_tileset_malloc(
       "test/assets/Cooz_curses_square_16x16.png");

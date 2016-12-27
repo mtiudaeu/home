@@ -5,6 +5,7 @@
 
 typedef struct {
   GLuint texture_id;
+
 } GraphicsText;
 
 GraphicsText* graphics_text_from_tileset_malloc(const char* filename);
