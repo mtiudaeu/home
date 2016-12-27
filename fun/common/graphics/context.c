@@ -1,21 +1,14 @@
 #include "graphics/context.h"
 
+#include "test/test.h"
+
 #include "log.h"
 
 #include <stdlib.h>
 #include <assert.h>
 
-/*
-SDL_Init(SDL_INIT_VIDEO);
-window = SDL_CreateWindow(
-SDL_GLContext glcontext = SDL_GL_CreateContext(window);
-
-
-SDL_GL_DeleteContext(glcontext); 
-SDL_DestroyWindow(window);
-SDL_Quit();
-
-*/
+#include <SDL2/SDL.h>
+#include <GL/glew.h>
 
 typedef struct {
 //MDTMP review name etc..
@@ -23,81 +16,18 @@ typedef struct {
   SDL_GLContext gl_context;
   GLuint program_id; //MDTMP needed?
 } InternalGraphicsContext;
-
-//--------------------------------------------------------------------------------
-static InternalGraphicsContext* internal_graphics_context_malloc() {
-    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) != 0) {
-        fprintf(stderr,
-                "\nUnable to initialize SDL:  %s\n",
-                SDL_GetError()
-               );
-        return 1;
-    }
-  SDL_Init(SDL_INIT_VIDEO);
-  window = SDL_CreateWindow("Default Parameter", SDL_WINDOWPOS_CENTERED,
-                            SDL_WINDOWPOS_CENTERED, 640, 480,
-                            SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
-  if (!window) {
-    //FIXME SDL_Init is not cleaned up
-    LOG_ERROR("SDL_CreateWindow %s", SDL_GetError());
-    return 0x0;
-  }
-/*
-SDL_GLContext glcontext = SDL_GL_CreateContext(window);
-
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-  if (SDL_GL_CreateContext(window) == NULL) {
-    LOG_ERROR("SDL_GL_CreateContext %s", SDL_GetError());
-    return 1;
-  }
-
-  GLenum glew_status = glewInit();
-  if (glew_status != GLEW_OK) {
-    LOG_ERROR("glewInit %s", glewGetErrorString(glew_status));
-    return 1;
-  }
-  if (!GLEW_VERSION_2_0) {
-    LOG_ERROR("graphic card does not support OpenGL 2.0");
-    return 1;
-  }
-
-  if (gl_resources_alloc() != 0) {
-    return 1;
-  }
-
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  mainLoop();
-
-  gl_resources_free();
-*/
-//MDTMP remove
-  InternalGraphicsContext* graphics_context = malloc(sizeof(InternalGraphicsContext));
-  // MDTMP set program_id and initialize program context
-  graphics_context->program_id = 0;
-  return graphics_context;
-}
-
-//--------------------------------------------------------------------------------
-//MDTMP remove
-static void internal_graphics_context_free(InternalGraphicsContext* graphics_context) {
-  assert(graphics_context);
-  // MDTMP uninitialize program_id
-  free(graphics_context);
-}
-
 static InternalGraphicsContext* global_graphics_context;
+
 //--------------------------------------------------------------------------------
-void graphics_context_global_init()
+size_t graphics_context_global_init()
 {
   if (global_graphics_context) {
     LOG_ERROR("global_graphics_context already initialize")
-    return;
+    return 1;
   }
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     LOG_ERROR("SDL_Init : %s", SDL_GetError());
-    return;
+    return 1;
   }
 
   global_graphics_context = calloc(1, sizeof(*global_graphics_context));
@@ -107,7 +37,7 @@ void graphics_context_global_init()
   if (!global_graphics_context->window) {
     graphics_context_global_uninit();
     LOG_ERROR("SDL_CreateWindow %s", SDL_GetError());
-    return;
+    return 1;
   }
 
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
@@ -116,7 +46,7 @@ void graphics_context_global_init()
   if (global_graphics_context->gl_context == NULL) {
     graphics_context_global_uninit();
     LOG_ERROR("SDL_GL_CreateContext %s", SDL_GetError());
-    return;
+    return 1;
   }
 
   // TODO validate if glewInit this need clean-up.
@@ -124,21 +54,23 @@ void graphics_context_global_init()
   if (glew_status != GLEW_OK) {
     LOG_ERROR("glewInit %s", glewGetErrorString(glew_status));
     graphics_context_global_uninit();
-    return;
+    return 1;
   }
   if (!GLEW_VERSION_2_0) {
     LOG_ERROR("graphic card does not support OpenGL 2.0");
     graphics_context_global_uninit();
-    return;
+    return 1;
   }
+
+  return 0;
 }
 
 //--------------------------------------------------------------------------------
-void graphics_context_global_uninit()
+size_t graphics_context_global_uninit()
 {
   if (!global_graphics_context) {
     LOG_ERROR("global_graphics_context is not initialize")
-    return;
+    return 1;
   }
 
   if (global_graphics_context->gl_context != NULL) {
@@ -155,6 +87,8 @@ void graphics_context_global_uninit()
 
   free(global_graphics_context);
   global_graphics_context = 0x0;
+
+  return 0;
 }
 
 //--------------------------------------------------------------------------------
@@ -164,3 +98,20 @@ void graphics_context_global_run()
 }
 
 
+//--------------------------------------------------------------------------------
+#ifdef INCLUDE_RUN_TEST
+size_t graphics_context_test_run()
+{
+  size_t ret = graphics_context_global_init();
+  if (ret != 0) {
+    TEST_ASSERT_MSG("graphics_context_global_init");
+    return ret;
+  }
+  ret = graphics_context_global_uninit();
+  if (ret != 0) {
+    TEST_ASSERT_MSG("graphics_context_global_uninit");
+    return ret;
+  }
+  return ret;
+}
+#endif  // INCLUDE_RUN_TEST

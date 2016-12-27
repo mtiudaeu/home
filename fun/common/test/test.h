@@ -22,11 +22,6 @@ void test_assert_equal_uint(unsigned int a, unsigned int b,
   test_assert_true_ptr(a, __FILE__, __LINE__);
 void test_assert_true_ptr(void* a, const char* file_name, int line);
 
-#define TEST_ASSERT_TRUE_SIZE_T(a) \
-  test_assert_true_size_t(a, __FILE__, __LINE__);
-void test_assert_true_size_t(size_t a, const char* file_name, int line);
-
-
 #define TEST_ASSERT_MSG(msg) \
   test_assert_msg(msg, __FILE__, __LINE__);
 void test_assert_msg(const char* msg, const char* file_name, int line);

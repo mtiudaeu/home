@@ -59,7 +59,7 @@ void graphics_text_free(GraphicsText* graphics_text) {
 
 #ifdef INCLUDE_RUN_TEST
 //--------------------------------------------------------------------------------
-int graphics_text_test_run() {
+size_t graphics_text_test_run() {
   GraphicsText* graphics_text = graphics_text_from_tileset_malloc(
       "test/assets/Cooz_curses_square_16x16.png");
 

@@ -6,7 +6,7 @@ all: test_array test_graphics
 
 # ---- graphics test all ----
 test_graphics : test_graphics.o context.o text.o test.o
-	$(CXX) test_graphics.o context.o text.o test.o -o test_graphics -lGL -lSDL2 -lSDL2_image
+	$(CXX) test_graphics.o context.o text.o test.o -o test_graphics -lGL -lGLEW -lSDL2 -lSDL2_image
 
 test_graphics.o : graphics/test_run.c test.o
 	$(CXX) -c graphics/test_run.c -o test_graphics.o

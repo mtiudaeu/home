@@ -39,20 +39,9 @@ void test_assert_true_ptr(void* a, const char* file_name, int line)
 }
 
 //--------------------------------------------------------------------------------
-void test_assert_true_size_t(size_t a, const char* file_name, int line)
-{
-  if (!a) {
-    printf("Error : %s:%d\n", file_name, line);
-    printf("   Should be true : %zu\n", a);
-  } else {
-    printf("Success\n");
-  }
-}
-
-//--------------------------------------------------------------------------------
 void test_assert_msg(const char* msg, const char* file_name, int line) {
   printf("Error : %s:%d\n", file_name, line);
-  printf("   %s", msg);
+  printf("   %s\n", msg);
 }
 
 #endif // INCLUDE_RUN_TEST

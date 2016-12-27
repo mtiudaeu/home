@@ -4,6 +4,7 @@
 #include "graphics/text.h"
 
 //--------------------------------------------------------------------------------
+//MDTMP
 static size_t internal_test_integration()
 {
   // MDTMP
@@ -23,11 +24,17 @@ static size_t internal_test_integration()
 
 //--------------------------------------------------------------------------------
 int main() {
-  size_t ret = internal_test_integration();
-  TEST_ASSERT_TRUE_SIZE_T(ret == 0);
+  size_t ret = graphics_context_test_run();
+  if (ret != 0) {
+    TEST_ASSERT_MSG("graphics_context_test_run");
+    return ret;
+  }
 
   ret = graphics_text_test_run();
-  TEST_ASSERT_TRUE_SIZE_T(ret == 0);
+  if (ret != 0) {
+    TEST_ASSERT_MSG("graphics_text_test_run");
+    return ret;
+  }
 
   return ret;
 }

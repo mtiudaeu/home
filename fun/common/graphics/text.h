@@ -17,7 +17,7 @@ void graphics_text_draw(GraphicsText* graphics_text);
 */
 
 #ifdef INCLUDE_RUN_TEST
-int graphics_text_test_run();
+size_t graphics_text_test_run();
 #endif  // INCLUDE_RUN_TEST
 
 #endif // GRAPHICS_TEXT_
