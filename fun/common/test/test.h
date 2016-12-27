@@ -3,6 +3,11 @@
 
 #ifdef INCLUDE_RUN_TEST
 
+#include <stddef.h>
+
+// Need different implementation to print values accordingly for different
+// types.
+
 #define TEST_ASSERT_EQUAL_STR(a, b) \
   test_assert_equal_str(a, b, __FILE__, __LINE__);
 void test_assert_equal_str(const char* a, const char* b, const char* file_name,
@@ -13,9 +18,13 @@ void test_assert_equal_str(const char* a, const char* b, const char* file_name,
 void test_assert_equal_uint(unsigned int a, unsigned int b,
                             const char* file_name, int line);
 
-#define TEST_ASSERT_TRUE(a) \
+#define TEST_ASSERT_TRUE_PTR(a) \
   test_assert_true_ptr(a, __FILE__, __LINE__);
 void test_assert_true_ptr(void* a, const char* file_name, int line);
+
+#define TEST_ASSERT_TRUE_SIZE_T(a) \
+  test_assert_true_size_t(a, __FILE__, __LINE__);
+void test_assert_true_size_t(size_t a, const char* file_name, int line);
 
 
 #define TEST_ASSERT_MSG(msg) \

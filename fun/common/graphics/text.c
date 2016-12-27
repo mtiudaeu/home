@@ -5,6 +5,7 @@
 #include "SDL2/SDL_image.h"
 
 #include <stdlib.h>
+#include <assert.h>
 
 // MDTMP Add all include and link.
 
@@ -50,16 +51,17 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
 }
 
 void graphics_text_free(GraphicsText* graphics_text) {
+  assert(graphics_text);
   glDeleteTextures(1, &graphics_text->texture_id);
   free(graphics_text);
 }
 
 #ifdef INCLUDE_RUN_TEST
-int main() {
+int graphics_text_test_run() {
   GraphicsText* graphics_text = graphics_text_from_tileset_malloc(
       "test/assets/Cooz_curses_square_16x16.png");
 
-  TEST_ASSERT_TRUE(graphics_text);
+  TEST_ASSERT_TRUE_PTR(graphics_text);
   graphics_text_free(graphics_text);
   graphics_text = 0x0;
 
