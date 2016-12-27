@@ -50,7 +50,7 @@ unsigned int* dynamic_array_uint_get_end(DynamicArrayUInt* array) {
 }
 
 #ifdef INCLUDE_RUN_TEST
-int array_test_run()
+int main()
 {
   unsigned int test_values[20] = {2,      51231, 11,  1458, 202, 109,  8,
                                       984998, 65,    348, 631,  15,  6665, 17,

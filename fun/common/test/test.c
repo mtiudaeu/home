@@ -26,11 +26,11 @@ void test_assert_equal_uint(unsigned int a, unsigned int b,
   }
 }
 
-void test_assert_true(int a, const char* file_name, int line)
+void test_assert_true_ptr(void* a, const char* file_name, int line)
 {
   if (!a) {
     printf("Error : %s:%d\n", file_name, line);
-    printf("   Should be true : %d", a);
+    printf("   Should be true : %p", a);
   } else {
     printf("Success\n");
   }

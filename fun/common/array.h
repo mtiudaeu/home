@@ -16,8 +16,4 @@ void dynamic_array_uint_push_back(DynamicArrayUInt* array,
 unsigned int * dynamic_array_uint_get_begin(DynamicArrayUInt* array);
 unsigned int * dynamic_array_uint_get_end(DynamicArrayUInt* array);
 
-#ifdef INCLUDE_RUN_TEST
-int array_test_run();
-#endif // INCLUDE_RUN_TEST
-
 #endif // ARRAY_H

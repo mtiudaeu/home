@@ -14,8 +14,8 @@ void test_assert_equal_uint(unsigned int a, unsigned int b,
                             const char* file_name, int line);
 
 #define TEST_ASSERT_TRUE(a) \
-  test_assert_true(a, __FILE__, __LINE__);
-void test_assert_true(int a, const char* file_name, int line);
+  test_assert_true_ptr(a, __FILE__, __LINE__);
+void test_assert_true_ptr(void* a, const char* file_name, int line);
 
 
 #define TEST_ASSERT_MSG(msg) \
