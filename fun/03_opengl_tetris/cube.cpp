@@ -15,6 +15,7 @@ using namespace std;
 #include "SDL2/SDL_image.h"
 
 #include "shader_utils.h"
+#include "debug_assert.h"
 
 /* GLM */
 // #define GLM_MESSAGES
@@ -70,9 +71,9 @@ bool init_resources() {
 	GLfloat cube_texcoords[2*4*6] = {
 		// front
 		0.0, 0.0,
-		0.5, 0.0,
-		0.5, 0.5,
-		0.0, 0.5,
+		1.0, 0.0,
+		1.0, 1.0,
+		0.0, 1.0,
 	};
 	for (int i = 1; i < 6; i++)
 		memcpy(&cube_texcoords[i*4*2], &cube_texcoords[0], 2*4*sizeof(GLfloat));
@@ -104,24 +105,32 @@ bool init_resources() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_cube_elements);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_elements), cube_elements, GL_STATIC_DRAW);
 
-	SDL_Surface* res_texture = IMG_Load("res_texture.png");
+//MDTMP SDL_Surface* res_texture = IMG_Load("Cooz_curses_square_16x16.png");
+SDL_Surface* res_texture = IMG_Load("res_texture.png");
 	if (res_texture == NULL) {
 		cerr << "IMG_Load: " << SDL_GetError() << endl;
 		return false;
 	}
+
+ ASSERT_DEBUG(false);
+
  cout << res_texture->w << std::endl;
  cout << res_texture->h << std::endl;
+ int bytes_per_pixel = res_texture->format->BytesPerPixel;
+ cout << bytes_per_pixel << std::endl;
 
 	glGenTextures(1, &texture_id);
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, // target
 		0,  // level, 0 = base, no minimap,
-		GL_RGBA, // internalformat
+		GL_RGB, // internalformat
+//MDTMP GL_RGBA, // internalformat
 		res_texture->w,  // width
 		res_texture->h,  // height
 		0,  // border, always 0 in OpenGL ES
-		GL_RGBA,  // format
+		GL_RGB,  // format
+//MDTMP GL_RGBA,  // format
 		GL_UNSIGNED_BYTE, // type
 		res_texture->pixels);
 	SDL_FreeSurface(res_texture);
