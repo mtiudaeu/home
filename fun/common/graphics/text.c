@@ -14,7 +14,6 @@
 //MDTMP remove! or change or rename.
 struct attributes {
   GLfloat coord2d[2];
-  GLfloat v_color[3];
 };
 
 //--------------------------------------------------------------------------------
@@ -71,9 +70,16 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
   }
 
   {  // Create vertex buffer
-    struct attributes triangle_attributes[] = {{{0.0, 0.8}, {1.0, 1.0, 0.0}},
-                                               {{-0.8, -0.8}, {0.0, 0.0, 1.0}},
-                                               {{0.8, -0.8}, {1.0, 0.0, 0.0}}};
+    struct attributes triangle_attributes[] =
+ {
+{{-0.5, -0.5}},
+{{0.5, 0.5}},
+{{-0.5, 0.5}},
+
+{{-0.5, -0.5}},
+{{0.5, 0.5}},
+{{0.5, -0.5}}
+};
     glGenBuffers(1, &graphics_text->vbo_triangle);
     glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_triangle);
     glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_attributes),
@@ -86,14 +92,6 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
     graphics_text->attribute_coord2d =
         glGetAttribLocation(graphics_text->program_id, attribute_name);
     if (graphics_text->attribute_coord2d == -1) {
-      LOG_ERROR("glGetAttribLocation %s", attribute_name);
-      graphics_text_free(graphics_text);
-      return 0x0;
-    }
-    attribute_name = "v_color";
-    graphics_text->attribute_v_color =
-        glGetAttribLocation(graphics_text->program_id, attribute_name);
-    if (graphics_text->attribute_v_color == -1) {
       LOG_ERROR("glGetAttribLocation %s", attribute_name);
       graphics_text_free(graphics_text);
       return 0x0;
@@ -122,30 +120,20 @@ void graphics_text_draw(GraphicsText* graphics_text)
   glUseProgram(graphics_text->program_id);
 
   glEnableVertexAttribArray(graphics_text->attribute_coord2d);
-  glEnableVertexAttribArray(graphics_text->attribute_v_color);
   glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_triangle);
   glVertexAttribPointer(
       graphics_text->attribute_coord2d,          // attribute
-      2,                          // number of elements per vertex, here (x,y)
+      2,                          // number of elements per vertex,
       GL_FLOAT,                   // the type of each element
       GL_FALSE,                   // take our values as-is
-      sizeof(struct attributes),  // next coord2d appears every 5 floats
-      0                           // offset of first element
-      );
-  glVertexAttribPointer(
-      graphics_text->attribute_v_color,          // attribute
-      3,                          // number of elements per vertex, here (r,g,b)
-      GL_FLOAT,                   // the type of each element
-      GL_FALSE,                   // take our values as-is
-      sizeof(struct attributes),  // stride
-      //(GLvoid*) (2 * sizeof(GLfloat))     // offset of first element
-      (GLvoid*)offsetof(struct attributes, v_color)  // offset
+      sizeof(struct attributes),  // size
+      0                           // offset (GLvoid*)offsetof(struct attributes, v_color)
       );
 
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+//MDTMP number of points...
+glDrawArrays(GL_TRIANGLES, 0, 6);
 
   glDisableVertexAttribArray(graphics_text->attribute_coord2d);
-  glDisableVertexAttribArray(graphics_text->attribute_v_color);
 
 }
 

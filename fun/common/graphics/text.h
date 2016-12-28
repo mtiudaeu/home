@@ -8,7 +8,6 @@ typedef struct {
   GLuint program_id;
   GLuint vbo_triangle;
   GLint attribute_coord2d;
-  GLint attribute_v_color;
 } GraphicsText;
 
 GraphicsText* graphics_text_from_tileset_malloc(const char* filename);

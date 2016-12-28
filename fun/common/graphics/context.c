@@ -13,6 +13,7 @@
 typedef struct {
   SDL_Window* window;
   SDL_GLContext gl_context;
+  void (*main_loop_cb)();
 } InternalGraphicsContext;
 static InternalGraphicsContext* global_graphics_context;
 
@@ -88,27 +89,35 @@ size_t graphics_context_global_uninit()
 }
 
 //--------------------------------------------------------------------------------
-size_t graphics_context_global_run(void (*render_cb)()) {
+void internal_main_loop() {
+  global_graphics_context->main_loop_cb();
+  SDL_GL_SwapWindow(global_graphics_context->window);
+}
+
+//--------------------------------------------------------------------------------
+size_t graphics_context_global_run(void (*main_loop_cb)()) {
   if (!global_graphics_context) {
-    LOG_ERROR("global_graphics_context is not initialize")
+    LOG_ERROR("global_graphics_context is not initialize");
     return 1;
   }
+  if (!main_loop_cb) {
+    LOG_ERROR("main_loop_cb is null");
+    return 1;
+  }
+  global_graphics_context->main_loop_cb = main_loop_cb;
+
 #ifdef EMSCRIPTEN
-  emscripten_set_main_loop(&render_cb,
+  emscripten_set_main_loop(&internal_main_loop,
                            0,  // fps
                            1   // simulate infinite loop
                            );
-//MDTMP register a main callback to the Context
-//MDTMP create  main internal main function which call this register + Swap window
-//MDTMP add to emscripten SDL_GL_SwapWindow(window);
 #else
   while (1) {
     SDL_Event ev;
     while (SDL_PollEvent(&ev)) {
       if (ev.type == SDL_QUIT) return 0;
     }
-    render_cb();
-    SDL_GL_SwapWindow(global_graphics_context->window);
+    internal_main_loop();
   }
 #endif
 
