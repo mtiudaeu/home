@@ -6,15 +6,15 @@
 typedef struct {
   GLuint texture_id;
   GLuint program_id;
+  GLuint vbo_triangle;
+  GLint attribute_coord2d;
+  GLint attribute_v_color;
 } GraphicsText;
 
 GraphicsText* graphics_text_from_tileset_malloc(const char* filename);
 void graphics_text_free(GraphicsText* graphics_text);
 
-//MDTMP
-/*
 void graphics_text_draw(GraphicsText* graphics_text);
-*/
 
 #ifdef INCLUDE_RUN_TEST
 size_t graphics_text_test_run();

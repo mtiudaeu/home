@@ -3,6 +3,8 @@
 #include "graphics/context.h"
 #include "graphics/text.h"
 
+static GraphicsText* graphics_text = 0x0;
+
 //--------------------------------------------------------------------------------
 //MDTMP
 /*
@@ -18,6 +20,10 @@ void animate() {
 void render() {
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
+
+  if (graphics_text) {
+    graphics_text_draw(graphics_text);
+  }
 //MDTMP
 /*
 
@@ -45,7 +51,6 @@ void render() {
       );
 
   // Push each element in buffer_vertices to the vertex shader 
-  glDrawArrays(GL_TRIANGLES, 0, 3);
 
   glDisableVertexAttribArray(attribute_coord2d);
   glDisableVertexAttribArray(attribute_v_color);
@@ -64,7 +69,7 @@ void mainCallback() {
 //--------------------------------------------------------------------------------
 static size_t internal_test_integration()
 {
-  GraphicsText* graphics_text = graphics_text_from_tileset_malloc(
+  graphics_text = graphics_text_from_tileset_malloc(
       "test/assets/Cooz_curses_square_16x16.png");
 
   //MDTMP
