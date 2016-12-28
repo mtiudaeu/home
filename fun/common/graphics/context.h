@@ -3,11 +3,10 @@
 
 #include <stddef.h>
 
-//MDTMP return error?
 size_t graphics_context_global_init();
 size_t graphics_context_global_uninit();
 
-void graphics_context_global_run();
+size_t graphics_context_global_run(void (*render_cb)());
 
 #ifdef INCLUDE_RUN_TEST
 size_t graphics_context_test_run();

@@ -1,4 +1,4 @@
-#include "shader_utils.h"
+#include "graphics/shader.h"
 
 #include "log.h"
 
@@ -44,7 +44,7 @@ static char* internal_file_read_malloc(const char* filename) {
 
 //--------------------------------------------------------------------------------
 // This function was not tested much...
-void shader_gl_log_error(GLuint object) {
+void graphics_shader_gl_log_error(GLuint object) {
   GLint log_length = 0;
   if (glIsShader(object)) {
     glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length);
@@ -61,12 +61,12 @@ void shader_gl_log_error(GLuint object) {
   else if (glIsProgram(object))
     glGetProgramInfoLog(object, log_length, NULL, log);
 
-  LOG_ERROR("%s : %s", "shader_gl_log_error", log);
+  LOG_ERROR("%s : %s", "graphics_shader_gl_log_error", log);
   free(log);
 }
 
 //--------------------------------------------------------------------------------
-GLuint shader_create_shader(const char* filename, GLenum type) {
+GLuint graphics_shader_create_shader(const char* filename, GLenum type) {
   const GLchar* source = internal_file_read_malloc(filename);
   if (!source) {
     LOG_ERROR("internal_file_read_malloc");
@@ -104,7 +104,7 @@ GLuint shader_create_shader(const char* filename, GLenum type) {
   GLint compile_ok = GL_FALSE;
   glGetShaderiv(shader_obj, GL_COMPILE_STATUS, &compile_ok);
   if (compile_ok == GL_FALSE) {
-    shader_gl_log_error(shader_obj);
+    graphics_shader_gl_log_error(shader_obj);
     LOG_ERROR("glGetShaderiv : %s", filename);
 
     glDeleteShader(shader_obj);
@@ -115,16 +115,16 @@ GLuint shader_create_shader(const char* filename, GLenum type) {
 }
 
 //--------------------------------------------------------------------------------
-GLuint shader_create_program(const char* vertexfile, const char* fragmentfile) {
+GLuint graphics_shader_create_program(const char* vertexfile, const char* fragmentfile) {
   GLuint program = glCreateProgram();
   GLuint shader;
   if (vertexfile) {
-    shader = shader_create_shader(vertexfile, GL_VERTEX_SHADER);
+    shader = graphics_shader_create_shader(vertexfile, GL_VERTEX_SHADER);
     if (!shader) return 0;
     glAttachShader(program, shader);
   }
   if (fragmentfile) {
-    shader = shader_create_shader(fragmentfile, GL_FRAGMENT_SHADER);
+    shader = graphics_shader_create_shader(fragmentfile, GL_FRAGMENT_SHADER);
     if (!shader) return 0;
     glAttachShader(program, shader);
   }
@@ -133,7 +133,7 @@ GLuint shader_create_program(const char* vertexfile, const char* fragmentfile) {
   glGetProgramiv(program, GL_LINK_STATUS, &link_ok);
   if (!link_ok) {
     LOG_ERROR("glLinkProgram");
-    shader_gl_log_error(program);
+    graphics_shader_gl_log_error(program);
     glDeleteProgram(program);
     return 0;
   }

@@ -11,10 +11,8 @@
 #include <GL/glew.h>
 
 typedef struct {
-//MDTMP review name etc..
   SDL_Window* window;
   SDL_GLContext gl_context;
-  GLuint program_id; //MDTMP needed?
 } InternalGraphicsContext;
 static InternalGraphicsContext* global_graphics_context;
 
@@ -73,13 +71,11 @@ size_t graphics_context_global_uninit()
     return 1;
   }
 
-  if (global_graphics_context->gl_context != NULL) {
-    // MDTMP test if is null by default with calloc default.
+  if (global_graphics_context->gl_context) {
     SDL_GL_DeleteContext(global_graphics_context->gl_context);
   }
 
   if (global_graphics_context->window) {
-    // MDTMP test if is null by default with calloc default.
     SDL_GL_DeleteContext(global_graphics_context->window);
   }
 
@@ -92,9 +88,31 @@ size_t graphics_context_global_uninit()
 }
 
 //--------------------------------------------------------------------------------
-void graphics_context_global_run()
-{
-//MDTMP do main loop
+size_t graphics_context_global_run(void (*render_cb)()) {
+  if (!global_graphics_context) {
+    LOG_ERROR("global_graphics_context is not initialize")
+    return 1;
+  }
+#ifdef EMSCRIPTEN
+  emscripten_set_main_loop(&render_cb,
+                           0,  // fps
+                           1   // simulate infinite loop
+                           );
+//MDTMP register a main callback to the Context
+//MDTMP create  main internal main function which call this register + Swap window
+//MDTMP add to emscripten SDL_GL_SwapWindow(window);
+#else
+  while (1) {
+    SDL_Event ev;
+    while (SDL_PollEvent(&ev)) {
+      if (ev.type == SDL_QUIT) return 0;
+    }
+    render_cb();
+    SDL_GL_SwapWindow(global_graphics_context->window);
+  }
+#endif
+
+  return 0;
 }
 
 

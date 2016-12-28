@@ -1,5 +1,7 @@
 #include "graphics/text.h"
 
+#include "graphics/shader.h"
+
 #include "test/test.h"
 
 #include "log.h"
@@ -11,23 +13,25 @@
 
 //--------------------------------------------------------------------------------
 GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
+  GraphicsText* graphics_text = malloc( sizeof(GraphicsText));
   SDL_Surface* tileset_texture = IMG_Load(filename);
-  {  // Validate inputs
+  { // Create texture object
     if (!tileset_texture) {
       LOG_ERROR("IMG_Load: %s", SDL_GetError());
+      graphics_text_free(graphics_text);
       return 0x0;
     }
     if (!tileset_texture->format) {
       LOG_ERROR("tileset_texture->format");
+      graphics_text_free(graphics_text);
       return 0x0;
     }
     if (tileset_texture->format->BytesPerPixel != 3) {
       LOG_ERROR("tileset_texture->format->BytesPerPixel != 3");
+      graphics_text_free(graphics_text);
       return 0x0;
     }
-  }
 
-  { // Create text object
     GLuint texture_id;
     glGenTextures(1, &texture_id);
     glBindTexture(GL_TEXTURE_2D, texture_id);
@@ -43,17 +47,29 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
                  tileset_texture->pixels);
     SDL_FreeSurface(tileset_texture);
 
-    GraphicsText* graphics_text = malloc(sizeof(GraphicsText));
     graphics_text->texture_id = texture_id;
-
-    return graphics_text;
   }
+
+//MDTMP remove hardcoded value.. 
+//MDTMP maybe hardcode actual sharder string here...
+  GLuint program_id = graphics_shader_create_program(
+      "test/assets/triangle.v.glsl", "test/assets/triangle.f.glsl");
+  if (!program_id) {
+    LOG_ERROR("graphics_shader_create_program");
+    graphics_text_free(graphics_text);
+    return 0x0;
+  }
+  graphics_text->program_id = program_id;
+
+  return graphics_text;
+
 }
 
 //--------------------------------------------------------------------------------
 void graphics_text_free(GraphicsText* graphics_text) {
   assert(graphics_text);
   glDeleteTextures(1, &graphics_text->texture_id);
+  glDeleteProgram(graphics_text->program_id);
   free(graphics_text);
 }
 
