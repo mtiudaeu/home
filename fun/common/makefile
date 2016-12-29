@@ -8,8 +8,8 @@ all: test_array test_graphics
 test_graphics : test_graphics.o context.o text.o shader.o test.o
 	$(CXX) test_graphics.o context.o text.o shader.o test.o -o test_graphics -lGL -lGLEW -lSDL2 -lSDL2_image
 
-test_graphics.o : graphics/test_run.c test.o
-	$(CXX) -c graphics/test_run.c -o test_graphics.o
+test_graphics.o : graphics/test_graphics.c test.o
+	$(CXX) -c graphics/test_graphics.c -o test_graphics.o
 
 # ---- graphics text ----
 text.o : graphics/text.h graphics/text.c shader.o test.o

@@ -6,21 +6,39 @@
 
 #include "log.h"
 
+#include <GL/glew.h>
 #include "SDL2/SDL_image.h"
 
-#include <stdlib.h>
 #include <assert.h>
+#include <stdlib.h>
 
-//MDTMP remove! or change or rename.
-struct attributes {
-  GLfloat coord2d[2];
+struct GraphicsText {
+  GLuint program;
+  GLuint tbo_texture_map;
+  GLuint uniform_texture_map;
+  GLuint vbo_vertices_coord;
+  GLint attribute_vertices_coord;
+  GLuint vbo_texture_coord;
+  GLint attribute_texture_coord;
 };
 
 //--------------------------------------------------------------------------------
 GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
   GraphicsText* graphics_text = calloc(1, sizeof(GraphicsText));
 
-  {  // Create texture object
+  {  // Create shader
+     // MDTMP remove hardcoded value..
+    // MDTMP maybe hardcode actual sharder string here...
+    graphics_text->program = graphics_shader_create_program(
+        "test/assets/text.v.glsl", "test/assets/text.f.glsl");
+    if (!graphics_text->program) {
+      LOG_ERROR("graphics_shader_create_program");
+      graphics_text_free(graphics_text);
+      return 0x0;
+    }
+  }
+
+  {  // Create texture map objects
     SDL_Surface* tileset_texture = IMG_Load(filename);
     if (!tileset_texture) {
       LOG_ERROR("IMG_Load: %s", SDL_GetError());
@@ -39,90 +57,65 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
       return 0x0;
     }
 
-    GLuint texture_id;
-    glGenTextures(1, &texture_id);
-    glBindTexture(GL_TEXTURE_2D, texture_id);
+    glGenTextures(1, &graphics_text->tbo_texture_map);
+    glBindTexture(GL_TEXTURE_2D, graphics_text->tbo_texture_map);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D(GL_TEXTURE_2D,       // target
                  0,                   // level, 0 = base, no minimap,
-                 GL_RGBA,              // internalformat
+                 GL_RGBA,             // internalformat
                  tileset_texture->w,  // width
                  tileset_texture->h,  // height
                  0,                   // border, always 0 in OpenGL ES
-                 GL_RGBA,              // format
+                 GL_RGBA,             // format
                  GL_UNSIGNED_BYTE,    // type
                  tileset_texture->pixels);
     SDL_FreeSurface(tileset_texture);
 
-    graphics_text->texture_id = texture_id;
-
-
-  }
-
-  {  // Create shader
-     // MDTMP remove hardcoded value..
-    // MDTMP maybe hardcode actual sharder string here...
-    GLuint program_id = graphics_shader_create_program(
-        "test/assets/triangle.v.glsl", "test/assets/triangle.f.glsl");
-    if (!program_id) {
-      LOG_ERROR("graphics_shader_create_program");
-      graphics_text_free(graphics_text);
-      return 0x0;
-    }
-    graphics_text->program_id = program_id;
-  }
-
-  { // ............Create texture buffer....
-    const char* uniform_name = "mytexture";
-    graphics_text->uniform_mytexture = glGetUniformLocation(graphics_text->program_id, uniform_name);
-    if (graphics_text->uniform_mytexture == -1) {
-      LOG_ERROR("glGetAttribLocation %s", uniform_name);
+    const char* uniform_name = "texture_map";
+    graphics_text->uniform_texture_map =
+        glGetUniformLocation(graphics_text->program, uniform_name);
+    if (graphics_text->uniform_texture_map == -1) {
+      LOG_ERROR("glGetUniformLocation %s", uniform_name);
       graphics_text_free(graphics_text);
       return 0x0;
     }
   }
 
+  {  // Create vertices objects
+    GLfloat verticles_coord[6][2] = {{-0.5, -0.5}, {0.5, 0.5}, {-0.5, 0.5},
+                                     {-0.5, -0.5}, {0.5, 0.5}, {0.5, -0.5}};
+    glGenBuffers(1, &graphics_text->vbo_vertices_coord);
+    glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_vertices_coord);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticles_coord), verticles_coord,
+                 GL_STATIC_DRAW);
 
-  {  // Create vertex buffer
-    struct attributes triangle_attributes[] = {
-        {{-0.5, -0.5}}, {{0.5, 0.5}}, {{-0.5, 0.5}},
-        {{-0.5, -0.5}}, {{0.5, 0.5}}, {{0.5, -0.5}}};
-    glGenBuffers(1, &graphics_text->vbo_triangle);
-    glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_triangle);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_attributes),
-                 triangle_attributes, GL_STATIC_DRAW);
-  }
-
-  {  // Create shader attributes.
-    const char* attribute_name = "coord2d";
-    graphics_text->attribute_coord2d =
-        glGetAttribLocation(graphics_text->program_id, attribute_name);
-    if (graphics_text->attribute_coord2d == -1) {
+    const char* attribute_name = "vertices_coord";
+    graphics_text->attribute_vertices_coord =
+        glGetAttribLocation(graphics_text->program, attribute_name);
+    if (graphics_text->attribute_vertices_coord == -1) {
       LOG_ERROR("glGetAttribLocation %s", attribute_name);
       graphics_text_free(graphics_text);
       return 0x0;
     }
   }
 
-  {  // Create vertex texture buffer
-    struct attributes texture_triangle_attributes[] = {
-        {{0.0, 0.0}}, {{1.0, 1.0}}, {{0.0, 1.0}},
-        {{0.0, 0.0}}, {{1.0, 1.0}}, {{1.0, 0.0}}};
-    glGenBuffers(1, &graphics_text->vbo_texture);
-    glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(texture_triangle_attributes),
-                 texture_triangle_attributes, GL_STATIC_DRAW);
+  {  // Create texture coord objects
+    GLfloat texture_coord[6][2] = {{0.0, 0.0}, {1.0, 1.0}, {0.0, 1.0},
+                                   {0.0, 0.0}, {1.0, 1.0}, {1.0, 0.0}};
+    glGenBuffers(1, &graphics_text->vbo_texture_coord);
+    glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture_coord);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(texture_coord), texture_coord,
+                 GL_STATIC_DRAW);
 
-    const char* attribute_name = "texcoord";
-    graphics_text->attribute_texcoord =
-        glGetAttribLocation(graphics_text->program_id, attribute_name);
-    if (graphics_text->attribute_texcoord == -1) {
+    const char* attribute_name = "texture_coord";
+    graphics_text->attribute_texture_coord =
+        glGetAttribLocation(graphics_text->program, attribute_name);
+    if (graphics_text->attribute_texture_coord == -1) {
       LOG_ERROR("glGetAttribLocation %s", attribute_name);
       graphics_text_free(graphics_text);
       return 0x0;
     }
   }
-
 
   return graphics_text;
 }
@@ -131,59 +124,58 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
 void graphics_text_free(GraphicsText* graphics_text) {
   assert(graphics_text);
 
-  glDeleteTextures(1, &graphics_text->texture_id);
-  glDeleteProgram(graphics_text->program_id);
-  glDeleteBuffers(1, &graphics_text->vbo_triangle);
+  glDeleteProgram(graphics_text->program);
+  glDeleteTextures(1, &graphics_text->uniform_texture_map);
+  glDeleteBuffers(1, &graphics_text->vbo_vertices_coord);
+  glDeleteBuffers(1, &graphics_text->vbo_texture_coord);
 
   free(graphics_text);
 }
 
 //--------------------------------------------------------------------------------
-void graphics_text_draw(GraphicsText* graphics_text)
-{
+void graphics_text_draw(GraphicsText* graphics_text) {
   assert(graphics_text);
 
-  glUseProgram(graphics_text->program_id);
+  glUseProgram(graphics_text->program);
 
   glActiveTexture(GL_TEXTURE0);
-  glUniform1i(graphics_text->uniform_mytexture, /*GL_TEXTURE*/0);
-  glBindTexture(GL_TEXTURE_2D, graphics_text->texture_id);
+  glUniform1i(graphics_text->uniform_texture_map, /*GL_TEXTURE*/ 0);
+  glBindTexture(GL_TEXTURE_2D, graphics_text->tbo_texture_map);
 
+  glEnableVertexAttribArray(graphics_text->attribute_vertices_coord);
+  glEnableVertexAttribArray(graphics_text->attribute_texture_coord);
 
-  glEnableVertexAttribArray(graphics_text->attribute_coord2d);
-  glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_triangle);
+  glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_vertices_coord);
   glVertexAttribPointer(
-      graphics_text->attribute_coord2d,          // attribute
-      2,                          // number of elements per vertex,
-      GL_FLOAT,                   // the type of each element
-      GL_FALSE,                   // take our values as-is
-      sizeof(struct attributes),  // size
-      0                           // offset (GLvoid*)offsetof(struct attributes, v_color)
+      graphics_text->attribute_vertices_coord,  // attribute
+      2,         // number of elements per vertex,
+      GL_FLOAT,  // the type of each element
+      GL_FALSE,  // take our values as-is
+      0,         // no extra size
+      0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
       );
 
-  glEnableVertexAttribArray(graphics_text->attribute_texcoord);
-  glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture);
+  glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture_coord);
   glVertexAttribPointer(
-      graphics_text->attribute_texcoord,          // attribute
-      2,                          // number of elements per vertex,
-      GL_FLOAT,                   // the type of each element
-      GL_FALSE,                   // take our values as-is
-      sizeof(struct attributes),  // size
-      0                           // offset (GLvoid*)offsetof(struct attributes, v_color)
+      graphics_text->attribute_texture_coord,  // attribute
+      2,                                       // number of elements per vertex,
+      GL_FLOAT,                                // the type of each element
+      GL_FALSE,                                // take our values as-is
+      0,                                       // no extra size
+      0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
       );
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
-  glDisableVertexAttribArray(graphics_text->attribute_coord2d);
-  glDisableVertexAttribArray(graphics_text->attribute_texcoord);
-
+  glDisableVertexAttribArray(graphics_text->attribute_vertices_coord);
+  glDisableVertexAttribArray(graphics_text->attribute_texture_coord);
 }
 
 #ifdef INCLUDE_RUN_TEST
 //--------------------------------------------------------------------------------
 size_t graphics_text_run_test() {
-  GraphicsText* graphics_text = graphics_text_from_tileset_malloc(
-      "test/assets/ASCII_tileset.png");
+  GraphicsText* graphics_text =
+      graphics_text_from_tileset_malloc("test/assets/ASCII_tileset.png");
 
   TEST_ASSERT_TRUE_PTR(graphics_text);
   graphics_text_free(graphics_text);

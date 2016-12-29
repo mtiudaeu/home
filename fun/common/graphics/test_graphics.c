@@ -3,6 +3,8 @@
 #include "graphics/context.h"
 #include "graphics/text.h"
 
+#include <GL/glew.h>
+
 //MDTMP remove from static
 static GraphicsText* graphics_text = 0x0;
 
