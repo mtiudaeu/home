@@ -21,11 +21,9 @@ void mainCallback() {
 static size_t internal_test_integration()
 {
   graphics_text = graphics_text_from_tileset_malloc(
-      "test/assets/Cooz_curses_square_16x16.png");
+      "test/assets/ASCII_tileset.png");
 
-  //MDTMP
   const size_t ret = graphics_context_global_run(&mainCallback);
-
 
   TEST_ASSERT_TRUE_PTR(graphics_text);
   graphics_text_free(graphics_text);

@@ -7,7 +7,10 @@ typedef struct {
   GLuint texture_id;
   GLuint program_id;
   GLuint vbo_triangle;
+  GLuint vbo_texture;
+  GLuint uniform_mytexture;
   GLint attribute_coord2d;
+  GLint attribute_texcoord;
 } GraphicsText;
 
 GraphicsText* graphics_text_from_tileset_malloc(const char* filename);

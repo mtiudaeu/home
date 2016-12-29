@@ -32,8 +32,9 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
       graphics_text_free(graphics_text);
       return 0x0;
     }
-    if (tileset_texture->format->BytesPerPixel != 3) {
-      LOG_ERROR("tileset_texture->format->BytesPerPixel != 3");
+    if (tileset_texture->format->BytesPerPixel != 4) {
+      // This assumes GL_RGBA when calling glTexImage2D
+      LOG_ERROR("tileset_texture->format->BytesPerPixel != 4");
       graphics_text_free(graphics_text);
       return 0x0;
     }
@@ -44,16 +45,18 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D(GL_TEXTURE_2D,       // target
                  0,                   // level, 0 = base, no minimap,
-                 GL_RGB,              // internalformat
+                 GL_RGBA,              // internalformat
                  tileset_texture->w,  // width
                  tileset_texture->h,  // height
                  0,                   // border, always 0 in OpenGL ES
-                 GL_RGB,              // format
+                 GL_RGBA,              // format
                  GL_UNSIGNED_BYTE,    // type
                  tileset_texture->pixels);
     SDL_FreeSurface(tileset_texture);
 
     graphics_text->texture_id = texture_id;
+
+
   }
 
   {  // Create shader
@@ -69,17 +72,21 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
     graphics_text->program_id = program_id;
   }
 
-  {  // Create vertex buffer
-    struct attributes triangle_attributes[] =
- {
-{{-0.5, -0.5}},
-{{0.5, 0.5}},
-{{-0.5, 0.5}},
+  { // ............Create texture buffer....
+    const char* uniform_name = "mytexture";
+    graphics_text->uniform_mytexture = glGetUniformLocation(graphics_text->program_id, uniform_name);
+    if (graphics_text->uniform_mytexture == -1) {
+      LOG_ERROR("glGetAttribLocation %s", uniform_name);
+      graphics_text_free(graphics_text);
+      return 0x0;
+    }
+  }
 
-{{-0.5, -0.5}},
-{{0.5, 0.5}},
-{{0.5, -0.5}}
-};
+
+  {  // Create vertex buffer
+    struct attributes triangle_attributes[] = {
+        {{-0.5, -0.5}}, {{0.5, 0.5}}, {{-0.5, 0.5}},
+        {{-0.5, -0.5}}, {{0.5, 0.5}}, {{0.5, -0.5}}};
     glGenBuffers(1, &graphics_text->vbo_triangle);
     glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_triangle);
     glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_attributes),
@@ -87,8 +94,7 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
   }
 
   {  // Create shader attributes.
-    const char* attribute_name;
-    attribute_name = "coord2d";
+    const char* attribute_name = "coord2d";
     graphics_text->attribute_coord2d =
         glGetAttribLocation(graphics_text->program_id, attribute_name);
     if (graphics_text->attribute_coord2d == -1) {
@@ -97,6 +103,26 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
       return 0x0;
     }
   }
+
+  {  // Create vertex texture buffer
+    struct attributes texture_triangle_attributes[] = {
+        {{0.0, 0.0}}, {{1.0, 1.0}}, {{0.0, 1.0}},
+        {{0.0, 0.0}}, {{1.0, 1.0}}, {{1.0, 0.0}}};
+    glGenBuffers(1, &graphics_text->vbo_texture);
+    glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(texture_triangle_attributes),
+                 texture_triangle_attributes, GL_STATIC_DRAW);
+
+    const char* attribute_name = "texcoord";
+    graphics_text->attribute_texcoord =
+        glGetAttribLocation(graphics_text->program_id, attribute_name);
+    if (graphics_text->attribute_texcoord == -1) {
+      LOG_ERROR("glGetAttribLocation %s", attribute_name);
+      graphics_text_free(graphics_text);
+      return 0x0;
+    }
+  }
+
 
   return graphics_text;
 }
@@ -119,6 +145,11 @@ void graphics_text_draw(GraphicsText* graphics_text)
 
   glUseProgram(graphics_text->program_id);
 
+  glActiveTexture(GL_TEXTURE0);
+  glUniform1i(graphics_text->uniform_mytexture, /*GL_TEXTURE*/0);
+  glBindTexture(GL_TEXTURE_2D, graphics_text->texture_id);
+
+
   glEnableVertexAttribArray(graphics_text->attribute_coord2d);
   glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_triangle);
   glVertexAttribPointer(
@@ -130,10 +161,21 @@ void graphics_text_draw(GraphicsText* graphics_text)
       0                           // offset (GLvoid*)offsetof(struct attributes, v_color)
       );
 
-//MDTMP number of points...
-glDrawArrays(GL_TRIANGLES, 0, 6);
+  glEnableVertexAttribArray(graphics_text->attribute_texcoord);
+  glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_triangle);
+  glVertexAttribPointer(
+      graphics_text->attribute_texcoord,          // attribute
+      2,                          // number of elements per vertex,
+      GL_FLOAT,                   // the type of each element
+      GL_FALSE,                   // take our values as-is
+      sizeof(struct attributes),  // size
+      0                           // offset (GLvoid*)offsetof(struct attributes, v_color)
+      );
+
+  glDrawArrays(GL_TRIANGLES, 0, 6);
 
   glDisableVertexAttribArray(graphics_text->attribute_coord2d);
+  glDisableVertexAttribArray(graphics_text->attribute_texcoord);
 
 }
 
@@ -141,7 +183,7 @@ glDrawArrays(GL_TRIANGLES, 0, 6);
 //--------------------------------------------------------------------------------
 size_t graphics_text_test_run() {
   GraphicsText* graphics_text = graphics_text_from_tileset_malloc(
-      "test/assets/Cooz_curses_square_16x16.png");
+      "test/assets/ASCII_tileset.png");
 
   TEST_ASSERT_TRUE_PTR(graphics_text);
   graphics_text_free(graphics_text);
