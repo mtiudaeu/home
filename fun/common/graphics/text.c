@@ -162,7 +162,7 @@ void graphics_text_draw(GraphicsText* graphics_text)
       );
 
   glEnableVertexAttribArray(graphics_text->attribute_texcoord);
-  glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_triangle);
+  glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture);
   glVertexAttribPointer(
       graphics_text->attribute_texcoord,          // attribute
       2,                          // number of elements per vertex,
@@ -181,7 +181,7 @@ void graphics_text_draw(GraphicsText* graphics_text)
 
 #ifdef INCLUDE_RUN_TEST
 //--------------------------------------------------------------------------------
-size_t graphics_text_test_run() {
+size_t graphics_text_run_test() {
   GraphicsText* graphics_text = graphics_text_from_tileset_malloc(
       "test/assets/ASCII_tileset.png");
 

@@ -127,7 +127,7 @@ size_t graphics_context_global_run(void (*main_loop_cb)()) {
 
 //--------------------------------------------------------------------------------
 #ifdef INCLUDE_RUN_TEST
-size_t graphics_context_test_run()
+size_t graphics_context_run_test()
 {
   size_t ret = graphics_context_global_init();
   if (ret != 0) {

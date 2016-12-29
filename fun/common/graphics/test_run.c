@@ -37,18 +37,18 @@ int main() {
   size_t ret;
   //MDTMP
 /*
-  size_t ret = graphics_context_test_run();
+  size_t ret = graphics_context_run_test();
   if (ret != 0) {
-    TEST_ASSERT_MSG("graphics_context_test_run");
+    TEST_ASSERT_MSG("graphics_context_run_test");
     return ret;
   }
 */
 
   graphics_context_global_init();
 
-  ret = graphics_text_test_run();
+  ret = graphics_text_run_test();
   if (ret != 0) {
-    TEST_ASSERT_MSG("graphics_text_test_run");
+    TEST_ASSERT_MSG("graphics_text_run_test");
     return ret;
   }
 
