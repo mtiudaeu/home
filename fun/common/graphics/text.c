@@ -22,7 +22,7 @@ struct GraphicsText {
   GLint attribute_texture_coord;
 };
 
-typedef struct { // (-1.0,-1.0) is bottom left;
+typedef struct SquareVertices { // (-1.0,-1.0) is bottom left;
 GLfloat bottom_left_1[2];
 GLfloat top_right_1[2];
 GLfloat top_left_1[2];
@@ -31,7 +31,18 @@ GLfloat top_right_2[2];
 GLfloat bottom_right_2[2];
 } SquareVertices;
 
-typedef struct { // (0,0) is top left
+// 0.0625 is 1/16
+#define TEXTURE_CHARACTER_WIDTH 1.0f/16.0f
+typedef struct SquareTexture { // (0.0,0.0) is bottom left;
+GLfloat bottom_left_1[2];
+GLfloat top_right_1[2];
+GLfloat top_left_1[2];
+GLfloat bottom_left_2[2];
+GLfloat top_right_2[2];
+GLfloat bottom_right_2[2];
+} SquareTexture;
+
+typedef struct GridCoord16x16 { // (0,0) is top left
   unsigned int x;
   unsigned int y;
 } GridCoord16x16;
@@ -39,10 +50,35 @@ typedef struct { // (0,0) is top left
 //--------------------------------------------------------------------------------
 static GridCoord16x16 internal_char_to_grid_coord(char value)
 {
+//FIXME Copies!!
   GridCoord16x16 coord;
   coord.x = value % 16; 
   coord.y = value / 16; 
   return coord;
+}
+
+//--------------------------------------------------------------------------------
+static SquareTexture internal_create_square_vertices(GridCoord16x16 coord)
+{
+  // FIXME Copies!!
+  const GLfloat x_left = (float)coord.x * TEXTURE_CHARACTER_WIDTH;
+  const GLfloat x_right = x_left + TEXTURE_CHARACTER_WIDTH;
+  const GLfloat y_top = 1.0f - (coord.y * TEXTURE_CHARACTER_WIDTH);
+  const GLfloat y_bottom = y_top - TEXTURE_CHARACTER_WIDTH;
+
+  SquareTexture square;
+  square.bottom_left_1[0] = square.bottom_left_2[0] = x_left;
+  square.bottom_left_1[1] = square.bottom_left_2[1] = y_bottom;
+
+  square.top_right_1[0] = square.top_right_2[0] = x_right;
+  square.top_right_1[1] = square.top_right_2[1] = y_top;
+
+  square.top_left_1[0] = x_left;
+  square.top_left_1[1] = y_top;
+
+  square.bottom_right_2[0] = x_right;
+  square.bottom_right_2[1] = y_bottom;
+  return square;
 }
 
 //--------------------------------------------------------------------------------
@@ -123,16 +159,12 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
   }
 
   {  // Create texture coord objects
-    SquareVertices texture_coord = {{0.0, 0.0}, {1.0, 1.0}, {0.0, 1.0},
-                                   {0.0, 0.0}, {1.0, 1.0}, {1.0, 0.0}};
-//MDTMP
-/*
-    GLfloat texture_coord[6][2] = {{1.0-0.0625, 1.0-0.0625}, {1.0, 1.0}, {1.0-0.0625, 1.0},
-                                   {1.0-0.0625, 1.0-0.0625}, {1.0, 1.0}, {1.0, 1.0-0.0625}};
-*/
+    GridCoord16x16 character_coord = internal_char_to_grid_coord('a');
+    SquareTexture texture_square = internal_create_square_vertices(character_coord);
+
     glGenBuffers(1, &graphics_text->vbo_texture_coord);
     glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture_coord);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(texture_coord), &texture_coord,
+    glBufferData(GL_ARRAY_BUFFER, sizeof(texture_square), &texture_square,
                  GL_STATIC_DRAW);
 
     const char* attribute_name = "texture_coord";
@@ -209,27 +241,37 @@ size_t graphics_text_run_test() {
   graphics_text_free(graphics_text);
   graphics_text = 0x0;
 
-  { // Test internal_char_to_grid_coord
-    GridCoord16x16 coord = internal_char_to_grid_coord( (char)0 );
+  {  // Test internal_char_to_grid_coord
+//MDTMP add more test
+    GridCoord16x16 coord = internal_char_to_grid_coord((char)0);
     TEST_ASSERT_EQUAL_UINT(coord.x, 0);
     TEST_ASSERT_EQUAL_UINT(coord.y, 0);
 
-    coord = internal_char_to_grid_coord( (char)16 );
+    coord = internal_char_to_grid_coord((char)16);
     TEST_ASSERT_EQUAL_UINT(coord.x, 0);
     TEST_ASSERT_EQUAL_UINT(coord.y, 1);
 
     // Overflow
-    coord = internal_char_to_grid_coord( (char)256 );
+    coord = internal_char_to_grid_coord((char)256);
     TEST_ASSERT_EQUAL_UINT(coord.x, 0);
     TEST_ASSERT_EQUAL_UINT(coord.y, 0);
 
-    coord = internal_char_to_grid_coord( (char)34 );
+    coord = internal_char_to_grid_coord((char)34);
     TEST_ASSERT_EQUAL_UINT(coord.x, 2);
     TEST_ASSERT_EQUAL_UINT(coord.y, 2);
   }
 
-
-//MDTMP Coordinate coord = internal_translate_char_to_coord();
+  {  // Test internal_create_square_vertices
+//MDTMP add more test
+    GridCoord16x16 coord = {15, 0};
+    SquareTexture answer = {
+        {1.0 - 0.0625, 1.0 - 0.0625}, {1.0, 1.0}, {1.0 - 0.0625, 1.0},
+        {1.0 - 0.0625, 1.0 - 0.0625}, {1.0, 1.0}, {1.0, 1.0 - 0.0625}};
+    SquareTexture result = internal_create_square_vertices(coord);
+    if (memcmp(&result, &answer, sizeof(result)) != 0) {
+      TEST_ASSERT_MSG("internal_create_square_vertices");
+    }
+  }
 
   return 0;
 }
