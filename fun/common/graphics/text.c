@@ -103,6 +103,7 @@ void internal_square_vertices_set_value(SquareVertices* square_vertices,
 */
 
 //--------------------------------------------------------------------------------
+//MDTMP change name of calloc
 GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
   GraphicsText* graphics_text = calloc(1, sizeof(GraphicsText));
 
@@ -221,7 +222,7 @@ void graphics_text_draw(GraphicsText* graphics_text) {
   {  // Set position vertices
     const size_t length_square_vertices = sizeof(SquareVertices) * length_msg;
     SquareVertices * const array_verticles_coord = malloc(length_square_vertices);
-//MDTMP use malloc macro
+//MDTMP use custom malloc
     for (size_t i = 0; i < length_msg; ++i) {
       const SquareVertices verticles_coord = {{-0.5, -0.5}, {0.5, 0.5}, {-0.5, 0.5},
                                         {-0.5, -0.5}, {0.5, 0.5}, {0.5, -0.5}};
@@ -230,8 +231,9 @@ void graphics_text_draw(GraphicsText* graphics_text) {
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_vertices_coord);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(length_square_vertices),
+    glBufferData(GL_ARRAY_BUFFER, length_square_vertices,
                  array_verticles_coord, GL_STATIC_DRAW);
+    free(array_verticles_coord);
 
     glEnableVertexAttribArray(graphics_text->attribute_vertices_coord);
     glVertexAttribPointer(
@@ -242,14 +244,11 @@ void graphics_text_draw(GraphicsText* graphics_text) {
         0,         // no extra size
         0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
         );
-
-//MDTMP move up
-//MDTMP free(array_verticles_coord);
   }
 
   {  // Set texture vertices
     const size_t length_square_texture = sizeof(SquareTexture) * length_msg;
-//MDTMP use malloc macro
+//MDTMP use custom malloc
     SquareTexture * const array_texture_coord = malloc(length_square_texture);
     for (size_t i = 0; i < length_msg; ++i) {
       //MDTMP replace by msg[i]?
@@ -257,8 +256,9 @@ void graphics_text_draw(GraphicsText* graphics_text) {
       internal_square_texture_set_value(array_texture_coord+i, 'a');
     }
     glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture_coord);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(length_square_texture),
+    glBufferData(GL_ARRAY_BUFFER, length_square_texture,
                  array_texture_coord, GL_STATIC_DRAW);
+    free(array_texture_coord);
 
     glEnableVertexAttribArray(graphics_text->attribute_texture_coord);
     glVertexAttribPointer(
@@ -269,9 +269,6 @@ void graphics_text_draw(GraphicsText* graphics_text) {
         0,         // no extra size
         0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
         );
-
-//MDTMP move up?
-//MDTMP free(array_texture_coord);
   }
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
