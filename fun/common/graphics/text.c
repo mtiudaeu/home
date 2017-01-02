@@ -14,8 +14,8 @@
 
 struct GraphicsText {
   GLuint program;
-  GLuint tbo_texture_map;
-  GLuint uniform_texture_map;
+  GLuint tbo_texture_tileset;
+  GLuint uniform_texture_tileset;
   GLuint vbo_vertices_coord;
   GLint attribute_vertices_coord;
   GLuint vbo_texture_coord;
@@ -50,7 +50,6 @@ typedef struct GridCoord16x16 { // (0,0) is top left
 //--------------------------------------------------------------------------------
 static GridCoord16x16 internal_char_to_grid_coord(char value)
 {
-//FIXME Copies!!
   GridCoord16x16 coord;
   coord.x = value % 16; 
   coord.y = value / 16; 
@@ -60,7 +59,6 @@ static GridCoord16x16 internal_char_to_grid_coord(char value)
 //--------------------------------------------------------------------------------
 static SquareTexture internal_create_square_vertices(GridCoord16x16 coord)
 {
-  // FIXME Copies!!
   const GLfloat x_left = (float)coord.x * TEXTURE_CHARACTER_WIDTH;
   const GLfloat x_right = x_left + TEXTURE_CHARACTER_WIDTH;
   const GLfloat y_top = 1.0f - (coord.y * TEXTURE_CHARACTER_WIDTH);
@@ -116,8 +114,8 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
       return 0x0;
     }
 
-    glGenTextures(1, &graphics_text->tbo_texture_map);
-    glBindTexture(GL_TEXTURE_2D, graphics_text->tbo_texture_map);
+    glGenTextures(1, &graphics_text->tbo_texture_tileset);
+    glBindTexture(GL_TEXTURE_2D, graphics_text->tbo_texture_tileset);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexImage2D(GL_TEXTURE_2D,       // target
                  0,                   // level, 0 = base, no minimap,
@@ -130,10 +128,10 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
                  tileset_texture->pixels);
     SDL_FreeSurface(tileset_texture);
 
-    const char* uniform_name = "texture_map";
-    graphics_text->uniform_texture_map =
+    const char* uniform_name = "texture_tileset";
+    graphics_text->uniform_texture_tileset =
         glGetUniformLocation(graphics_text->program, uniform_name);
-    if (graphics_text->uniform_texture_map == -1) {
+    if (graphics_text->uniform_texture_tileset == -1) {
       LOG_ERROR("glGetUniformLocation %s", uniform_name);
       graphics_text_free(graphics_text);
       return 0x0;
@@ -141,12 +139,7 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
   }
 
   {  // Create vertices objects
-    SquareVertices verticles_coord = {{-0.5, -0.5}, {0.5, 0.5}, {-0.5, 0.5},
-                                     {-0.5, -0.5}, {0.5, 0.5}, {0.5, -0.5}};
     glGenBuffers(1, &graphics_text->vbo_vertices_coord);
-    glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_vertices_coord);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticles_coord), &verticles_coord,
-                 GL_STATIC_DRAW);
 
     const char* attribute_name = "vertices_coord";
     graphics_text->attribute_vertices_coord =
@@ -159,13 +152,7 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
   }
 
   {  // Create texture coord objects
-    GridCoord16x16 character_coord = internal_char_to_grid_coord('a');
-    SquareTexture texture_square = internal_create_square_vertices(character_coord);
-
     glGenBuffers(1, &graphics_text->vbo_texture_coord);
-    glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture_coord);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(texture_square), &texture_square,
-                 GL_STATIC_DRAW);
 
     const char* attribute_name = "texture_coord";
     graphics_text->attribute_texture_coord =
@@ -185,7 +172,7 @@ void graphics_text_free(GraphicsText* graphics_text) {
   assert(graphics_text);
 
   glDeleteProgram(graphics_text->program);
-  glDeleteTextures(1, &graphics_text->uniform_texture_map);
+  glDeleteTextures(1, &graphics_text->tbo_texture_tileset);
   glDeleteBuffers(1, &graphics_text->vbo_vertices_coord);
   glDeleteBuffers(1, &graphics_text->vbo_texture_coord);
 
@@ -193,19 +180,24 @@ void graphics_text_free(GraphicsText* graphics_text) {
 }
 
 //--------------------------------------------------------------------------------
+//FIXME  Could accumulate all text to draw on screen and call glDrawArray once.
 void graphics_text_draw(GraphicsText* graphics_text) {
   assert(graphics_text);
 
-  glUseProgram(graphics_text->program);
+  { // Bind program and text texture
+    glUseProgram(graphics_text->program);
 
-  glActiveTexture(GL_TEXTURE0);
-  glUniform1i(graphics_text->uniform_texture_map, /*GL_TEXTURE*/ 0);
-  glBindTexture(GL_TEXTURE_2D, graphics_text->tbo_texture_map);
+    glActiveTexture(GL_TEXTURE0);
+    glUniform1i(graphics_text->uniform_texture_tileset, /*GL_TEXTURE*/ 0);
+    glBindTexture(GL_TEXTURE_2D, graphics_text->tbo_texture_tileset);
+  }
 
-  glEnableVertexAttribArray(graphics_text->attribute_vertices_coord);
-  glEnableVertexAttribArray(graphics_text->attribute_texture_coord);
-
+  SquareVertices verticles_coord = {{-0.5, -0.5}, {0.5, 0.5}, {-0.5, 0.5},
+                                    {-0.5, -0.5}, {0.5, 0.5}, {0.5, -0.5}};
   glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_vertices_coord);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(verticles_coord), &verticles_coord,
+               GL_STATIC_DRAW);
+  glEnableVertexAttribArray(graphics_text->attribute_vertices_coord);
   glVertexAttribPointer(
       graphics_text->attribute_vertices_coord,  // attribute
       2,         // number of elements per vertex,
@@ -215,7 +207,12 @@ void graphics_text_draw(GraphicsText* graphics_text) {
       0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
       );
 
+  GridCoord16x16 character_coord = internal_char_to_grid_coord('a');
+  SquareTexture texture_square = internal_create_square_vertices(character_coord);
   glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture_coord);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(texture_square), &texture_square,
+               GL_STATIC_DRAW);
+  glEnableVertexAttribArray(graphics_text->attribute_texture_coord);
   glVertexAttribPointer(
       graphics_text->attribute_texture_coord,  // attribute
       2,                                       // number of elements per vertex,
