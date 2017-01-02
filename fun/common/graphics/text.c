@@ -80,6 +80,29 @@ static SquareTexture internal_create_square_vertices(GridCoord16x16 coord)
 }
 
 //--------------------------------------------------------------------------------
+static void internal_square_texture_set_value(SquareTexture* square_texture,
+                                              char value) {
+  assert(square_texture);
+  //MDTMP add test
+  //MDTMP unify those two in one... maybe not... unit testing...
+  GridCoord16x16 character_coord = internal_char_to_grid_coord(value);
+  SquareTexture texture_square =
+      internal_create_square_vertices(character_coord);
+  //MDTMP no copy?
+  memcpy(square_texture, &texture_square, sizeof(texture_square));
+}
+
+//--------------------------------------------------------------------------------
+//MDTMP
+/*
+void internal_square_vertices_set_value(SquareVertices* square_vertices,
+                                        float scale, GraphicsPoint position) {
+  assert(square_vertices);
+  //MDTMP
+}
+*/
+
+//--------------------------------------------------------------------------------
 GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
   GraphicsText* graphics_text = calloc(1, sizeof(GraphicsText));
 
@@ -178,9 +201,10 @@ void graphics_text_free(GraphicsText* graphics_text) {
 
   free(graphics_text);
 }
-
 //--------------------------------------------------------------------------------
 //FIXME  Could accumulate all text to draw on screen and call glDrawArray once.
+//MDTMP void graphics_text_draw(GraphicsText* graphics_text, float scale,
+//MDTMP GraphicsPoint position, const char* msg) {
 void graphics_text_draw(GraphicsText* graphics_text) {
   assert(graphics_text);
 
@@ -192,35 +216,63 @@ void graphics_text_draw(GraphicsText* graphics_text) {
     glBindTexture(GL_TEXTURE_2D, graphics_text->tbo_texture_tileset);
   }
 
-  SquareVertices verticles_coord = {{-0.5, -0.5}, {0.5, 0.5}, {-0.5, 0.5},
-                                    {-0.5, -0.5}, {0.5, 0.5}, {0.5, -0.5}};
-  glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_vertices_coord);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(verticles_coord), &verticles_coord,
-               GL_STATIC_DRAW);
-  glEnableVertexAttribArray(graphics_text->attribute_vertices_coord);
-  glVertexAttribPointer(
-      graphics_text->attribute_vertices_coord,  // attribute
-      2,         // number of elements per vertex,
-      GL_FLOAT,  // the type of each element
-      GL_FALSE,  // take our values as-is
-      0,         // no extra size
-      0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
-      );
+//MDTMP const size_t length_msg = strlen(msg);
+  const size_t length_msg = 1;
+  {  // Set position vertices
+    const size_t length_square_vertices = sizeof(SquareVertices) * length_msg;
+    SquareVertices * const array_verticles_coord = malloc(length_square_vertices);
+//MDTMP use malloc macro
+    for (size_t i = 0; i < length_msg; ++i) {
+      const SquareVertices verticles_coord = {{-0.5, -0.5}, {0.5, 0.5}, {-0.5, 0.5},
+                                        {-0.5, -0.5}, {0.5, 0.5}, {0.5, -0.5}};
+      memcpy(array_verticles_coord + i, &verticles_coord, sizeof(verticles_coord));
+      //MDTMP internal_square_vertices_set_value(array_verticles_coord+i, scale, position);
+    }
 
-  GridCoord16x16 character_coord = internal_char_to_grid_coord('a');
-  SquareTexture texture_square = internal_create_square_vertices(character_coord);
-  glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture_coord);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(texture_square), &texture_square,
-               GL_STATIC_DRAW);
-  glEnableVertexAttribArray(graphics_text->attribute_texture_coord);
-  glVertexAttribPointer(
-      graphics_text->attribute_texture_coord,  // attribute
-      2,                                       // number of elements per vertex,
-      GL_FLOAT,                                // the type of each element
-      GL_FALSE,                                // take our values as-is
-      0,                                       // no extra size
-      0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
-      );
+    glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_vertices_coord);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(length_square_vertices),
+                 array_verticles_coord, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(graphics_text->attribute_vertices_coord);
+    glVertexAttribPointer(
+        graphics_text->attribute_vertices_coord,  // attribute
+        2,         // number of elements per vertex,
+        GL_FLOAT,  // the type of each element
+        GL_FALSE,  // take our values as-is
+        0,         // no extra size
+        0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
+        );
+
+//MDTMP move up
+//MDTMP free(array_verticles_coord);
+  }
+
+  {  // Set texture vertices
+    const size_t length_square_texture = sizeof(SquareTexture) * length_msg;
+//MDTMP use malloc macro
+    SquareTexture * const array_texture_coord = malloc(length_square_texture);
+    for (size_t i = 0; i < length_msg; ++i) {
+      //MDTMP replace by msg[i]?
+//MDTMP internal_square_texture_set_value(array_texture_coord+i, *(msg + i));
+      internal_square_texture_set_value(array_texture_coord+i, 'a');
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture_coord);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(length_square_texture),
+                 array_texture_coord, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(graphics_text->attribute_texture_coord);
+    glVertexAttribPointer(
+        graphics_text->attribute_texture_coord,  // attribute
+        2,         // number of elements per vertex,
+        GL_FLOAT,  // the type of each element
+        GL_FALSE,  // take our values as-is
+        0,         // no extra size
+        0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
+        );
+
+//MDTMP move up?
+//MDTMP free(array_texture_coord);
+  }
 
   glDrawArrays(GL_TRIANGLES, 0, 6);
 
