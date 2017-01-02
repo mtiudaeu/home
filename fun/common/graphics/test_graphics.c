@@ -14,7 +14,7 @@ void mainCallback() {
   glClear(GL_COLOR_BUFFER_BIT);
 
   if (graphics_text) {
-    graphics_text_draw(graphics_text);
+    graphics_text_draw(graphics_text, "test");
   }
 
 }
@@ -49,14 +49,14 @@ int main() {
   graphics_context_global_init();
 
   ret = graphics_text_run_test();
+  TEST_ASSERT_MSG("graphics_text_run_test", ret);
   if (ret != 0) {
-    TEST_ASSERT_MSG("graphics_text_run_test");
     return ret;
   }
 
   ret = internal_test_integration();
+  TEST_ASSERT_MSG("internal_test_integration", ret);
   if (ret != 0) {
-    TEST_ASSERT_MSG("internal_test_integration");
     return ret;
   }
 

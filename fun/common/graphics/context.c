@@ -130,13 +130,13 @@ size_t graphics_context_global_run(void (*main_loop_cb)()) {
 size_t graphics_context_run_test()
 {
   size_t ret = graphics_context_global_init();
+  TEST_ASSERT_MSG("graphics_context_global_init", ret);
   if (ret != 0) {
-    TEST_ASSERT_MSG("graphics_context_global_init");
     return ret;
   }
   ret = graphics_context_global_uninit();
+  TEST_ASSERT_MSG("graphics_context_global_uninit", ret);
   if (ret != 0) {
-    TEST_ASSERT_MSG("graphics_context_global_uninit");
     return ret;
   }
   return ret;

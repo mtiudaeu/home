@@ -22,6 +22,7 @@ struct GraphicsText {
   GLint attribute_texture_coord;
 };
 
+//--------------------------------------------------------------------------------
 typedef struct SquareVertices { // (-1.0,-1.0) is bottom left;
 GLfloat bottom_left_1[2];
 GLfloat top_right_1[2];
@@ -31,6 +32,16 @@ GLfloat top_right_2[2];
 GLfloat bottom_right_2[2];
 } SquareVertices;
 
+//--------------------------------------------------------------------------------
+/*
+void internal_square_vertices_set_value(SquareVertices* square_vertices,
+                                        float scale, GraphicsPoint2D position) {
+  assert(square_vertices);
+  //MDTMP
+}
+*/
+
+//--------------------------------------------------------------------------------
 // 0.0625 is 1/16
 #define TEXTURE_CHARACTER_WIDTH 1.0f/16.0f
 typedef struct SquareTexture { // (0.0,0.0) is bottom left;
@@ -42,6 +53,7 @@ GLfloat top_right_2[2];
 GLfloat bottom_right_2[2];
 } SquareTexture;
 
+//--------------------------------------------------------------------------------
 typedef struct GridCoord16x16 { // (0,0) is top left
   unsigned int x;
   unsigned int y;
@@ -91,16 +103,6 @@ static void internal_square_texture_set_value(SquareTexture* square_texture,
   //MDTMP no copy?
   memcpy(square_texture, &texture_square, sizeof(texture_square));
 }
-
-//--------------------------------------------------------------------------------
-//MDTMP
-/*
-void internal_square_vertices_set_value(SquareVertices* square_vertices,
-                                        float scale, GraphicsPoint position) {
-  assert(square_vertices);
-  //MDTMP
-}
-*/
 
 //--------------------------------------------------------------------------------
 //MDTMP change name of calloc
@@ -205,9 +207,10 @@ void graphics_text_free(GraphicsText* graphics_text) {
 //--------------------------------------------------------------------------------
 //FIXME  Could accumulate all text to draw on screen and call glDrawArray once.
 //MDTMP void graphics_text_draw(GraphicsText* graphics_text, float scale,
-//MDTMP GraphicsPoint position, const char* msg) {
-void graphics_text_draw(GraphicsText* graphics_text) {
+//MDTMP GraphicsPoint2D position, const char* msg) {
+void graphics_text_draw(GraphicsText* graphics_text, const char* msg) {
   assert(graphics_text);
+//MDTMP check msg ptr.
 
   { // Bind program and text texture
     glUseProgram(graphics_text->program);
@@ -221,8 +224,7 @@ void graphics_text_draw(GraphicsText* graphics_text) {
   const size_t length_msg = 1;
   {  // Set position vertices
     const size_t length_square_vertices = sizeof(SquareVertices) * length_msg;
-    SquareVertices * const array_verticles_coord = malloc(length_square_vertices);
-//MDTMP use custom malloc
+    SquareVertices * const array_verticles_coord = (SquareVertices *)malloc(length_square_vertices);
     for (size_t i = 0; i < length_msg; ++i) {
       const SquareVertices verticles_coord = {{-0.5, -0.5}, {0.5, 0.5}, {-0.5, 0.5},
                                         {-0.5, -0.5}, {0.5, 0.5}, {0.5, -0.5}};
@@ -248,12 +250,11 @@ void graphics_text_draw(GraphicsText* graphics_text) {
 
   {  // Set texture vertices
     const size_t length_square_texture = sizeof(SquareTexture) * length_msg;
-//MDTMP use custom malloc
-    SquareTexture * const array_texture_coord = malloc(length_square_texture);
+    SquareTexture * const array_texture_coord = (SquareTexture *)malloc(length_square_texture);
     for (size_t i = 0; i < length_msg; ++i) {
       //MDTMP replace by msg[i]?
 //MDTMP internal_square_texture_set_value(array_texture_coord+i, *(msg + i));
-      internal_square_texture_set_value(array_texture_coord+i, 'a');
+      internal_square_texture_set_value(array_texture_coord+i, *msg);
     }
     glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture_coord);
     glBufferData(GL_ARRAY_BUFFER, length_square_texture,
@@ -314,9 +315,8 @@ size_t graphics_text_run_test() {
         {1.0 - 0.0625, 1.0 - 0.0625}, {1.0, 1.0}, {1.0 - 0.0625, 1.0},
         {1.0 - 0.0625, 1.0 - 0.0625}, {1.0, 1.0}, {1.0, 1.0 - 0.0625}};
     SquareTexture result = internal_create_square_vertices(coord);
-    if (memcmp(&result, &answer, sizeof(result)) != 0) {
-      TEST_ASSERT_MSG("internal_create_square_vertices");
-    }
+    TEST_ASSERT_MSG("internal_create_square_vertices",
+                    memcmp(&result, &answer, sizeof(result)) != 0);
   }
 
   return 0;
