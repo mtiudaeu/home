@@ -1,6 +1,7 @@
 #include "graphics/text.h"
 
 #include "graphics/shader.h"
+#include "graphics/point.h"
 
 #include "test/test.h"
 
@@ -33,13 +34,40 @@ GLfloat bottom_right_2[2];
 } SquareVertices;
 
 //--------------------------------------------------------------------------------
-/*
+static float internal_square_vertices_half_width(float scale) {
+  // FIXME_2 change scale to enum of specific text related type
+  // FIXME_2 harcoded size ratio
+  const float size_ratio = 0.1f;
+  return scale * size_ratio;
+}
+
+//--------------------------------------------------------------------------------
 void internal_square_vertices_set_value(SquareVertices* square_vertices,
                                         float scale, GraphicsPoint2D position) {
   assert(square_vertices);
-  //MDTMP
+//MDTMP out of bound error checking?
+
+//FIXME Add unit test (need compare operation)
+  const float size_ratio = 0.1f;
+  const float half_size_square = internal_square_vertices_half_width(scale);
+
+  const GLfloat x_left = position.x - half_size_square;
+  const GLfloat x_right = position.x + half_size_square;
+  const GLfloat y_top = position.y + half_size_square;
+  const GLfloat y_bottom = position.y - half_size_square;
+
+  square_vertices->bottom_left_1[0] = square_vertices->bottom_left_2[0] = x_left;
+  square_vertices->bottom_left_1[1] = square_vertices->bottom_left_2[1] = y_bottom;
+
+  square_vertices->top_right_1[0] = square_vertices->top_right_2[0] = x_right;
+  square_vertices->top_right_1[1] = square_vertices->top_right_2[1] = y_top;
+
+  square_vertices->top_left_1[0] = x_left;
+  square_vertices->top_left_1[1] = y_top;
+
+  square_vertices->bottom_right_2[0] = x_right;
+  square_vertices->bottom_right_2[1] = y_bottom;
 }
-*/
 
 //--------------------------------------------------------------------------------
 // 0.0625 is 1/16
@@ -204,15 +232,17 @@ void graphics_text_free(GraphicsText* graphics_text) {
 
   free(graphics_text);
 }
+
 //--------------------------------------------------------------------------------
 //FIXME  Could accumulate all text to draw on screen and call glDrawArray once.
-//MDTMP void graphics_text_draw(GraphicsText* graphics_text, float scale,
-//MDTMP GraphicsPoint2D position, const char* msg) {
-void graphics_text_draw(GraphicsText* graphics_text, const char* msg) {
+void graphics_text_draw(GraphicsText* graphics_text, float scale,
+                        GraphicsPoint2D position, const char* msg) {
   assert(graphics_text);
-//MDTMP check msg ptr.
+  if (!msg || !msg[0]) {
+    LOG_ERROR("graphics_text_draw : invalid msg");
+  }
 
-  { // Bind program and text texture
+  {  // Bind program and text texture
     glUseProgram(graphics_text->program);
 
     glActiveTexture(GL_TEXTURE0);
@@ -220,21 +250,22 @@ void graphics_text_draw(GraphicsText* graphics_text, const char* msg) {
     glBindTexture(GL_TEXTURE_2D, graphics_text->tbo_texture_tileset);
   }
 
-//MDTMP const size_t length_msg = strlen(msg);
-  const size_t length_msg = 1;
+  const size_t length_msg = strlen(msg);
   {  // Set position vertices
     const size_t length_square_vertices = sizeof(SquareVertices) * length_msg;
-    SquareVertices * const array_verticles_coord = (SquareVertices *)malloc(length_square_vertices);
+    SquareVertices* const array_verticles_coord =
+        (SquareVertices*)malloc(length_square_vertices);
+    const float width = internal_square_vertices_half_width(scale) * 2.0f;
+    position.x -= width; // make sure i = 0 have correct value.
     for (size_t i = 0; i < length_msg; ++i) {
-      const SquareVertices verticles_coord = {{-0.5, -0.5}, {0.5, 0.5}, {-0.5, 0.5},
-                                        {-0.5, -0.5}, {0.5, 0.5}, {0.5, -0.5}};
-      memcpy(array_verticles_coord + i, &verticles_coord, sizeof(verticles_coord));
-      //MDTMP internal_square_vertices_set_value(array_verticles_coord+i, scale, position);
+      position.x += width;
+      internal_square_vertices_set_value(array_verticles_coord + i, scale,
+                                         position);
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_vertices_coord);
-    glBufferData(GL_ARRAY_BUFFER, length_square_vertices,
-                 array_verticles_coord, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, length_square_vertices, array_verticles_coord,
+                 GL_STATIC_DRAW);
     free(array_verticles_coord);
 
     glEnableVertexAttribArray(graphics_text->attribute_vertices_coord);
@@ -250,15 +281,14 @@ void graphics_text_draw(GraphicsText* graphics_text, const char* msg) {
 
   {  // Set texture vertices
     const size_t length_square_texture = sizeof(SquareTexture) * length_msg;
-    SquareTexture * const array_texture_coord = (SquareTexture *)malloc(length_square_texture);
+    SquareTexture* const array_texture_coord =
+        (SquareTexture*)malloc(length_square_texture);
     for (size_t i = 0; i < length_msg; ++i) {
-      //MDTMP replace by msg[i]?
-//MDTMP internal_square_texture_set_value(array_texture_coord+i, *(msg + i));
-      internal_square_texture_set_value(array_texture_coord+i, *msg);
+      internal_square_texture_set_value(array_texture_coord + i, msg[i]);
     }
     glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture_coord);
-    glBufferData(GL_ARRAY_BUFFER, length_square_texture,
-                 array_texture_coord, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, length_square_texture, array_texture_coord,
+                 GL_STATIC_DRAW);
     free(array_texture_coord);
 
     glEnableVertexAttribArray(graphics_text->attribute_texture_coord);
@@ -272,7 +302,7 @@ void graphics_text_draw(GraphicsText* graphics_text, const char* msg) {
         );
   }
 
-  glDrawArrays(GL_TRIANGLES, 0, 6);
+  glDrawArrays(GL_TRIANGLES, 0, 6 * length_msg);
 
   glDisableVertexAttribArray(graphics_text->attribute_vertices_coord);
   glDisableVertexAttribArray(graphics_text->attribute_texture_coord);
@@ -287,6 +317,22 @@ size_t graphics_text_run_test() {
   TEST_ASSERT_TRUE_PTR(graphics_text);
   graphics_text_free(graphics_text);
   graphics_text = 0x0;
+
+/*
+{  // internal_square_vertices_set_value
+  const GraphicsPoint2D position = {0.5, 0.5};
+  const float scale = 2.0;
+  const SquareVertices answer = {{0.3, 0.30}, {0.7, 0.7}, {0.3, 0.7},
+                                 {0.3, 0.3}, {0.7, 0.7}, {0.7, 0.3}};
+  SquareVertices *const result =
+      (SquareVertices *)malloc(sizeof(SquareVertices));
+  internal_square_vertices_set_value(result, scale, position);
+  TEST_ASSERT_MSG("internal_create_square_vertices memcmp",
+                  memcmp(result, &answer, sizeof(answer)) != 0);
+
+  free(result);
+}
+*/
 
   {  // Test internal_char_to_grid_coord
 //MDTMP add more test

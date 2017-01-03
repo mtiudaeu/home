@@ -14,7 +14,9 @@ void mainCallback() {
   glClear(GL_COLOR_BUFFER_BIT);
 
   if (graphics_text) {
-    graphics_text_draw(graphics_text, "test");
+    const float scale = 0.5f;
+    const GraphicsPoint2D position = {0.1, 0.5};
+    graphics_text_draw(graphics_text, scale, position, "test");
   }
 
 }
