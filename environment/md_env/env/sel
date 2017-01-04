@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
    filename = sys.argv[1]
    line = sys.argv[2]
-   call(["python", script_path + script_name, "ex", "tabe " + os.path.abspath(filename)])
+   call(["python", script_path + script_name, "ex", "e " + os.path.abspath(filename)])
    call(["python", script_path + script_name, "ex", line ])
 
    call(["python", script_path + script_name, "redraw", ""])
