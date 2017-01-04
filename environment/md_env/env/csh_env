@@ -1,0 +1,5 @@
+setenv VIMINIT 'source $MD_ENV_PATH/env/vimrc'
+setenv VIMRUNTIME $MD_ENV_PATH/share/vim/runtime
+
+
+setenv PATH ${PATH}:$MD_ENV_PATH/env

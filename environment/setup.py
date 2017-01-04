@@ -3,6 +3,7 @@
 # Usage
 # python setup.py -p <install_path>
 # example : python setup.py -p "/home/mathieu/.md_env" --vim_git_path="/home/mathieu/git/vim"
+# example : python setup.py -p "/magma/people/drapeaum/.md_env" --vim_git_path="/mnt/git/vim"
 
 import tempfile, os, sys, getopt, subprocess, datetime
 
