@@ -10,6 +10,10 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#endif
+
 typedef struct {
   SDL_Window* window;
   SDL_GLContext gl_context;
