@@ -12,6 +12,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct GraphicsText {
   GLuint program;
@@ -152,7 +153,7 @@ GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
   {  // Create texture map objects
     SDL_Surface* tileset_texture = IMG_Load(filename);
     if (!tileset_texture) {
-      LOG_ERROR("IMG_Load: %s", SDL_GetError());
+      LOG_ERROR("IMG_Load: %s : %s", SDL_GetError(), filename);
       graphics_text_free(graphics_text);
       return 0x0;
     }
