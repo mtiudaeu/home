@@ -8,7 +8,7 @@ EMCC = emcc -O2 -I. -DINCLUDE_RUN_TEST -Werror -s USE_SDL=2 -s USE_SDL_IMAGE=2 -
 GCC = gcc -I. -g -DINCLUDE_RUN_TEST -Werror
 
 # ---- Target Lists ----
-TARGETS_ALL = test_graphics.out
+TARGETS_ALL = $(BUILD_PATH)test_graphics.out
 BUILD_PATH = bin/
 
 all: gcc_targets emcc_targets
@@ -16,9 +16,7 @@ gcc_targets : $(TARGETS_ALL)
 emcc_targets : $(TARGETS_ALL:.out=.html)
 
 # ---- Dependancies ----
-# Lower level to higher
-# FIXME Add pattern into a template.
-
+# Lower level dependancy to higher
 # ---- test ----
 TEST_NAME = test
 TEST_DEP = test/test.c test/test.h
@@ -30,18 +28,18 @@ SHADER_DEP = graphics/shader.c graphics/shader.h log.h
 SHADER_DEP_EMCC = $(SHADER_DEP:.o=.bc)
 # ---- graphics context ----
 CONTEXT_NAME = context
-CONTEXT_DEP = graphics/context.c graphics/context.h test.o log.h
+CONTEXT_DEP = graphics/context.c graphics/context.h log.h $(addprefix $(BUILD_PATH),test.o)
 CONTEXT_DEP_EMCC = $(CONTEXT_DEP:.o=.bc)
 # ---- graphics text ----
 TEXT_NAME = text
-TEXT_DEP = graphics/text.c graphics/text.h graphics/point.h shader.o test.o log.h 
+TEXT_DEP = graphics/text.c graphics/text.h graphics/point.h log.h $(addprefix $(BUILD_PATH),shader.o test.o)
 TEXT_DEP_EMCC = $(TEXT_DEP:.o=.bc)
 # ---- graphics test all ----
 TEST_GRAPHICS_NAME = test_graphics
-TEST_GRAPHICS_DEP = graphics/test_graphics.c context.o text.o test.o
+TEST_GRAPHICS_DEP = graphics/test_graphics.c $(addprefix $(BUILD_PATH),context.o text.o test.o)
 TEST_GRAPHICS_DEP_EMCC = $(TEST_GRAPHICS_DEP:.o=.bc)
 
-TEST_GRAPHICS_DEP_EXEC = test_graphics.o context.o text.o shader.o test.o
+TEST_GRAPHICS_DEP_EXEC = $(addprefix $(BUILD_PATH),test_graphics.o context.o text.o shader.o test.o)
 TEST_GRAPHICS_DEP_EXEC_EMCC = $(TEST_GRAPHICS_DEP_EXEC:.o=.bc)
 
 # ---- test ----
@@ -72,13 +70,15 @@ $(BUILD_PATH)$(TEST_GRAPHICS_NAME).bc : $(TEST_GRAPHICS_DEP_EMCC)
 	$(EMCC) -c $< -o $@
 
 $(BUILD_PATH)$(TEST_GRAPHICS_NAME).out : $(TEST_GRAPHICS_DEP_EXEC)
-	$(GCC) $(addprefix $(BUILD_PATH),$^) -o $@ -lGL -lGLEW -lSDL2 -lSDL2_image
+	$(GCC) $^ -o $@ -lGL -lGLEW -lSDL2 -lSDL2_image
 $(BUILD_PATH)$(TEST_GRAPHICS_NAME).html : $(TEST_GRAPHICS_DEP_EXEC_EMCC)
-	$(EMCC) $(addprefix $(BUILD_PATH),$^) -o $@ --preload-file test/assets/text.v.glsl --preload-file test/assets/text.f.glsl --preload-file test/assets/ASCII_tileset.png
+	$(EMCC) $^ -o $@ --preload-file test/assets/text.v.glsl --preload-file test/assets/text.f.glsl --preload-file test/assets/ASCII_tileset.png
 
 # ---- clean ----
 clean : 
 	rm -f $(addprefix $(BUILD_PATH), *.o *.out *.js *.html *.bc *.mem *.data)
+
+
 
 
 # ---- array ----

@@ -5,5 +5,3 @@
   fprintf(stderr, __VA_ARGS__);                            \
   fprintf(stderr, "\n");
 
-
-//MDTMP
