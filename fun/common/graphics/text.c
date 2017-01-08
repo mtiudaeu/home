@@ -1,7 +1,7 @@
 #include "graphics/text.h"
 
-#include "graphics/shader.h"
 #include "graphics/point.h"
+#include "graphics/shader.h"
 
 #include "test/test.h"
 
