@@ -134,8 +134,7 @@ static void internal_square_texture_set_value(SquareTexture* square_texture,
 }
 
 //--------------------------------------------------------------------------------
-//MDTMP change name of calloc
-GraphicsText* graphics_text_from_tileset_malloc(const char* filename) {
+GraphicsText* graphics_text_from_tileset_calloc(const char* filename) {
   GraphicsText* graphics_text = calloc(1, sizeof(GraphicsText));
 
   {  // Create shader
@@ -313,7 +312,7 @@ void graphics_text_draw(GraphicsText* graphics_text, float scale,
 //--------------------------------------------------------------------------------
 size_t graphics_text_run_test() {
   GraphicsText* graphics_text =
-      graphics_text_from_tileset_malloc("test/assets/ASCII_tileset.png");
+      graphics_text_from_tileset_calloc("test/assets/ASCII_tileset.png");
 
   TEST_ASSERT_TRUE_PTR(graphics_text);
   graphics_text_free(graphics_text);
@@ -336,7 +335,6 @@ size_t graphics_text_run_test() {
 */
 
   {  // Test internal_char_to_grid_coord
-//MDTMP add more test
     GridCoord16x16 coord = internal_char_to_grid_coord((char)0);
     TEST_ASSERT_EQUAL_UINT(coord.x, 0);
     TEST_ASSERT_EQUAL_UINT(coord.y, 0);
@@ -356,7 +354,6 @@ size_t graphics_text_run_test() {
   }
 
   {  // Test internal_create_square_vertices
-//MDTMP add more test
     GridCoord16x16 coord = {15, 0};
     SquareTexture answer = {
         {1.0 - 0.0625, 1.0 - 0.0625}, {1.0, 1.0}, {1.0 - 0.0625, 1.0},

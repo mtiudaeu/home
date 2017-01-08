@@ -5,50 +5,42 @@
 
 #include <GL/glew.h>
 
-//MDTMP remove from static
-static GraphicsText* graphics_text = 0x0;
+static GraphicsText* internal_graphics_text = 0x0;
 
 //--------------------------------------------------------------------------------
-void mainCallback() {
+static void internal_mainCallback() {
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
-  if (graphics_text) {
+  if (internal_graphics_text) {
     const float scale = 0.5f;
     const GraphicsPoint2D position = {0.1, 0.5};
-    graphics_text_draw(graphics_text, scale, position, "test");
+    graphics_text_draw(internal_graphics_text, scale, position, "test");
   }
-
 }
 
 //--------------------------------------------------------------------------------
 static size_t internal_test_integration()
 {
-  graphics_text = graphics_text_from_tileset_malloc(
+  internal_graphics_text = graphics_text_from_tileset_calloc(
       "test/assets/ASCII_tileset.png");
 
-  const size_t ret = graphics_context_global_run(&mainCallback);
+  const size_t ret = graphics_context_global_run(&internal_mainCallback);
 
-  TEST_ASSERT_TRUE_PTR(graphics_text);
-  graphics_text_free(graphics_text);
-  graphics_text = 0x0;
+  TEST_ASSERT_TRUE_PTR(internal_graphics_text);
+  graphics_text_free(internal_graphics_text);
+  internal_graphics_text = 0x0;
 
   return ret;
 }
 
 //--------------------------------------------------------------------------------
 int main() {
-  size_t ret;
-  //MDTMP
-/*
-  size_t ret = graphics_context_run_test();
+  size_t ret = graphics_context_global_init();
+  TEST_ASSERT_MSG("graphics_context_global_init", ret);
   if (ret != 0) {
-    TEST_ASSERT_MSG("graphics_context_run_test");
     return ret;
   }
-*/
-
-  graphics_context_global_init();
 
   ret = graphics_text_run_test();
   TEST_ASSERT_MSG("graphics_text_run_test", ret);
@@ -62,7 +54,11 @@ int main() {
     return ret;
   }
 
-  graphics_context_global_uninit();
+  ret = graphics_context_global_uninit();
+  TEST_ASSERT_MSG("graphics_context_global_uninit", ret);
+  if (ret != 0) {
+    return ret;
+  }
 
   return ret;
 }

@@ -1,3 +1,5 @@
+# FIXME A lot of duplication!!
+
 GCC = gcc -I. -g -DINCLUDE_RUN_TEST -Werror
 
 # USE_SDL=2       : SDL2 Libraries
@@ -5,7 +7,6 @@ GCC = gcc -I. -g -DINCLUDE_RUN_TEST -Werror
 # --use-preload-plugins : Prevent format error with IMG_load from SDL_Image
 EMCC = emcc -O2 -I. -DINCLUDE_RUN_TEST -Werror -s USE_SDL=2 -s USE_SDL_IMAGE=2 --use-preload-plugins
 
-#MDTMP
 all: test_graphics.out emcc_test_graphics
 
 # ---- graphics test all ----
@@ -46,9 +47,6 @@ emcc_test.bc : test/test.h test/test.c
 # ---- clean ----
 clean : 
 	rm -f *.o *.out *.js *.html *.bc *.mem *.data
-
-
-
 
 
 # ---- array ----
