@@ -30,18 +30,18 @@ GRAPHICS_SHADER_DEP = graphics/shader.c graphics/shader.h log.h
 GRAPHICS_SHADER_DEP_EMCC = $(GRAPHICS_SHADER_DEP:.o=.bc)
 # ---- GRAPHICS_CONTEXT ----
 GRAPHICS_CONTEXT = context
-GRAPHICS_CONTEXT_DEP = graphics/context.c graphics/context.h log.h $(addprefix $(BUILD_PATH),$(TEST).o)
+GRAPHICS_CONTEXT_DEP = graphics/context.c graphics/context.h log.h test/test.h
 GRAPHICS_CONTEXT_DEP_EMCC = $(GRAPHICS_CONTEXT_DEP:.o=.bc)
 # ---- GRAPHICS_TEXT ----
 GRAPHICS_TEXT = text
-GRAPHICS_TEXT_DEP = graphics/text/text.c graphics/text/text.h graphics/text/square_vertices.h graphics/text/square_texture.h graphics/point.h log.h $(addprefix $(BUILD_PATH),$(GRAPHICS_SHADER).o $(TEST).o)
+GRAPHICS_TEXT_DEP = graphics/text/text.c graphics/text/text.h graphics/text/square_vertices.h graphics/text/square_texture.h graphics/point.h log.h graphics/shader.h test/test.h 
 GRAPHICS_TEXT_DEP_EMCC = $(GRAPHICS_TEXT_DEP:.o=.bc)
 # ---- TEST_GRAPHICS ----
 TEST_GRAPHICS = test_graphics
-TEST_GRAPHICS_DEP = graphics/test_graphics.c $(addprefix $(BUILD_PATH),$(GRAPHICS_CONTEXT).o $(GRAPHICS_TEXT).o $(TEST).o)
+TEST_GRAPHICS_DEP = graphics/test_graphics.c test/test.h graphics/context.h graphics/text/text.h
 TEST_GRAPHICS_DEP_EMCC = $(TEST_GRAPHICS_DEP:.o=.bc)
 
-TEST_GRAPHICS_DEP_EXEC = $(addprefix $(BUILD_PATH),test_graphics.o $(GRAPHICS_CONTEXT).o $(GRAPHICS_TEXT).o $(GRAPHICS_SHADER).o $(TEST).o)
+TEST_GRAPHICS_DEP_EXEC = $(addprefix $(BUILD_PATH),$(TEST_GRAPHICS).o $(GRAPHICS_CONTEXT).o $(GRAPHICS_TEXT).o $(GRAPHICS_SHADER).o $(TEST).o)
 TEST_GRAPHICS_DEP_EXEC_EMCC = $(TEST_GRAPHICS_DEP_EXEC:.o=.bc)
 
 # ---- Objects ----
@@ -80,14 +80,4 @@ $(BUILD_PATH)$(TEST_GRAPHICS).html : $(TEST_GRAPHICS_DEP_EXEC_EMCC)
 # ---- clean ----
 clean : 
 	rm -f $(addprefix $(BUILD_PATH), *.o *.out *.js *.html *.bc *.mem *.data)
-
-
-
-
-# ---- array ----
-#test_array.out : array.o test.o
-#	$(GCC) array.o test.o -o test_array.out
-#
-#array.o : array.h array.c test.o
-#	$(GCC) -c array.c -o array.o
 
