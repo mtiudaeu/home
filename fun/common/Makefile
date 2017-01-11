@@ -1,4 +1,6 @@
-default : all
+default : gcc
+gcc : gcc_targets
+emcc : emcc_targets
 
 # ---- Build Flags ----
 # USE_SDL=2       : SDL2 Libraries
@@ -17,62 +19,63 @@ emcc_targets : $(TARGETS_ALL:.out=.html)
 
 # ---- Dependancies ----
 # Lower level dependancy to higher
-# ---- test ----
-TEST_NAME = test
+# ---- TEST ----
+TEST = test
 TEST_DEP = test/test.c test/test.h
 TEST_DEP_EMCC = $(TEST_DEP:.o=.bc)
-# ---- graphics ----
-# ---- graphics shader ----
-SHADER_NAME = shader
-SHADER_DEP = graphics/shader.c graphics/shader.h log.h
-SHADER_DEP_EMCC = $(SHADER_DEP:.o=.bc)
-# ---- graphics context ----
-CONTEXT_NAME = context
-CONTEXT_DEP = graphics/context.c graphics/context.h log.h $(addprefix $(BUILD_PATH),test.o)
-CONTEXT_DEP_EMCC = $(CONTEXT_DEP:.o=.bc)
-# ---- graphics text ----
-TEXT_NAME = text
-TEXT_DEP = graphics/text.c graphics/text.h graphics/point.h log.h $(addprefix $(BUILD_PATH),shader.o test.o)
-TEXT_DEP_EMCC = $(TEXT_DEP:.o=.bc)
-# ---- graphics test all ----
-TEST_GRAPHICS_NAME = test_graphics
-TEST_GRAPHICS_DEP = graphics/test_graphics.c $(addprefix $(BUILD_PATH),context.o text.o test.o)
+# ---- GRAPHICS ----
+# ---- GRAPHICS_SHADER ----
+GRAPHICS_SHADER = shader
+GRAPHICS_SHADER_DEP = graphics/shader.c graphics/shader.h log.h
+GRAPHICS_SHADER_DEP_EMCC = $(GRAPHICS_SHADER_DEP:.o=.bc)
+# ---- GRAPHICS_CONTEXT ----
+GRAPHICS_CONTEXT = context
+GRAPHICS_CONTEXT_DEP = graphics/context.c graphics/context.h log.h $(addprefix $(BUILD_PATH),$(TEST).o)
+GRAPHICS_CONTEXT_DEP_EMCC = $(GRAPHICS_CONTEXT_DEP:.o=.bc)
+# ---- GRAPHICS_TEXT ----
+GRAPHICS_TEXT = text
+GRAPHICS_TEXT_DEP = graphics/text/text.c graphics/text/text.h graphics/point.h log.h $(addprefix $(BUILD_PATH),$(GRAPHICS_SHADER).o $(TEST).o)
+GRAPHICS_TEXT_DEP_EMCC = $(GRAPHICS_TEXT_DEP:.o=.bc)
+# ---- TEST_GRAPHICS ----
+TEST_GRAPHICS = test_graphics
+TEST_GRAPHICS_DEP = graphics/test_graphics.c $(addprefix $(BUILD_PATH),$(GRAPHICS_CONTEXT).o $(GRAPHICS_TEXT).o $(TEST).o)
 TEST_GRAPHICS_DEP_EMCC = $(TEST_GRAPHICS_DEP:.o=.bc)
 
-TEST_GRAPHICS_DEP_EXEC = $(addprefix $(BUILD_PATH),test_graphics.o context.o text.o shader.o test.o)
+TEST_GRAPHICS_DEP_EXEC = $(addprefix $(BUILD_PATH),test_graphics.o $(GRAPHICS_CONTEXT).o $(GRAPHICS_TEXT).o $(GRAPHICS_SHADER).o $(TEST).o)
 TEST_GRAPHICS_DEP_EXEC_EMCC = $(TEST_GRAPHICS_DEP_EXEC:.o=.bc)
 
-# ---- test ----
-$(BUILD_PATH)$(TEST_NAME).o : $(TEST_DEP)
+# ---- Objects ----
+# ---- TEST ----
+$(BUILD_PATH)$(TEST).o : $(TEST_DEP)
 	$(GCC) -c $< -o $@
-$(BUILD_PATH)$(TEST_NAME).bc : $(TEST_DEP_EMCC)
+$(BUILD_PATH)$(TEST).bc : $(TEST_DEP_EMCC)
 	$(EMCC) -c $< -o $@
-# ---- graphics ----
-# ---- graphics shader ----
-$(BUILD_PATH)$(SHADER_NAME).o : $(SHADER_DEP)
+# ---- GRAPHICS ----
+# ---- GRAPHICS_SHADER ----
+$(BUILD_PATH)$(GRAPHICS_SHADER).o : $(GRAPHICS_SHADER_DEP)
 	$(GCC) -c $< -o $@
-$(BUILD_PATH)$(SHADER_NAME).bc : $(SHADER_DEP_EMCC)
+$(BUILD_PATH)$(GRAPHICS_SHADER).bc : $(GRAPHICS_SHADER_DEP_EMCC)
 	$(EMCC) -c $< -o $@
-# ---- graphics context ----
-$(BUILD_PATH)$(CONTEXT_NAME).o : $(CONTEXT_DEP)
+# ---- GRAPHICS_CONTEXT ----
+$(BUILD_PATH)$(GRAPHICS_CONTEXT).o : $(GRAPHICS_CONTEXT_DEP)
 	$(GCC) -c $< -o $@
-$(BUILD_PATH)$(CONTEXT_NAME).bc : $(CONTEXT_DEP_EMCC)
+$(BUILD_PATH)$(GRAPHICS_CONTEXT).bc : $(GRAPHICS_CONTEXT_DEP_EMCC)
 	$(EMCC) -c $< -o $@
-# ---- graphics text ----
-$(BUILD_PATH)$(TEXT_NAME).o : $(TEXT_DEP)
+# ---- GRAPHICS_TEXT ----
+$(BUILD_PATH)$(GRAPHICS_TEXT).o : $(GRAPHICS_TEXT_DEP)
 	$(GCC) -c $< -o $@
-$(BUILD_PATH)$(TEXT_NAME).bc : $(TEXT_DEP_EMCC)
+$(BUILD_PATH)$(GRAPHICS_TEXT).bc : $(GRAPHICS_TEXT_DEP_EMCC)
 	$(EMCC) -c $< -o $@
-# ---- graphics test all ----
-$(BUILD_PATH)$(TEST_GRAPHICS_NAME).o : $(TEST_GRAPHICS_DEP)
+# ---- TEST_GRAPHICS ----
+$(BUILD_PATH)$(TEST_GRAPHICS).o : $(TEST_GRAPHICS_DEP)
 	$(GCC) -c $< -o $@
-$(BUILD_PATH)$(TEST_GRAPHICS_NAME).bc : $(TEST_GRAPHICS_DEP_EMCC)
+$(BUILD_PATH)$(TEST_GRAPHICS).bc : $(TEST_GRAPHICS_DEP_EMCC)
 	$(EMCC) -c $< -o $@
 
-$(BUILD_PATH)$(TEST_GRAPHICS_NAME).out : $(TEST_GRAPHICS_DEP_EXEC)
+$(BUILD_PATH)$(TEST_GRAPHICS).out : $(TEST_GRAPHICS_DEP_EXEC)
 	$(GCC) $^ -o $@ -lGL -lGLEW -lSDL2 -lSDL2_image
-$(BUILD_PATH)$(TEST_GRAPHICS_NAME).html : $(TEST_GRAPHICS_DEP_EXEC_EMCC)
-	$(EMCC) $^ -o $@ --preload-file test/assets/text.v.glsl --preload-file test/assets/text.f.glsl --preload-file test/assets/ASCII_tileset.png
+$(BUILD_PATH)$(TEST_GRAPHICS).html : $(TEST_GRAPHICS_DEP_EXEC_EMCC)
+	$(EMCC) $^ -o $@ --preload-file assets/text/texture.f.glsl --preload-file assets/text/texture.v.glsl --preload-file assets/text/ASCII_tileset.png
 
 # ---- clean ----
 clean : 

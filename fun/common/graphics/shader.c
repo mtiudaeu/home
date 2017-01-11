@@ -10,6 +10,29 @@
 #include <string.h>
 
 //--------------------------------------------------------------------------------
+// This function was not tested much...
+static void internal_gl_log_error(GLuint object) {
+  GLint log_length = 0;
+  if (glIsShader(object)) {
+    glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length);
+  } else if (glIsProgram(object)) {
+    glGetProgramiv(object, GL_INFO_LOG_LENGTH, &log_length);
+  } else {
+    LOG_ERROR("Cannot find gl object information");
+    return;
+  }
+
+  char* log = (char*)malloc(log_length);
+  if (glIsShader(object))
+    glGetShaderInfoLog(object, log_length, NULL, log);
+  else if (glIsProgram(object))
+    glGetProgramInfoLog(object, log_length, NULL, log);
+
+  LOG_ERROR("%s : %s", "internal_gl_log_error", log);
+  free(log);
+}
+
+//--------------------------------------------------------------------------------
 static char* internal_file_read_malloc(const char* filename) {
   FILE* f = fopen(filename, "rb");
   if (!f) {
@@ -43,30 +66,7 @@ static char* internal_file_read_malloc(const char* filename) {
 }
 
 //--------------------------------------------------------------------------------
-// This function was not tested much...
-void graphics_shader_gl_log_error(GLuint object) {
-  GLint log_length = 0;
-  if (glIsShader(object)) {
-    glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length);
-  } else if (glIsProgram(object)) {
-    glGetProgramiv(object, GL_INFO_LOG_LENGTH, &log_length);
-  } else {
-    LOG_ERROR("Cannot find gl object information");
-    return;
-  }
-
-  char* log = (char*)malloc(log_length);
-  if (glIsShader(object))
-    glGetShaderInfoLog(object, log_length, NULL, log);
-  else if (glIsProgram(object))
-    glGetProgramInfoLog(object, log_length, NULL, log);
-
-  LOG_ERROR("%s : %s", "graphics_shader_gl_log_error", log);
-  free(log);
-}
-
-//--------------------------------------------------------------------------------
-GLuint graphics_shader_create_shader(const char* filename, GLenum type) {
+static GLuint internal_shader_create_file(const char* filename, GLenum type) {
   const GLchar* source = internal_file_read_malloc(filename);
   if (!source) {
     LOG_ERROR("internal_file_read_malloc");
@@ -104,7 +104,7 @@ GLuint graphics_shader_create_shader(const char* filename, GLenum type) {
   GLint compile_ok = GL_FALSE;
   glGetShaderiv(shader_obj, GL_COMPILE_STATUS, &compile_ok);
   if (compile_ok == GL_FALSE) {
-    graphics_shader_gl_log_error(shader_obj);
+    internal_gl_log_error(shader_obj);
     LOG_ERROR("glGetShaderiv : %s", filename);
 
     glDeleteShader(shader_obj);
@@ -115,17 +115,23 @@ GLuint graphics_shader_create_shader(const char* filename, GLenum type) {
 }
 
 //--------------------------------------------------------------------------------
-GLuint graphics_shader_create_program(const char* vertexfile, const char* fragmentfile) {
+GLuint graphics_shader_program_create_file(const char* vertexfile, const char* fragmentfile) {
   GLuint program = glCreateProgram();
   GLuint shader;
   if (vertexfile) {
-    shader = graphics_shader_create_shader(vertexfile, GL_VERTEX_SHADER);
-    if (!shader) return 0;
+    shader = internal_shader_create_file(vertexfile, GL_VERTEX_SHADER);
+    if (!shader) {
+      LOG_ERROR("internal_shader_create_file");
+      return 0;
+    }
     glAttachShader(program, shader);
   }
   if (fragmentfile) {
-    shader = graphics_shader_create_shader(fragmentfile, GL_FRAGMENT_SHADER);
-    if (!shader) return 0;
+    shader = internal_shader_create_file(fragmentfile, GL_FRAGMENT_SHADER);
+    if (!shader) {
+      LOG_ERROR("internal_shader_create_file");
+      return 0;
+    }
     glAttachShader(program, shader);
   }
   glLinkProgram(program);
@@ -133,7 +139,7 @@ GLuint graphics_shader_create_program(const char* vertexfile, const char* fragme
   glGetProgramiv(program, GL_LINK_STATUS, &link_ok);
   if (!link_ok) {
     LOG_ERROR("glLinkProgram");
-    graphics_shader_gl_log_error(program);
+    internal_gl_log_error(program);
     glDeleteProgram(program);
     return 0;
   }

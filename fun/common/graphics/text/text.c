@@ -1,4 +1,4 @@
-#include "graphics/text.h"
+#include "graphics/text/text.h"
 
 #include "graphics/point.h"
 #include "graphics/shader.h"
@@ -14,15 +14,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct GraphicsText {
-  GLuint program;
-  GLuint tbo_texture_tileset;
-  GLuint uniform_texture_tileset;
-  GLuint vbo_vertices_coord;
-  GLint attribute_vertices_coord;
-  GLuint vbo_texture_coord;
-  GLint attribute_texture_coord;
-};
+//--------------------------------------------------------------------------------
+static float internal_square_vertices_half_width(float scale) {
+  // FIXME_2 change scale to enum of specific text related type
+  // FIXME_2 harcoded size ratio
+  const float size_ratio = 0.1f;
+  return scale * size_ratio;
+}
 
 //--------------------------------------------------------------------------------
 typedef struct SquareVertices { // (-1.0,-1.0) is bottom left;
@@ -35,20 +33,12 @@ GLfloat bottom_right_2[2];
 } SquareVertices;
 
 //--------------------------------------------------------------------------------
-static float internal_square_vertices_half_width(float scale) {
-  // FIXME_2 change scale to enum of specific text related type
-  // FIXME_2 harcoded size ratio
-  const float size_ratio = 0.1f;
-  return scale * size_ratio;
-}
-
-//--------------------------------------------------------------------------------
 void internal_square_vertices_set_value(SquareVertices* square_vertices,
                                         float scale, GraphicsPoint2D position) {
+//FIXME Need unit test. Cannot compare float by memcmp on struct.
   assert(square_vertices);
 //MDTMP out of bound error checking?
 
-//FIXME Add unit test (need compare operation)
   const float size_ratio = 0.1f;
   const float half_size_square = internal_square_vertices_half_width(scale);
 
@@ -71,18 +61,6 @@ void internal_square_vertices_set_value(SquareVertices* square_vertices,
 }
 
 //--------------------------------------------------------------------------------
-// 0.0625 is 1/16
-#define TEXTURE_CHARACTER_WIDTH 1.0f/16.0f
-typedef struct SquareTexture { // (0.0,0.0) is bottom left;
-GLfloat bottom_left_1[2];
-GLfloat top_right_1[2];
-GLfloat top_left_1[2];
-GLfloat bottom_left_2[2];
-GLfloat top_right_2[2];
-GLfloat bottom_right_2[2];
-} SquareTexture;
-
-//--------------------------------------------------------------------------------
 typedef struct GridCoord16x16 { // (0,0) is top left
   unsigned int x;
   unsigned int y;
@@ -98,61 +76,79 @@ static GridCoord16x16 internal_char_to_grid_coord(char value)
 }
 
 //--------------------------------------------------------------------------------
-static SquareTexture internal_create_square_vertices(GridCoord16x16 coord)
+#define TEXTURE_CHARACTER_WIDTH 1.0f/16.0f
+typedef struct SquareTexture { // (0.0,0.0) is bottom left;
+GLfloat bottom_left_1[2];
+GLfloat top_right_1[2];
+GLfloat top_left_1[2];
+GLfloat bottom_left_2[2];
+GLfloat top_right_2[2];
+GLfloat bottom_right_2[2];
+} SquareTexture;
+
+//--------------------------------------------------------------------------------
+static void internal_square_texture_fill(SquareTexture* square_texture,
+GridCoord16x16 coord)
 {
+  assert(square_texture);
+
   const GLfloat x_left = (float)coord.x * TEXTURE_CHARACTER_WIDTH;
   const GLfloat x_right = x_left + TEXTURE_CHARACTER_WIDTH;
   const GLfloat y_top = 1.0f - (coord.y * TEXTURE_CHARACTER_WIDTH);
   const GLfloat y_bottom = y_top - TEXTURE_CHARACTER_WIDTH;
 
-  SquareTexture square;
-  square.bottom_left_1[0] = square.bottom_left_2[0] = x_left;
-  square.bottom_left_1[1] = square.bottom_left_2[1] = y_bottom;
+  square_texture->bottom_left_1[0] = square_texture->bottom_left_2[0] = x_left;
+  square_texture->bottom_left_1[1] = square_texture->bottom_left_2[1] = y_bottom;
 
-  square.top_right_1[0] = square.top_right_2[0] = x_right;
-  square.top_right_1[1] = square.top_right_2[1] = y_top;
+  square_texture->top_right_1[0] = square_texture->top_right_2[0] = x_right;
+  square_texture->top_right_1[1] = square_texture->top_right_2[1] = y_top;
 
-  square.top_left_1[0] = x_left;
-  square.top_left_1[1] = y_top;
+  square_texture->top_left_1[0] = x_left;
+  square_texture->top_left_1[1] = y_top;
 
-  square.bottom_right_2[0] = x_right;
-  square.bottom_right_2[1] = y_bottom;
-  return square;
+  square_texture->bottom_right_2[0] = x_right;
+  square_texture->bottom_right_2[1] = y_bottom;
 }
 
 //--------------------------------------------------------------------------------
 static void internal_square_texture_set_value(SquareTexture* square_texture,
                                               char value) {
+  //FIXME Need more unit test. Cannot compare float by memcmp on struct.
   assert(square_texture);
-  //MDTMP add test
-  //MDTMP unify those two in one... maybe not... unit testing...
   GridCoord16x16 character_coord = internal_char_to_grid_coord(value);
-  SquareTexture texture_square =
-      internal_create_square_vertices(character_coord);
-  //MDTMP no copy?
-  memcpy(square_texture, &texture_square, sizeof(texture_square));
+  internal_square_texture_fill(square_texture, character_coord);
 }
 
 //--------------------------------------------------------------------------------
-GraphicsText* graphics_text_from_tileset_calloc(const char* filename) {
+struct GraphicsText {
+  GLuint program;
+  GLuint tbo_texture_tileset;
+  GLuint uniform_texture_tileset;
+  GLuint vbo_vertices_coord;
+  GLint attribute_vertices_coord;
+  GLuint vbo_texture_coord;
+  GLint attribute_texture_coord;
+};
+
+//--------------------------------------------------------------------------------
+GraphicsText* graphics_text_from_tileset_calloc() {
   GraphicsText* graphics_text = calloc(1, sizeof(GraphicsText));
 
   {  // Create shader
-     // MDTMP remove hardcoded value..
-    // MDTMP maybe hardcode actual sharder string here...
-    graphics_text->program = graphics_shader_create_program(
-        "test/assets/text.v.glsl", "test/assets/text.f.glsl");
+    graphics_text->program = graphics_shader_program_create_file(
+        "assets/text/texture.v.glsl", "assets/text/texture.f.glsl");
     if (!graphics_text->program) {
-      LOG_ERROR("graphics_shader_create_program");
+      LOG_ERROR("graphics_shader_program_create_file");
       graphics_text_free(graphics_text);
       return 0x0;
     }
   }
 
   {  // Create texture map objects
-    SDL_Surface* tileset_texture = IMG_Load(filename);
+    const char* tileset_filename = "assets/text/ASCII_tileset.png";
+    SDL_Surface* tileset_texture = IMG_Load(tileset_filename);
     if (!tileset_texture) {
-      LOG_ERROR("IMG_Load: %s : %s", SDL_GetError(), filename);
+      LOG_ERROR("IMG_Load: %s : %s", SDL_GetError(), tileset_filename);
       graphics_text_free(graphics_text);
       return 0x0;
     }
@@ -235,7 +231,7 @@ void graphics_text_free(GraphicsText* graphics_text) {
 
 //--------------------------------------------------------------------------------
 //FIXME  Could accumulate all text to draw on screen and call glDrawArray once.
-void graphics_text_draw(GraphicsText* graphics_text, float scale,
+void graphics_text_draw(const GraphicsText* graphics_text, float scale,
                         GraphicsPoint2D position, const char* msg) {
   assert(graphics_text);
   if (!msg || !msg[0]) {
@@ -312,27 +308,11 @@ void graphics_text_draw(GraphicsText* graphics_text, float scale,
 //--------------------------------------------------------------------------------
 size_t graphics_text_run_test() {
   GraphicsText* graphics_text =
-      graphics_text_from_tileset_calloc("test/assets/ASCII_tileset.png");
+      graphics_text_from_tileset_calloc();
 
   TEST_ASSERT_TRUE_PTR(graphics_text);
   graphics_text_free(graphics_text);
   graphics_text = 0x0;
-
-/*
-{  // internal_square_vertices_set_value
-  const GraphicsPoint2D position = {0.5, 0.5};
-  const float scale = 2.0;
-  const SquareVertices answer = {{0.3, 0.30}, {0.7, 0.7}, {0.3, 0.7},
-                                 {0.3, 0.3}, {0.7, 0.7}, {0.7, 0.3}};
-  SquareVertices *const result =
-      (SquareVertices *)malloc(sizeof(SquareVertices));
-  internal_square_vertices_set_value(result, scale, position);
-  TEST_ASSERT_MSG("internal_create_square_vertices memcmp",
-                  memcmp(result, &answer, sizeof(answer)) != 0);
-
-  free(result);
-}
-*/
 
   {  // Test internal_char_to_grid_coord
     GridCoord16x16 coord = internal_char_to_grid_coord((char)0);
@@ -353,13 +333,14 @@ size_t graphics_text_run_test() {
     TEST_ASSERT_EQUAL_UINT(coord.y, 2);
   }
 
-  {  // Test internal_create_square_vertices
+  {  // Test internal_square_texture_fill
     GridCoord16x16 coord = {15, 0};
     SquareTexture answer = {
         {1.0 - 0.0625, 1.0 - 0.0625}, {1.0, 1.0}, {1.0 - 0.0625, 1.0},
         {1.0 - 0.0625, 1.0 - 0.0625}, {1.0, 1.0}, {1.0, 1.0 - 0.0625}};
-    SquareTexture result = internal_create_square_vertices(coord);
-    TEST_ASSERT_MSG("internal_create_square_vertices",
+    SquareTexture result;
+    internal_square_texture_fill(&result, coord);
+    TEST_ASSERT_MSG("internal_square_texture_fill",
                     memcmp(&result, &answer, sizeof(result)) != 0);
   }
 

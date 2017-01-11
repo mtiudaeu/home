@@ -1,7 +1,7 @@
 #include "test/test.h"
 
 #include "graphics/context.h"
-#include "graphics/text.h"
+#include "graphics/text/text.h"
 
 #include <GL/glew.h>
 
@@ -22,8 +22,7 @@ static void internal_mainCallback() {
 //--------------------------------------------------------------------------------
 static size_t internal_test_integration()
 {
-  internal_graphics_text = graphics_text_from_tileset_calloc(
-      "test/assets/ASCII_tileset.png");
+  internal_graphics_text = graphics_text_from_tileset_calloc();
 
   const size_t ret = graphics_context_global_run(&internal_mainCallback);
 
