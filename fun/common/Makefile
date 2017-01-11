@@ -34,7 +34,7 @@ GRAPHICS_CONTEXT_DEP = graphics/context.c graphics/context.h log.h $(addprefix $
 GRAPHICS_CONTEXT_DEP_EMCC = $(GRAPHICS_CONTEXT_DEP:.o=.bc)
 # ---- GRAPHICS_TEXT ----
 GRAPHICS_TEXT = text
-GRAPHICS_TEXT_DEP = graphics/text/text.c graphics/text/text.h graphics/point.h log.h $(addprefix $(BUILD_PATH),$(GRAPHICS_SHADER).o $(TEST).o)
+GRAPHICS_TEXT_DEP = graphics/text/text.c graphics/text/text.h graphics/text/square_vertices.h graphics/text/square_texture.h graphics/point.h log.h $(addprefix $(BUILD_PATH),$(GRAPHICS_SHADER).o $(TEST).o)
 GRAPHICS_TEXT_DEP_EMCC = $(GRAPHICS_TEXT_DEP:.o=.bc)
 # ---- TEST_GRAPHICS ----
 TEST_GRAPHICS = test_graphics
