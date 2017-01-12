@@ -1,12 +1,12 @@
-#include "graphics/text/text.h"
+#include "common/graphics/text/text.h"
 
-#include "graphics/point.h"
-#include "graphics/shader.h"
-#include "graphics/context.h"
+#include "common/graphics/point.h"
+#include "common/graphics/shader.h"
+#include "common/graphics/context.h"
 
-#include "test/test.h"
+#include "common/test/test.h"
 
-#include "log.h"
+#include "common/log.h"
 
 #include <GL/glew.h>
 #include "SDL2/SDL_image.h"
@@ -15,8 +15,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "graphics/text/square_texture.h"
-#include "graphics/text/square_vertices.h"
+#include "common/graphics/text/square_texture.h"
+#include "common/graphics/text/square_vertices.h"
 
 //--------------------------------------------------------------------------------
 struct GraphicsText {
@@ -39,7 +39,7 @@ GraphicsText* graphics_text_from_tileset_calloc() {
 
   {  // Create shader
     graphics_text->program = graphics_shader_program_create_file(
-        "assets/text/texture.v.glsl", "assets/text/texture.f.glsl");
+        "common/assets/text/texture.v.glsl", "common/assets/text/texture.f.glsl");
     if (!graphics_text->program) {
       LOG_ERROR("graphics_shader_program_create_file");
       graphics_text_free(graphics_text);
@@ -48,7 +48,7 @@ GraphicsText* graphics_text_from_tileset_calloc() {
   }
 
   {  // Create texture map objects
-    const char* tileset_filename = "assets/text/ASCII_tileset.png";
+    const char* tileset_filename = "common/assets/text/ASCII_tileset.png";
     SDL_Surface* tileset_texture = IMG_Load(tileset_filename);
     if (!tileset_texture) {
       LOG_ERROR("IMG_Load: %s : %s", SDL_GetError(), tileset_filename);

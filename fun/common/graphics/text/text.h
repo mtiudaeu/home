@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_TEXT_TEXT_H
 #define GRAPHICS_TEXT_TEXT_H
 
-#include "graphics/point.h"
+#include "common/graphics/point.h"
 
 #include <stddef.h>
 

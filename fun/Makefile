@@ -1,4 +1,4 @@
-default : gcc
+common_default : gcc
 gcc : gcc_targets
 emcc : emcc_targets
 
@@ -6,11 +6,17 @@ emcc : emcc_targets
 # USE_SDL=2       : SDL2 Libraries
 # USE_SDL_IMAGE=2 :
 # --use-preload-plugins : Prevent format error with IMG_load from SDL_Image
-EMCC = emcc -O2 -I. -DINCLUDE_RUN_TEST -Werror -s USE_SDL=2 -s USE_SDL_IMAGE=2 --use-preload-plugins
-GCC = gcc -I. -g -DINCLUDE_RUN_TEST -Werror
+ifndef INCLUDE_TEST
+INCLUDE_TEST = -DINCLUDE_RUN_TEST
+endif
+EMCC = emcc -O2 -I. $(INCLUDE_TEST) -Werror -s USE_SDL=2 -s USE_SDL_IMAGE=2 --use-preload-plugins
+GCC = gcc -I. -g $(INCLUDE_TEST) -Werror
 
 # ---- Target Lists ----
+ifndef TARGETS_ALL
 TARGETS_ALL = $(BUILD_PATH)test_graphics.out
+endif
+
 BUILD_PATH = bin/
 
 all: gcc_targets emcc_targets
@@ -21,24 +27,25 @@ emcc_targets : $(TARGETS_ALL:.out=.html)
 # Lower level dependancy to higher
 # ---- TEST ----
 TEST = test
-TEST_DEP = test/test.c test/test.h
+TEST_DEP = common/test/test.c common/test/test.h
 TEST_DEP_EMCC = $(TEST_DEP:.o=.bc)
 # ---- GRAPHICS ----
 # ---- GRAPHICS_SHADER ----
 GRAPHICS_SHADER = shader
-GRAPHICS_SHADER_DEP = graphics/shader.c graphics/shader.h log.h
+GRAPHICS_SHADER_DEP = common/graphics/shader.c common/graphics/shader.h common/log.h
 GRAPHICS_SHADER_DEP_EMCC = $(GRAPHICS_SHADER_DEP:.o=.bc)
 # ---- GRAPHICS_CONTEXT ----
 GRAPHICS_CONTEXT = context
-GRAPHICS_CONTEXT_DEP = graphics/context.c graphics/context.h log.h test/test.h
+GRAPHICS_CONTEXT_DEP = common/graphics/context.c common/graphics/context.h common/log.h common/test/test.h
 GRAPHICS_CONTEXT_DEP_EMCC = $(GRAPHICS_CONTEXT_DEP:.o=.bc)
 # ---- GRAPHICS_TEXT ----
 GRAPHICS_TEXT = text
-GRAPHICS_TEXT_DEP = graphics/text/text.c graphics/text/text.h graphics/text/square_vertices.h graphics/text/square_texture.h graphics/point.h log.h graphics/shader.h test/test.h 
+GRAPHICS_TEXT_HEADER = common/graphics/text/text.h common/graphics/point.h
+GRAPHICS_TEXT_DEP = common/graphics/text/text.c $(GRAPHICS_TEXT_HEADER) common/graphics/text/square_vertices.h common/graphics/text/square_texture.h common/log.h common/graphics/shader.h common/test/test.h 
 GRAPHICS_TEXT_DEP_EMCC = $(GRAPHICS_TEXT_DEP:.o=.bc)
 # ---- TEST_GRAPHICS ----
 TEST_GRAPHICS = test_graphics
-TEST_GRAPHICS_DEP = graphics/test_graphics.c test/test.h graphics/context.h graphics/text/text.h
+TEST_GRAPHICS_DEP = common/graphics/test_graphics.c common/test/test.h common/graphics/context.h $(GRAPHICS_TEXT_HEADER)
 TEST_GRAPHICS_DEP_EMCC = $(TEST_GRAPHICS_DEP:.o=.bc)
 
 TEST_GRAPHICS_DEP_EXEC = $(addprefix $(BUILD_PATH),$(TEST_GRAPHICS).o $(GRAPHICS_CONTEXT).o $(GRAPHICS_TEXT).o $(GRAPHICS_SHADER).o $(TEST).o)
@@ -75,7 +82,7 @@ $(BUILD_PATH)$(TEST_GRAPHICS).bc : $(TEST_GRAPHICS_DEP_EMCC)
 $(BUILD_PATH)$(TEST_GRAPHICS).out : $(TEST_GRAPHICS_DEP_EXEC)
 	$(GCC) $^ -o $@ -lGL -lGLEW -lSDL2 -lSDL2_image
 $(BUILD_PATH)$(TEST_GRAPHICS).html : $(TEST_GRAPHICS_DEP_EXEC_EMCC)
-	$(EMCC) $^ -o $@ --preload-file assets/text/texture.f.glsl --preload-file assets/text/texture.v.glsl --preload-file assets/text/ASCII_tileset.png
+	$(EMCC) $^ -o $@ --preload-file common/assets/text/texture.f.glsl --preload-file common/assets/text/texture.v.glsl --preload-file common/assets/text/ASCII_tileset.png
 
 # ---- clean ----
 clean : 
