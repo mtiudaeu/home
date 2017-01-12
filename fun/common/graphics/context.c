@@ -96,6 +96,7 @@ size_t graphics_context_global_uninit()
 //--------------------------------------------------------------------------------
 void internal_main_loop() {
   SDL_Event ev;
+//MDTMP bug here, will only send last event to main_loop_cb.
   while (SDL_PollEvent(&ev)) {
     if (ev.type == SDL_QUIT) {
       global_graphics_context->leave_main_loop = 1;
