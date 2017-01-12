@@ -5,16 +5,28 @@
 
 #include <GL/glew.h>
 
+#include <assert.h>
+
 static GraphicsText* internal_graphics_text = 0x0;
+//MDTMP
+GraphicsPoint2D position = {0.1, 0.5};
 
 //--------------------------------------------------------------------------------
-static void internal_mainCallback() {
+static void internal_mainCallback(SDL_Event* ev) {
+  assert(ev);
+//MDTMP
+  if (ev->type == SDL_KEYDOWN) {
+    position.x -= 0.1;
+  }
+  else if (ev->type == SDL_KEYUP) {
+    position.x += 0.1;
+  }
+
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
   if (internal_graphics_text) {
     const float scale = 0.5f;
-    const GraphicsPoint2D position = {0.1, 0.5};
     graphics_text_draw(internal_graphics_text, scale, position, "test");
   }
 }

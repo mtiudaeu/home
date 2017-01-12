@@ -29,21 +29,9 @@ void internal_square_vertices_set_value(SquareVertices* square_vertices,
   const float half_size_square = internal_square_vertices_half_width(scale);
 
   const GLfloat x_left = position.x - half_size_square;
-  if (x_left < -1.0f || x_left > 1.0f) {
-    LOG_ERROR("out of bounds");
-  }
   const GLfloat x_right = position.x + half_size_square;
-  if (x_right < -1.0f || x_right > 1.0f) {
-    LOG_ERROR("out of bounds");
-  }
   const GLfloat y_top = position.y + half_size_square;
-  if (y_top < -1.0f || y_top > 1.0f) {
-    LOG_ERROR("out of bounds");
-  }
   const GLfloat y_bottom = position.y - half_size_square;
-  if (y_bottom < -1.0f || y_bottom > 1.0f) {
-    LOG_ERROR("out of bounds");
-  }
 
   square_vertices->bottom_left_1[0] = square_vertices->bottom_left_2[0] =
       x_left;

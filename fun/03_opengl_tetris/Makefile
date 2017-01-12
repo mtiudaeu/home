@@ -1,11 +1,11 @@
 TARGETS_ALL = $(BUILD_PATH)tetris.out
 INCLUDE_TEST = -DNO_RUN_TEST
 
-include ../Makefile
+include common/Makefile
 
 # ---- TETRIS ----
 TETRIS = tetris
-TETRIS_DEP = tetris.c common/graphics/context.h $(GRAPHICS_TEXT_HEADER)
+TETRIS_DEP = 03_opengl_tetris/tetris.c common/graphics/context.h $(GRAPHICS_TEXT_HEADER)
 TETRIS_DEP_EMCC = $(TETRIS_DEP:.o=.bc)
 
 TETRIS_DEP_EXEC = $(addprefix $(BUILD_PATH),$(TETRIS).o $(GRAPHICS_CONTEXT).o $(GRAPHICS_TEXT).o $(GRAPHICS_SHADER).o )
