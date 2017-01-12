@@ -2,6 +2,7 @@
 
 #include "graphics/point.h"
 #include "graphics/shader.h"
+#include "graphics/context.h"
 
 #include "test/test.h"
 
@@ -30,6 +31,10 @@ struct GraphicsText {
 
 //--------------------------------------------------------------------------------
 GraphicsText* graphics_text_from_tileset_calloc() {
+  if (graphics_context_global_ready() != 0) {
+    LOG_ERROR("graphics_context_global_ready != 0");
+    return 0x0;
+  }
   GraphicsText* graphics_text = calloc(1, sizeof(GraphicsText));
 
   {  // Create shader

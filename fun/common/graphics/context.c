@@ -128,6 +128,11 @@ size_t graphics_context_global_run(void (*main_loop_cb)()) {
   return 0;
 }
 
+//--------------------------------------------------------------------------------
+size_t graphics_context_global_ready()
+{
+  return global_graphics_context == 0;
+}
 
 //--------------------------------------------------------------------------------
 #ifdef INCLUDE_RUN_TEST

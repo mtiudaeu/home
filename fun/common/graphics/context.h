@@ -6,6 +6,9 @@
 size_t graphics_context_global_init();
 size_t graphics_context_global_uninit();
 
+// return 0 is ready
+size_t graphics_context_global_ready();
+
 size_t graphics_context_global_run(void (*render_cb)());
 
 #ifdef INCLUDE_RUN_TEST
