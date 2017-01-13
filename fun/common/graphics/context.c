@@ -16,7 +16,8 @@
 typedef struct {
   SDL_Window* window;
   SDL_GLContext gl_context;
-  void (*main_loop_cb)(SDL_Event*);
+  void (*main_loop_cb)();
+  void (*handle_hotkey_cb)(SDL_Event*);
   size_t leave_main_loop;
 } InternalGraphicsContext;
 static InternalGraphicsContext* global_graphics_context;
@@ -96,20 +97,23 @@ size_t graphics_context_global_uninit()
 //--------------------------------------------------------------------------------
 void internal_main_loop() {
   SDL_Event ev;
-//MDTMP bug here, will only send last event to main_loop_cb.
   while (SDL_PollEvent(&ev)) {
     if (ev.type == SDL_QUIT) {
       global_graphics_context->leave_main_loop = 1;
       return;
     }
+    if (global_graphics_context->handle_hotkey_cb) {
+      global_graphics_context->handle_hotkey_cb(&ev);
+    }
   }
 
-  global_graphics_context->main_loop_cb(&ev);
+  global_graphics_context->main_loop_cb();
   SDL_GL_SwapWindow(global_graphics_context->window);
 }
 
 //--------------------------------------------------------------------------------
-size_t graphics_context_global_run(void (*main_loop_cb)(SDL_Event*)) {
+size_t graphics_context_global_run(void (*main_loop_cb)(),
+                                   void (*handle_hotkey_cb)(SDL_Event*)) {
   if (!global_graphics_context) {
     LOG_ERROR("global_graphics_context is not initialize");
     return 1;
@@ -119,6 +123,9 @@ size_t graphics_context_global_run(void (*main_loop_cb)(SDL_Event*)) {
     return 1;
   }
   global_graphics_context->main_loop_cb = main_loop_cb;
+  if (handle_hotkey_cb) {
+    global_graphics_context->handle_hotkey_cb = handle_hotkey_cb;
+  }
 
 #ifdef EMSCRIPTEN
   emscripten_set_main_loop(&internal_main_loop,

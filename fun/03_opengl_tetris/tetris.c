@@ -12,7 +12,7 @@ static GraphicsText* internal_graphics_text = 0x0;
 GraphicsPoint2D position = {0.1, 0.5};
 
 //--------------------------------------------------------------------------------
-static void internal_mainCallback(SDL_Event* ev) {
+static void internal_handle_hotkey_cb(SDL_Event* ev) {
   assert(ev);
 //MDTMP
   if (ev->type == SDL_KEYDOWN) {
@@ -21,6 +21,10 @@ static void internal_mainCallback(SDL_Event* ev) {
   else if (ev->type == SDL_KEYUP) {
     position.x += 0.1;
   }
+}
+
+//--------------------------------------------------------------------------------
+static void internal_mainCallback() {
 
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -40,7 +44,8 @@ int main() {
 
   internal_graphics_text = graphics_text_from_tileset_calloc();
 
-  ret = graphics_context_global_run(&internal_mainCallback);
+  ret = graphics_context_global_run(&internal_mainCallback,
+                                    internal_handle_hotkey_cb);
   if (ret != 0) {
     LOG_ERROR("graphics_context_global_run");
     return ret;
