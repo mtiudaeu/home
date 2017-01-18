@@ -9,6 +9,7 @@
 
 static GraphicsText* internal_graphics_text = 0x0;
 //MDTMP
+
 GraphicsPoint2D position = {0.1, 0.5};
 
 //--------------------------------------------------------------------------------
@@ -16,10 +17,20 @@ static void internal_handle_hotkey_cb(SDL_Event* ev) {
   assert(ev);
 //MDTMP
   if (ev->type == SDL_KEYDOWN) {
-    position.x -= 0.1;
-  }
-  else if (ev->type == SDL_KEYUP) {
-    position.x += 0.1;
+    switch (ev->key.keysym.sym) {
+      case SDLK_LEFT:
+        position.x -= 0.1;
+        break;
+      case SDLK_RIGHT:
+        position.x += 0.1;
+        break;
+      case SDLK_UP:
+        position.y += 0.1;
+        break;
+      case SDLK_DOWN:
+        position.y -= 0.1;
+        break;
+    }
   }
 }
 
