@@ -1,5 +1,6 @@
+#include <common/ui/ui_text.h>
+
 #include "common/graphics/context.h"
-#include "common/graphics/text/text.h"
 
 #include "common/log.h"
 
@@ -7,42 +8,40 @@
 
 #include <assert.h>
 
-static GraphicsText* internal_graphics_text = 0x0;
-//MDTMP
-
-GraphicsPoint2D position = {0.1, 0.5};
+static UIText* internal_ui_text = 0x0;
+GraphicsPoint2D internal_position = {0.1, 0.5};
 
 //--------------------------------------------------------------------------------
 static void internal_handle_hotkey_cb(SDL_Event* ev) {
   assert(ev);
-//MDTMP
   if (ev->type == SDL_KEYDOWN) {
     switch (ev->key.keysym.sym) {
       case SDLK_LEFT:
-        position.x -= 0.1;
+        internal_position.x -= 0.1;
         break;
       case SDLK_RIGHT:
-        position.x += 0.1;
+        internal_position.x += 0.1;
         break;
       case SDLK_UP:
-        position.y += 0.1;
+        internal_position.y += 0.1;
         break;
       case SDLK_DOWN:
-        position.y -= 0.1;
+        internal_position.y -= 0.1;
         break;
     }
+  }
+  if (internal_ui_text) {
+    ui_text_set_position(internal_ui_text, internal_position);
   }
 }
 
 //--------------------------------------------------------------------------------
 static void internal_mainCallback() {
-
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
-  if (internal_graphics_text) {
-    const float scale = 0.5f;
-    graphics_text_draw(internal_graphics_text, scale, position, "test");
+  if (internal_ui_text) {
+    ui_text_draw(internal_ui_text);
   }
 }
 
@@ -53,7 +52,15 @@ int main() {
     return ret;
   }
 
-  internal_graphics_text = graphics_text_from_tileset_calloc();
+  internal_ui_text = ui_text_calloc();
+  if (!internal_ui_text) {
+    LOG_ERROR("!internal_ui_text");
+    return 1;
+  }
+
+  ui_text_set_scale(internal_ui_text, 0.5f);
+  ui_text_set_position(internal_ui_text, internal_position);
+  ui_text_set_msg(internal_ui_text, "test");
 
   ret = graphics_context_global_run(&internal_mainCallback,
                                     internal_handle_hotkey_cb);
@@ -62,8 +69,8 @@ int main() {
     return ret;
   }
 
-  graphics_text_free(internal_graphics_text);
-  internal_graphics_text = 0x0;
+  ui_text_free(internal_ui_text);
+  internal_ui_text = 0x0;
 
   ret = graphics_context_global_uninit();
   if (ret != 0) {

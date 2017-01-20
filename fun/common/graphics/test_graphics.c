@@ -22,7 +22,7 @@ static void internal_mainCallback() {
 //--------------------------------------------------------------------------------
 static size_t internal_test_integration()
 {
-  internal_graphics_text = graphics_text_from_tileset_calloc();
+  internal_graphics_text = graphics_text_calloc();
 
   const size_t ret = graphics_context_global_run(&internal_mainCallback,
                                                  0x0  // handle_hotkey_cb

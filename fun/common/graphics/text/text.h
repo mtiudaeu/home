@@ -7,7 +7,7 @@
 
 typedef struct GraphicsText GraphicsText;
 
-GraphicsText* graphics_text_from_tileset_calloc();
+GraphicsText* graphics_text_calloc();
 void graphics_text_free(GraphicsText* graphics_text);
 
 void graphics_text_draw(const GraphicsText* graphics_text, float scale,

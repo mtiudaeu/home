@@ -30,7 +30,7 @@ struct GraphicsText {
 };
 
 //--------------------------------------------------------------------------------
-GraphicsText* graphics_text_from_tileset_calloc() {
+GraphicsText* graphics_text_calloc() {
   if (graphics_context_global_ready() != 0) {
     LOG_ERROR("graphics_context_global_ready != 0");
     return 0x0;
@@ -210,7 +210,7 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
 #ifdef INCLUDE_RUN_TEST
 //--------------------------------------------------------------------------------
 size_t graphics_text_run_test() {
-  GraphicsText* graphics_text = graphics_text_from_tileset_calloc();
+  GraphicsText* graphics_text = graphics_text_calloc();
 
   TEST_ASSERT_TRUE_PTR(graphics_text);
   graphics_text_free(graphics_text);

@@ -52,6 +52,11 @@ TEST_GRAPHICS_DEP_EMCC = $(TEST_GRAPHICS_DEP:.o=.bc)
 
 TEST_GRAPHICS_DEP_EXEC = $(addprefix $(BUILD_PATH),$(TEST_GRAPHICS).o $(GRAPHICS_CONTEXT).o $(GRAPHICS_TEXT).o $(GRAPHICS_SHADER).o $(TEST).o)
 TEST_GRAPHICS_DEP_EXEC_EMCC = $(TEST_GRAPHICS_DEP_EXEC:.o=.bc)
+# ---- UI_TEXT ----
+UI_TEXT = ui_text
+UI_TEXT_HEADER = common/ui/ui_text.h common/graphics/point.h
+UI_TEXT_DEP = common/ui/ui_text.c $(UI_TEXT_HEADER) $(GRAPHICS_TEXT_HEADER) common/log.h
+UI_TEXT_DEP_EMCC = $(UI_TEXT_DEP:.o=.bc)
 
 # ---- Objects ----
 # ---- TEST ----
@@ -85,6 +90,12 @@ $(BUILD_PATH)$(TEST_GRAPHICS).out : $(TEST_GRAPHICS_DEP_EXEC)
 	$(GCC) $^ -o $@ -lGL -lGLEW -lSDL2 -lSDL2_image
 $(BUILD_PATH)$(TEST_GRAPHICS).html : $(TEST_GRAPHICS_DEP_EXEC_EMCC)
 	$(EMCC) $^ -o $@ --preload-file common/assets/text/texture.f.glsl --preload-file common/assets/text/texture.v.glsl --preload-file common/assets/text/ASCII_tileset.png
+
+# ---- UI_TEXT ----
+$(BUILD_PATH)$(UI_TEXT).o : $(UI_TEXT_DEP)
+	$(GCC) -c $< -o $@
+$(BUILD_PATH)$(UI_TEXT).bc : $(UI_TEXT_DEP_EMCC)
+	$(EMCC) -c $< -o $@
 
 # ---- clean ----
 clean : 
