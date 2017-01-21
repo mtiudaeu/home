@@ -33,6 +33,6 @@ $(BUILD_PATH)test_graphics.html : $(TEST_GRAPHICS_DEP_EXEC_EMCC)
 
 # ---- clean ----
 clean : 
-	rm -f $(addprefix $(BUILD_PATH), *.o *.out *.js *.html *.bc *.mem *.data)
+	rm -f $(addprefix $(BUILD_PATH), *.o *.out *.js *.html *.bc *.mem *.data *.c *.h)
 
 include common/Makefile_generated

@@ -2,3 +2,5 @@ bin/03_opengl_tetris_tetris.c: 03_opengl_tetris/tetris.c bin/common_graphics_con
 	touch bin/03_opengl_tetris_tetris.c
 bin/03_opengl_tetris_tetris.o: 03_opengl_tetris/tetris.c bin/03_opengl_tetris_tetris.c
 	$(GCC) -c $< -o $@
+bin/03_opengl_tetris_tetris.bc: 03_opengl_tetris/tetris.c bin/03_opengl_tetris_tetris.c
+	$(EMCC) -c $< -o $@

@@ -13,6 +13,9 @@ def build_object_rules(c_file_path_list):
     o_file_target = c_file_target.replace(".c", ".o")
     print(o_file_target + ": " + c_file_path + " " + c_file_target )
     print("\t$(GCC) -c $< -o $@")
+    bc_file_target = c_file_target.replace(".c", ".bc")
+    print(bc_file_target + ": " + c_file_path + " " + c_file_target )
+    print("\t$(EMCC) -c $< -o $@")
     
 def build_extract_rules(file_path_list):
   for file_path in file_path_list:
