@@ -1,0 +1,4 @@
+bin/03_opengl_tetris_tetris.c: 03_opengl_tetris/tetris.c bin/common_graphics_context.h bin/common_log.h
+	touch bin/03_opengl_tetris_tetris.c
+bin/03_opengl_tetris_tetris.o: 03_opengl_tetris/tetris.c bin/03_opengl_tetris_tetris.c
+	$(GCC) -c $< -o $@
