@@ -66,13 +66,7 @@ static char* internal_file_read_malloc(const char* filename) {
 }
 
 //--------------------------------------------------------------------------------
-static GLuint internal_shader_create_file(const char* filename, GLenum type) {
-  const GLchar* source = internal_file_read_malloc(filename);
-  if (!source) {
-    LOG_ERROR("internal_file_read_malloc");
-    return 0;
-  }
-
+static GLuint internal_shader_create_str(const char* source, GLenum type) {
   GLuint shader_obj = glCreateShader(type);
   // GLSL version
   const char* version;
@@ -98,14 +92,13 @@ static GLuint internal_shader_create_file(const char* filename, GLenum type) {
       "#endif                              \n";
   const GLchar* sources[] = {version, precision, source};
   glShaderSource(shader_obj, 3, sources, NULL);
-  free((void*)source);
 
   glCompileShader(shader_obj);
   GLint compile_ok = GL_FALSE;
   glGetShaderiv(shader_obj, GL_COMPILE_STATUS, &compile_ok);
   if (compile_ok == GL_FALSE) {
     internal_gl_log_error(shader_obj);
-    LOG_ERROR("glGetShaderiv : %s", filename);
+    LOG_ERROR("glGetShaderiv");
 
     glDeleteShader(shader_obj);
     return 0;
@@ -115,25 +108,34 @@ static GLuint internal_shader_create_file(const char* filename, GLenum type) {
 }
 
 //--------------------------------------------------------------------------------
-GLuint graphics_shader_program_create_file(const char* vertexfile, const char* fragmentfile) {
+static GLuint internal_shader_create_file(const char* filename, GLenum type) {
+  const GLchar* source = internal_file_read_malloc(filename);
+  if (!source) {
+    LOG_ERROR("internal_file_read_malloc");
+    return 0;
+  }
+
+  const GLuint ret = internal_shader_create_str(source, type);
+  free((void*)source);
+  return ret;
+}
+
+//--------------------------------------------------------------------------------
+static GLuint internal_program_create(GLuint vertex_shader,
+                                      GLuint fragment_shader) {
+  if (!vertex_shader) {
+    LOG_ERROR("!vertex_shader");
+    return 0;
+  }
+  if (!fragment_shader) {
+    LOG_ERROR("!fragment_shader");
+    return 0;
+  }
+
   GLuint program = glCreateProgram();
-  GLuint shader;
-  if (vertexfile) {
-    shader = internal_shader_create_file(vertexfile, GL_VERTEX_SHADER);
-    if (!shader) {
-      LOG_ERROR("internal_shader_create_file");
-      return 0;
-    }
-    glAttachShader(program, shader);
-  }
-  if (fragmentfile) {
-    shader = internal_shader_create_file(fragmentfile, GL_FRAGMENT_SHADER);
-    if (!shader) {
-      LOG_ERROR("internal_shader_create_file");
-      return 0;
-    }
-    glAttachShader(program, shader);
-  }
+  glAttachShader(program, vertex_shader);
+  glAttachShader(program, fragment_shader);
+
   glLinkProgram(program);
   GLint link_ok = GL_FALSE;
   glGetProgramiv(program, GL_LINK_STATUS, &link_ok);
@@ -144,4 +146,42 @@ GLuint graphics_shader_program_create_file(const char* vertexfile, const char* f
     return 0;
   }
   return program;
+}
+
+//--------------------------------------------------------------------------------
+GLuint graphics_shader_program_create_str(const char* vertex_source,
+                                          const char* fragment_source) {
+  const GLuint vertex_shader =
+      internal_shader_create_str(vertex_source, GL_VERTEX_SHADER);
+  if (!vertex_shader) {
+    LOG_ERROR("!vertex_shader");
+    return 0;
+  }
+  const GLuint fragment_shader =
+      internal_shader_create_str(fragment_source, GL_FRAGMENT_SHADER);
+  if (!fragment_shader) {
+    LOG_ERROR("!fragment_shader");
+    return 0;
+  }
+
+  return internal_program_create(vertex_shader, fragment_shader);
+}
+
+//--------------------------------------------------------------------------------
+GLuint graphics_shader_program_create_file(const char* vertexfile,
+                                           const char* fragmentfile) {
+  const GLuint vertex_shader =
+      internal_shader_create_file(vertexfile, GL_VERTEX_SHADER);
+  if (!vertex_shader) {
+    LOG_ERROR("!vertex_shader");
+    return 0;
+  }
+  const GLuint fragment_shader =
+      internal_shader_create_file(fragmentfile, GL_FRAGMENT_SHADER);
+  if (!fragment_shader) {
+    LOG_ERROR("!fragment_shader");
+    return 0;
+  }
+
+  return internal_program_create(vertex_shader, fragment_shader);
 }

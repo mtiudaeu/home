@@ -1,7 +1,6 @@
 #include "common/graphics/text/text.h"
 
 #include "common/graphics/point.h"
-#include "common/graphics/shader.h"
 #include "common/graphics/context.h"
 
 #include "common/test/test.h"
@@ -17,6 +16,7 @@
 
 #include "common/graphics/text/square_texture.h"
 #include "common/graphics/text/square_vertices.h"
+#include "common/graphics/text/shader_text.h"
 
 //--------------------------------------------------------------------------------
 struct GraphicsText {
@@ -38,8 +38,7 @@ GraphicsText* graphics_text_calloc() {
   GraphicsText* graphics_text = calloc(1, sizeof(GraphicsText));
 
   {  // Create shader
-    graphics_text->program = graphics_shader_program_create_file(
-        "common/assets/text/texture.v.glsl", "common/assets/text/texture.f.glsl");
+    graphics_text->program = internal_program_create();
     if (!graphics_text->program) {
       LOG_ERROR("graphics_shader_program_create_file");
       graphics_text_free(graphics_text);

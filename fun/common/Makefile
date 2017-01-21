@@ -29,7 +29,7 @@ TEST_GRAPHICS_DEP_EXEC_EMCC = $(TEST_GRAPHICS_DEP_EXEC:.o=.bc)
 $(BUILD_PATH)test_graphics.out : $(TEST_GRAPHICS_DEP_EXEC)
 	$(GCC) $^ -o $@ -lGL -lGLEW -lSDL2 -lSDL2_image
 $(BUILD_PATH)test_graphics.html : $(TEST_GRAPHICS_DEP_EXEC_EMCC)
-	$(EMCC) $^ -o $@ --preload-file common/assets/text/texture.f.glsl --preload-file common/assets/text/texture.v.glsl --preload-file common/assets/text/ASCII_tileset.png
+	$(EMCC) $^ -o $@ --preload-file common/assets/text/ASCII_tileset.png
 
 # ---- clean ----
 clean : 
