@@ -9,7 +9,7 @@
 #include "common/log.h"
 
 #include <GL/glew.h>
-#include "SDL2/SDL_image.h"
+#include <SDL2/SDL_image.h>
 
 #include <assert.h>
 #include <stdlib.h>
