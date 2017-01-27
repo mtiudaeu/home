@@ -13,13 +13,12 @@
 
 static GLuint internal_program_id = 0;
 
-//MDTMP rename with internal.
-static GLuint vbo_vertices_coord = 0;
-static GLint attribute_vertices_coord = 0;
+static GLuint internal_vbo_vertices_coord = 0;
+static GLint internal_attribute_vertices_coord = 0;
 
-static GLuint uniform_texture_tileset;
-static GLuint vbo_texture_coord = 0;
-static GLint attribute_texture_coord = 0;
+static GLuint internal_uniform_texture_tileset;
+static GLuint internal_vbo_texture_coord = 0;
+static GLint internal_attribute_texture_coord = 0;
 
 //--------------------------------------------------------------------------------
 static GLuint internal_program_create() {
@@ -45,45 +44,6 @@ void main(void) {\
   return graphics_shader_program_create_str(vertex_source, fragment_source);
 }
 
-/* MDTMP
-//--------------------------------------------------------------------------------
-void internal_square_2D_array_draw(
-vbo_vertices
-attribute
-const Square2D* array_square,
-                                   size_t square_length)
-{
-  const size_t length_triangles = square_length * 2;
-  {  // Set geometry position
-    const size_t vertices_sizeof =
-        sizeof(TriangleVertices2D) * length_triangles;
-    TriangleVertices2D* const array_triangle_vertices =
-        (TriangleVertices2D*)malloc(vertices_sizeof);
-    size_t i = 0;
-    for (; i < length_triangles; i += 2) {
-      graphics_primitive_triangle_vertices_from_square_2D(
-          array_triangle_vertices + i, array_square[i / 2]);
-    }
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices_coord);
-    glBufferData(GL_ARRAY_BUFFER, vertices_sizeof, array_triangle_vertices,
-                 GL_STATIC_DRAW);
-    free(array_triangle_vertices);
-
-    glEnableVertexAttribArray(attribute_vertices_coord);
-    glVertexAttribPointer(
-        attribute_vertices_coord,  // attribute
-        2,                         // number of elements per vertex,
-        GL_FLOAT,                  // the type of each element
-        GL_FALSE,                  // take our values as-is
-        0,                         // no extra size
-        0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
-        );
-  }
-}
-*/
-
-
 //--------------------------------------------------------------------------------
 size_t graphics_primitive_square_2D_init() {
   if (internal_program_id) {
@@ -98,21 +58,21 @@ size_t graphics_primitive_square_2D_init() {
   }
 
   const char* uniform_name = "texture_tileset";
-  uniform_texture_tileset =
+  internal_uniform_texture_tileset =
       glGetUniformLocation(internal_program_id, uniform_name);
-  if (uniform_texture_tileset == -1) {
+  if (internal_uniform_texture_tileset == -1) {
     LOG_ERROR("glGetUniformLocation %s", uniform_name);
     graphics_primitive_square_2D_uninit();
     return 1;
   }
 
   {  // Create vertices objects
-    glGenBuffers(1, &vbo_vertices_coord);
+    glGenBuffers(1, &internal_vbo_vertices_coord);
 
     const char* attribute_name = "vertices_coord";
-    attribute_vertices_coord =
+    internal_attribute_vertices_coord =
         glGetAttribLocation(internal_program_id, attribute_name);
-    if (attribute_vertices_coord == -1) {
+    if (internal_attribute_vertices_coord == -1) {
       LOG_ERROR("glGetAttribLocation %s", attribute_name);
       graphics_primitive_square_2D_uninit();
       return 1;
@@ -120,12 +80,12 @@ size_t graphics_primitive_square_2D_init() {
   }
 
   {  // Create texture coord objects
-    glGenBuffers(1, &vbo_texture_coord);
+    glGenBuffers(1, &internal_vbo_texture_coord);
 
     const char* attribute_name = "texture_coord";
-    attribute_texture_coord =
+    internal_attribute_texture_coord =
         glGetAttribLocation(internal_program_id, attribute_name);
-    if (attribute_texture_coord == -1) {
+    if (internal_attribute_texture_coord == -1) {
       LOG_ERROR("glGetAttribLocation %s", attribute_name);
       graphics_primitive_square_2D_uninit();
       return 1;
@@ -141,11 +101,11 @@ void graphics_primitive_square_2D_uninit()
   glDeleteProgram(internal_program_id);
   internal_program_id = 0;
 
-  glDeleteBuffers(1, &vbo_vertices_coord);
-  vbo_vertices_coord = 0;
+  glDeleteBuffers(1, &internal_vbo_vertices_coord);
+  internal_vbo_vertices_coord = 0;
 
-  glDeleteBuffers(1, &vbo_texture_coord);
-  vbo_texture_coord = 0;
+  glDeleteBuffers(1, &internal_vbo_texture_coord);
+  internal_vbo_texture_coord = 0;
 }
 
 //--------------------------------------------------------------------------------
@@ -160,7 +120,7 @@ void graphics_primitive_square_2D_draw(GLuint bo_texture,
     glUseProgram(internal_program_id);
 
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(uniform_texture_tileset, /*GL_TEXTURE*/ 0);
+    glUniform1i(internal_uniform_texture_tileset, /*GL_TEXTURE*/ 0);
     glBindTexture(GL_TEXTURE_2D, bo_texture);
   }
 
@@ -175,14 +135,14 @@ void graphics_primitive_square_2D_draw(GLuint bo_texture,
           array_triangle_vertices + i, array_context_position[i / 2]);
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_vertices_coord);
+    glBindBuffer(GL_ARRAY_BUFFER, internal_vbo_vertices_coord);
     glBufferData(GL_ARRAY_BUFFER, vertices_sizeof, array_triangle_vertices,
                  GL_STATIC_DRAW);
     free(array_triangle_vertices);
 
-    glEnableVertexAttribArray(attribute_vertices_coord);
+    glEnableVertexAttribArray(internal_attribute_vertices_coord);
     glVertexAttribPointer(
-        attribute_vertices_coord,  // attribute
+        internal_attribute_vertices_coord,  // attribute
         2,         // number of elements per vertex,
         GL_FLOAT,  // the type of each element
         GL_FALSE,  // take our values as-is
@@ -201,14 +161,14 @@ void graphics_primitive_square_2D_draw(GLuint bo_texture,
           array_texture_coord + i, array_texture_position[i / 2]);
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_texture_coord);
+    glBindBuffer(GL_ARRAY_BUFFER, internal_vbo_texture_coord);
     glBufferData(GL_ARRAY_BUFFER, vertices_sizeof, array_texture_coord,
                  GL_STATIC_DRAW);
     free(array_texture_coord);
 
-    glEnableVertexAttribArray(attribute_texture_coord);
+    glEnableVertexAttribArray(internal_attribute_texture_coord);
     glVertexAttribPointer(
-        attribute_texture_coord,  // attribute
+        internal_attribute_texture_coord,  // attribute
         2,         // number of elements per vertex,
         GL_FLOAT,  // the type of each element
         GL_FALSE,  // take our values as-is
@@ -219,8 +179,8 @@ void graphics_primitive_square_2D_draw(GLuint bo_texture,
 
   glDrawArrays(GL_TRIANGLES, 0, 3 * length_triangles);
 
-  glDisableVertexAttribArray(attribute_vertices_coord);
-  glDisableVertexAttribArray(attribute_texture_coord);
+  glDisableVertexAttribArray(internal_attribute_vertices_coord);
+  glDisableVertexAttribArray(internal_attribute_texture_coord);
 }
 
 #ifdef INCLUDE_RUN_TEST
@@ -228,8 +188,10 @@ static GLuint internal_bo_texture = 0;
 
 //--------------------------------------------------------------------------------
 static void internal_draw_callback() {
+
   if (!internal_bo_texture) {
-    const char* tileset_filename = "common/assets/text/ASCII_tileset.png";
+//MDTMP const char* tileset_filename = "common/assets/text/ASCII_tileset.png";
+    const char* tileset_filename = "common/assets/tmp/tetris_texture.png";
     internal_bo_texture =
         graphics_shader_texture_buffer_create(tileset_filename);
     if (!internal_bo_texture) {
@@ -247,12 +209,25 @@ static void internal_draw_callback() {
   square_2D.y = 0.6f;
   array_context_position[1] = square_2D;
 
+
   square_2D.x = 0.5f;
   square_2D.y = 0.5f;
   square_2D.half_width = 0.5f;
   Square2D array_texture_position[2];
   array_texture_position[0] = square_2D;
   array_texture_position[1] = square_2D;
+
+//MDTMP
+/*
+  float texture_increment_x = 1.0f / 15.0f;
+  float texture_increment_y = 1.0f / 5.0f;
+  square_2D.x = 1.0f * texture_increment_x - texture_increment_x/2.0f;
+  square_2D.y = 3.0f * texture_increment_y - texture_increment_y/2.0f;
+  square_2D.half_width = texture_increment_x;
+//MDTMP Square2D array_texture_position[2];
+  array_texture_position[0] = square_2D;
+  array_texture_position[1] = square_2D;
+*/
 
   graphics_primitive_square_2D_draw(internal_bo_texture, array_context_position,
                                     array_texture_position, 2);
