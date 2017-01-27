@@ -14,7 +14,8 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
                         GraphicsPoint2D position, const char* msg);
 
 #ifdef INCLUDE_RUN_TEST
-size_t graphics_text_run_test();
+size_t graphics_text_run_test(void (** draw_callback)(void),
+                              void (** uninit_callback)(void));
 #endif  // INCLUDE_RUN_TEST
 
 #endif // GRAPHICS_TEXT_TEXT_H

@@ -1,5 +1,5 @@
-#ifndef GRAPHICS_TEXT_SQUARE_VERTICES_H
-#define GRAPHICS_TEXT_SQUARE_VERTICES_H
+#ifndef GRAPHICS_PRIMITIVE_SQUARE_VERTICES_H
+#define GRAPHICS_PRIMITIVE_SQUARE_VERTICES_H
 
 //--------------------------------------------------------------------------------
 static float internal_square_vertices_half_width(float scale) {
@@ -10,18 +10,6 @@ static float internal_square_vertices_half_width(float scale) {
 }
 
 //--------------------------------------------------------------------------------
-static void internal_text_square_2D(Square2D* square_2D, float scale,
-                             GraphicsPoint2D position) {
-  assert(square_2D);
-
-  square_2D->x = position.x;
-  square_2D->y = position.y;
-  square_2D->half_width = internal_square_vertices_half_width(scale);
-}
-
-
-//MDTMP remove
-//--------------------------------------------------------------------------------
 typedef struct SquareVertices {  // (-1.0,-1.0) is bottom left;
   GLfloat bottom_left_1[2];
   GLfloat top_right_1[2];
@@ -31,14 +19,12 @@ typedef struct SquareVertices {  // (-1.0,-1.0) is bottom left;
   GLfloat bottom_right_2[2];
 } SquareVertices;
 
-//MDTMP remove
 //--------------------------------------------------------------------------------
-static void internal_square_vertices_set_value(SquareVertices* square_vertices,
+void internal_square_vertices_set_value(SquareVertices* square_vertices,
                                         float scale, GraphicsPoint2D position) {
   // FIXME Need unit test. Cannot compare float by memcmp on struct.
   assert(square_vertices);
 
-  const float size_ratio = 0.1f;
   const float half_size_square = internal_square_vertices_half_width(scale);
 
   const GLfloat x_left = position.x - half_size_square;
@@ -61,4 +47,4 @@ static void internal_square_vertices_set_value(SquareVertices* square_vertices,
   square_vertices->bottom_right_2[1] = y_bottom;
 }
 
-#endif  // GRAPHICS_TEXT_SQUARE_VERTICES_H
+#endif  // GRAPHICS_PRIMITIVE_SQUARE_VERTICES_H

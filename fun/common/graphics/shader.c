@@ -4,6 +4,7 @@
 
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #include <errno.h>
 #include <stdlib.h>
@@ -184,4 +185,41 @@ GLuint graphics_shader_program_create_file(const char* vertexfile,
   }
 
   return internal_program_create(vertex_shader, fragment_shader);
+}
+
+//--------------------------------------------------------------------------------
+GLuint graphics_shader_texture_buffer_create(const char* image_file_path)
+{
+  GLuint tbo_texture = 0;
+
+  SDL_Surface* tileset_texture = IMG_Load(image_file_path);
+  if (!tileset_texture) {
+    LOG_ERROR("IMG_Load: %s : %s", SDL_GetError(), image_file_path);
+    return tbo_texture;
+  }
+  if (!tileset_texture->format) {
+    LOG_ERROR("tileset_texture->format");
+    return tbo_texture;
+  }
+  if (tileset_texture->format->BytesPerPixel != 4) {
+    // This assumes GL_RGBA when calling glTexImage2D
+    LOG_ERROR("tileset_texture->format->BytesPerPixel != 4");
+    return tbo_texture;
+  }
+
+  glGenTextures(1, &tbo_texture);
+  glBindTexture(GL_TEXTURE_2D, tbo_texture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D,       // target
+               0,                   // level, 0 = base, no minimap,
+               GL_RGBA,             // internalformat
+               tileset_texture->w,  // width
+               tileset_texture->h,  // height
+               0,                   // border, always 0 in OpenGL ES
+               GL_RGBA,             // format
+               GL_UNSIGNED_BYTE,    // type
+               tileset_texture->pixels);
+  SDL_FreeSurface(tileset_texture);
+
+  return tbo_texture;
 }

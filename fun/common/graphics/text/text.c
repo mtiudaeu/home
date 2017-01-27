@@ -3,12 +3,13 @@
 #include "common/graphics/point.h"
 #include "common/graphics/context.h"
 
+#include "common/graphics/primitive/square_2D.h"
+
 #include "common/test/test.h"
 
 #include "common/log.h"
 
 #include <GL/glew.h>
-#include <SDL2/SDL_image.h>
 
 #include <assert.h>
 #include <stdlib.h>
@@ -48,37 +49,13 @@ GraphicsText* graphics_text_calloc() {
 
   {  // Create texture map objects
     const char* tileset_filename = "common/assets/text/ASCII_tileset.png";
-    SDL_Surface* tileset_texture = IMG_Load(tileset_filename);
-    if (!tileset_texture) {
-      LOG_ERROR("IMG_Load: %s : %s", SDL_GetError(), tileset_filename);
+    graphics_text->tbo_texture_tileset =
+        graphics_shader_texture_buffer_create(tileset_filename);
+    if (!graphics_text->tbo_texture_tileset) {
+      LOG_ERROR("!graphics_text->tbo_texture_tileset");
       graphics_text_free(graphics_text);
       return 0x0;
     }
-    if (!tileset_texture->format) {
-      LOG_ERROR("tileset_texture->format");
-      graphics_text_free(graphics_text);
-      return 0x0;
-    }
-    if (tileset_texture->format->BytesPerPixel != 4) {
-      // This assumes GL_RGBA when calling glTexImage2D
-      LOG_ERROR("tileset_texture->format->BytesPerPixel != 4");
-      graphics_text_free(graphics_text);
-      return 0x0;
-    }
-
-    glGenTextures(1, &graphics_text->tbo_texture_tileset);
-    glBindTexture(GL_TEXTURE_2D, graphics_text->tbo_texture_tileset);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D,       // target
-                 0,                   // level, 0 = base, no minimap,
-                 GL_RGBA,             // internalformat
-                 tileset_texture->w,  // width
-                 tileset_texture->h,  // height
-                 0,                   // border, always 0 in OpenGL ES
-                 GL_RGBA,             // format
-                 GL_UNSIGNED_BYTE,    // type
-                 tileset_texture->pixels);
-    SDL_FreeSurface(tileset_texture);
 
     const char* uniform_name = "texture_tileset";
     graphics_text->uniform_texture_tileset =
@@ -140,11 +117,36 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
     LOG_ERROR("graphics_text_draw : invalid msg");
   }
 
+
+  const size_t length_msg = strlen(msg);
+
+  const size_t square_2D_sizeof = sizeof(Square2D) * length_msg;
+  Square2D* const array_context_position = (Square2D*)malloc(square_2D_sizeof);
+  size_t i;
+  const float width = internal_square_vertices_half_width(scale) * 2.0f;
+  for (i = 0; i < length_msg; ++i, position.x += width) {
+    internal_text_square_2D(array_context_position + i, scale, position);
+  }
+
+  Square2D* const array_texture_position = (Square2D*)malloc(square_2D_sizeof);
+  for (i = 0; i < length_msg; ++i) {
+    internal_text_square_2D_texture(array_texture_position + i, msg[i]);
+  }
+
+  graphics_primitive_square_2D_draw(graphics_text->tbo_texture_tileset,
+                                    array_context_position,
+                                    array_texture_position,
+                                    length_msg);
+
+  free(array_context_position);
+  free(array_texture_position);
+
+/*
   {  // Bind program and text texture
     glUseProgram(graphics_text->program);
 
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(graphics_text->uniform_texture_tileset, /*GL_TEXTURE*/ 0);
+    glUniform1i(graphics_text->uniform_texture_tileset, GL_TEXTURE 0);
     glBindTexture(GL_TEXTURE_2D, graphics_text->tbo_texture_tileset);
   }
 
@@ -154,9 +156,8 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
     SquareVertices* const array_verticles_coord =
         (SquareVertices*)malloc(length_square_vertices);
     const float width = internal_square_vertices_half_width(scale) * 2.0f;
-    position.x -= width;  // make sure i = 0 have correct value.
-    for (size_t i = 0; i < length_msg; ++i) {
-      position.x += width;
+    size_t i = 0;
+    for (; i < length_msg; ++i, position.x += width) {
       internal_square_vertices_set_value(array_verticles_coord + i, scale,
                                          position);
     }
@@ -181,7 +182,8 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
     const size_t length_square_texture = sizeof(SquareTexture) * length_msg;
     SquareTexture* const array_texture_coord =
         (SquareTexture*)malloc(length_square_texture);
-    for (size_t i = 0; i < length_msg; ++i) {
+    size_t i = 0;
+    for (; i < length_msg; ++i) {
       internal_square_texture_set_value(array_texture_coord + i, msg[i]);
     }
     glBindBuffer(GL_ARRAY_BUFFER, graphics_text->vbo_texture_coord);
@@ -204,11 +206,49 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
 
   glDisableVertexAttribArray(graphics_text->attribute_vertices_coord);
   glDisableVertexAttribArray(graphics_text->attribute_texture_coord);
+*/
 }
 
 #ifdef INCLUDE_RUN_TEST
+static GraphicsText* internal_graphics_text = 0x0;
+
 //--------------------------------------------------------------------------------
-size_t graphics_text_run_test() {
+static void internal_draw_callback()
+{
+  if (!internal_graphics_text) {
+    internal_graphics_text = graphics_text_calloc();
+    TEST_ASSERT_TRUE_PTR(internal_graphics_text);
+  } else {
+    const float scale = 0.5f;
+    const GraphicsPoint2D position = {0.1, 0.5};
+    graphics_text_draw(internal_graphics_text, scale, position, "test");
+  }
+}
+
+//--------------------------------------------------------------------------------
+static void internal_uninit_callback()
+{
+  TEST_ASSERT_TRUE_PTR(internal_graphics_text);
+  graphics_text_free(internal_graphics_text);
+  internal_graphics_text = 0x0;
+}
+
+//--------------------------------------------------------------------------------
+size_t graphics_text_run_test(void (** draw_callback)(void),
+                              void (** uninit_callback)(void)) {
+  {  // Set draw and uninit callback
+    if (!draw_callback) {
+      TEST_ASSERT_MSG("!draw_callback", 1);
+      return 1;
+    }
+    if (!uninit_callback) {
+      TEST_ASSERT_MSG("!uninit_callback", 1);
+      return 1;
+    }
+    *draw_callback = &internal_draw_callback;
+    *uninit_callback = &internal_uninit_callback;
+  }
+
   GraphicsText* graphics_text = graphics_text_calloc();
 
   TEST_ASSERT_TRUE_PTR(graphics_text);

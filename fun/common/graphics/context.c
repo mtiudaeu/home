@@ -2,6 +2,8 @@
 
 #include "common/test/test.h"
 
+#include "common/graphics/primitive/square_2D.h"
+
 #include "common/log.h"
 
 #include <stdlib.h>
@@ -30,41 +32,53 @@ size_t graphics_context_global_init()
     return 1;
   }
 
-  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-    LOG_ERROR("SDL_Init : %s", SDL_GetError());
-    return 1;
+  {  // OpenGL related
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+      LOG_ERROR("SDL_Init : %s", SDL_GetError());
+      return 1;
+    }
+
+    global_graphics_context = calloc(1, sizeof(*global_graphics_context));
+    global_graphics_context->window = SDL_CreateWindow(
+        "Default Parameter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+        640, 480, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+    if (!global_graphics_context->window) {
+      graphics_context_global_uninit();
+      LOG_ERROR("SDL_CreateWindow %s", SDL_GetError());
+      return 1;
+    }
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    global_graphics_context->gl_context =
+        SDL_GL_CreateContext(global_graphics_context->window);
+    if (global_graphics_context->gl_context == NULL) {
+      graphics_context_global_uninit();
+      LOG_ERROR("SDL_GL_CreateContext %s", SDL_GetError());
+      return 1;
+    }
+
+    // TODO validate if glewInit this need clean-up.
+    GLenum glew_status = glewInit();
+    if (glew_status != GLEW_OK) {
+      LOG_ERROR("glewInit %s", glewGetErrorString(glew_status));
+      graphics_context_global_uninit();
+      return 1;
+    }
+    if (!GLEW_VERSION_2_0) {
+      LOG_ERROR("graphic card does not support OpenGL 2.0");
+      graphics_context_global_uninit();
+      return 1;
+    }
   }
 
-  global_graphics_context = calloc(1, sizeof(*global_graphics_context));
-  global_graphics_context->window = SDL_CreateWindow(
-      "Default Parameter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640,
-      480, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
-  if (!global_graphics_context->window) {
-    graphics_context_global_uninit();
-    LOG_ERROR("SDL_CreateWindow %s", SDL_GetError());
-    return 1;
-  }
-
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-  global_graphics_context->gl_context =
-      SDL_GL_CreateContext(global_graphics_context->window);
-  if (global_graphics_context->gl_context == NULL) {
-    graphics_context_global_uninit();
-    LOG_ERROR("SDL_GL_CreateContext %s", SDL_GetError());
-    return 1;
-  }
-
-  // TODO validate if glewInit this need clean-up.
-  GLenum glew_status = glewInit();
-  if (glew_status != GLEW_OK) {
-    LOG_ERROR("glewInit %s", glewGetErrorString(glew_status));
-    graphics_context_global_uninit();
-    return 1;
-  }
-  if (!GLEW_VERSION_2_0) {
-    LOG_ERROR("graphic card does not support OpenGL 2.0");
-    graphics_context_global_uninit();
-    return 1;
+  size_t ret = 0;
+  { // Primitive
+    ret = graphics_primitive_square_2D_init();
+    if (ret != 0) {
+      LOG_ERROR("graphics_primitive_square_2D_init");
+      graphics_context_global_uninit();
+      return ret;
+    }
   }
 
   return 0;
@@ -73,20 +87,26 @@ size_t graphics_context_global_init()
 //--------------------------------------------------------------------------------
 size_t graphics_context_global_uninit()
 {
-  if (!global_graphics_context) {
-    LOG_ERROR("global_graphics_context is not initialize")
-    return 1;
+  {  // OpenGL related
+    if (!global_graphics_context) {
+      LOG_ERROR("global_graphics_context is not initialize")
+      return 1;
+    }
+
+    if (global_graphics_context->gl_context) {
+      SDL_GL_DeleteContext(global_graphics_context->gl_context);
+    }
+
+    if (global_graphics_context->window) {
+      SDL_GL_DeleteContext(global_graphics_context->window);
+    }
+
+    SDL_Quit();
   }
 
-  if (global_graphics_context->gl_context) {
-    SDL_GL_DeleteContext(global_graphics_context->gl_context);
+  {  // Primitive
+    graphics_primitive_square_2D_uninit();
   }
-
-  if (global_graphics_context->window) {
-    SDL_GL_DeleteContext(global_graphics_context->window);
-  }
-
-  SDL_Quit();
 
   free(global_graphics_context);
   global_graphics_context = 0x0;
