@@ -1,5 +1,13 @@
+bin/03_opengl_tetris_piece.h: 03_opengl_tetris/piece.h 
+	touch bin/03_opengl_tetris_piece.h
+bin/03_opengl_tetris_piece.c: 03_opengl_tetris/piece.c bin/03_opengl_tetris_piece.h
+	touch bin/03_opengl_tetris_piece.c
 bin/03_opengl_tetris_tetris.c: 03_opengl_tetris/tetris.c bin/common_graphics_context.h bin/common_log.h
 	touch bin/03_opengl_tetris_tetris.c
+bin/03_opengl_tetris_piece.o: 03_opengl_tetris/piece.c bin/03_opengl_tetris_piece.c
+	$(GCC) -c $< -o $@
+bin/03_opengl_tetris_piece.bc: 03_opengl_tetris/piece.c bin/03_opengl_tetris_piece.c
+	$(EMCC) -c $< -o $@
 bin/03_opengl_tetris_tetris.o: 03_opengl_tetris/tetris.c bin/03_opengl_tetris_tetris.c
 	$(GCC) -c $< -o $@
 bin/03_opengl_tetris_tetris.bc: 03_opengl_tetris/tetris.c bin/03_opengl_tetris_tetris.c
