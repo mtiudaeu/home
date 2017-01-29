@@ -4,6 +4,8 @@
 
 #include "common/log/log.h"
 
+#include "common/test/test.h"
+
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,3 +78,52 @@ void ui_text_draw(const UIText* ui_text) {
   graphics_text_draw(ui_text->graphics_text, ui_text->scale, ui_text->position,
                      ui_text->msg);
 }
+
+#ifdef INCLUDE_RUN_TEST
+static UIText* internal_ui_text = 0x0;
+
+//--------------------------------------------------------------------------------
+static void internal_draw_callback()
+{
+  if (!internal_ui_text) {
+    internal_ui_text = ui_text_calloc();
+    assert(internal_ui_text );
+
+    ui_text_set_scale(internal_ui_text, 1.2f);
+    GraphicsPoint2D internal_position = {-0.8f, 0.2};
+    ui_text_set_position(internal_ui_text, internal_position);
+    ui_text_set_msg(internal_ui_text, "ui_test_ whoo!");
+  } else {
+    ui_text_draw(internal_ui_text);
+  }
+}
+
+//--------------------------------------------------------------------------------
+static void internal_uninit_callback()
+{
+  assert(internal_ui_text);
+  ui_text_free(internal_ui_text);
+  internal_ui_text = 0x0;
+}
+
+//--------------------------------------------------------------------------------
+size_t ui_text_run_test(void (** draw_callback)(void),
+                        void (** uninit_callback)(void))
+{
+  {  // Set draw and uninit callback
+    if (!draw_callback) {
+      TEST_ASSERT_MSG("!draw_callback");
+      return 1;
+    }
+    if (!uninit_callback) {
+      TEST_ASSERT_MSG("!uninit_callback");
+      return 1;
+    }
+    *draw_callback = &internal_draw_callback;
+    *uninit_callback = &internal_uninit_callback;
+  }
+
+  return 0;
+}
+#endif // INCLUDE_RUN_TEST
+

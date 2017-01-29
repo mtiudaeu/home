@@ -14,9 +14,5 @@ size_t graphics_context_global_ready();
 size_t graphics_context_global_run(void (*main_loop_cb)(),
                                    void (*handle_hotkey_cb)(SDL_Event*));
 
-#ifdef INCLUDE_RUN_TEST
-size_t graphics_context_run_test();
-#endif  // INCLUDE_RUN_TEST
-
 #endif // GRAPHICS_CONTEXT_H
 

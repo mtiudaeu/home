@@ -16,19 +16,19 @@ BUILD_PATH = bin/
 
 # ---- Target Lists ----
 ifndef TARGETS_ALL
-TARGETS_ALL = $(BUILD_PATH)test_graphics.out
+TARGETS_ALL = $(BUILD_PATH)run_test.out
 endif
 
 all: gcc_targets emcc_targets
 gcc_targets : $(TARGETS_ALL)
 emcc_targets : $(TARGETS_ALL:.out=.html)
 
-TEST_GRAPHICS_DEP_EXEC = $(addprefix $(BUILD_PATH),common_graphics_test_graphics.o common_graphics_text_text.o common_graphics_shader.o common_graphics_context.o common_graphics_primitive_rectangle_2D.o)
-TEST_GRAPHICS_DEP_EXEC_EMCC = $(TEST_GRAPHICS_DEP_EXEC:.o=.bc)
+RUN_TEST_DEP_EXEC = $(addprefix $(BUILD_PATH),common_run_test.o common_graphics_text_text.o common_graphics_shader.o common_graphics_context.o common_graphics_primitive_rectangle_2D.o common_ui_ui_text.o)
+RUN_TEST_DEP_EXEC_EMCC = $(RUN_TEST_DEP_EXEC:.o=.bc)
 
-$(BUILD_PATH)test_graphics.out : $(TEST_GRAPHICS_DEP_EXEC)
+$(BUILD_PATH)run_test.out : $(RUN_TEST_DEP_EXEC)
 	$(GCC) $^ -o $@ -lGL -lGLEW -lSDL2 -lSDL2_image
-$(BUILD_PATH)test_graphics.html : $(TEST_GRAPHICS_DEP_EXEC_EMCC)
+$(BUILD_PATH)run_test.html : $(RUN_TEST_DEP_EXEC_EMCC)
 	$(EMCC) $^ -o $@ --preload-file common/assets/text/ASCII_tileset.png
 
 # ---- clean ----

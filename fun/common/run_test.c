@@ -1,5 +1,7 @@
 #include "common/test/test.h"
 
+#include "common/ui/ui_text.h"
+
 #include "common/graphics/context.h"
 #include "common/graphics/text/text.h"
 
@@ -50,7 +52,7 @@ int main() {
 
   DrawCallback draw_callback = 0x0;
   UninitCallback uninit_callback = 0x0;
-  { // graphics_text
+  { // graphics_text_text
     ret = graphics_text_run_test(&draw_callback, &uninit_callback);
     if (ret != 0) {
       TEST_ASSERT_MSG("graphics_text_run_test");
@@ -67,6 +69,19 @@ int main() {
     ret = graphics_primitive_rectangle_2D_run_test(&draw_callback, &uninit_callback);
     if (ret != 0) {
       TEST_ASSERT_MSG("graphics_primitive_rectangle_2D_run_test");
+      return ret;
+    }
+    draw_callbacks[callbacks_size] = draw_callback;
+    uninit_callbacks[callbacks_size] = uninit_callback;
+    callbacks_size++;
+    draw_callback = 0x0;
+    uninit_callback = 0x0;
+  }
+
+  { // ui_ui_text
+    ret = ui_text_run_test(&draw_callback, &uninit_callback);
+    if (ret != 0) {
+      TEST_ASSERT_MSG("ui_text_run_test");
       return ret;
     }
     draw_callbacks[callbacks_size] = draw_callback;

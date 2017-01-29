@@ -58,7 +58,7 @@ int main() {
     return 1;
   }
 
-  ui_text_set_scale(internal_ui_text, 0.5f);
+  ui_text_set_scale(internal_ui_text, 1.0f);
   ui_text_set_position(internal_ui_text, internal_position);
   ui_text_set_msg(internal_ui_text, "test");
 

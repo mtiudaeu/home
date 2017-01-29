@@ -167,20 +167,3 @@ size_t graphics_context_global_ready()
   return global_graphics_context == 0;
 }
 
-//--------------------------------------------------------------------------------
-#ifdef INCLUDE_RUN_TEST
-size_t graphics_context_run_test()
-{
-  size_t ret = graphics_context_global_init();
-  if (ret != 0) {
-    TEST_ASSERT_MSG("graphics_context_global_init");
-    return ret;
-  }
-  ret = graphics_context_global_uninit();
-  if (ret != 0) {
-    TEST_ASSERT_MSG("graphics_context_global_uninit");
-    return ret;
-  }
-  return ret;
-}
-#endif  // INCLUDE_RUN_TEST
