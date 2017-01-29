@@ -43,8 +43,8 @@ static size_t internal_test_integration_draw()
 //--------------------------------------------------------------------------------
 int main() {
   size_t ret = graphics_context_global_init();
-  TEST_ASSERT_MSG("graphics_context_global_init", ret);
   if (ret != 0) {
+    TEST_ASSERT_MSG("graphics_context_global_init");
     return ret;
   }
 
@@ -52,8 +52,8 @@ int main() {
   UninitCallback uninit_callback = 0x0;
   { // graphics_text
     ret = graphics_text_run_test(&draw_callback, &uninit_callback);
-    TEST_ASSERT_MSG("graphics_text_run_test", ret);
     if (ret != 0) {
+      TEST_ASSERT_MSG("graphics_text_run_test");
       return ret;
     }
     draw_callbacks[callbacks_size] = draw_callback;
@@ -65,8 +65,8 @@ int main() {
 
   { // graphics_primitive_rectangle_2D
     ret = graphics_primitive_rectangle_2D_run_test(&draw_callback, &uninit_callback);
-    TEST_ASSERT_MSG("graphics_primitive_rectangle_2D_run_test", ret);
     if (ret != 0) {
+      TEST_ASSERT_MSG("graphics_primitive_rectangle_2D_run_test");
       return ret;
     }
     draw_callbacks[callbacks_size] = draw_callback;
@@ -77,14 +77,14 @@ int main() {
   }
 
   ret = internal_test_integration_draw();
-  TEST_ASSERT_MSG("internal_test_integration_draw", ret);
   if (ret != 0) {
+    TEST_ASSERT_MSG("internal_test_integration_draw");
     return ret;
   }
 
   ret = graphics_context_global_uninit();
-  TEST_ASSERT_MSG("graphics_context_global_uninit", ret);
   if (ret != 0) {
+    TEST_ASSERT_MSG("graphics_context_global_uninit");
     return ret;
   }
 

@@ -97,7 +97,7 @@ static void internal_draw_callback()
 {
   if (!internal_graphics_text) {
     internal_graphics_text = graphics_text_calloc();
-    TEST_ASSERT_TRUE_PTR(internal_graphics_text);
+    assert(internal_graphics_text);
   } else {
     const float scale = 1.0f;
     const GraphicsPoint2D position = {0.1, 0.5};
@@ -108,7 +108,7 @@ static void internal_draw_callback()
 //--------------------------------------------------------------------------------
 static void internal_uninit_callback()
 {
-  TEST_ASSERT_TRUE_PTR(internal_graphics_text);
+  assert(internal_graphics_text);
   graphics_text_free(internal_graphics_text);
   internal_graphics_text = 0x0;
 }
@@ -118,11 +118,11 @@ size_t graphics_text_run_test(void (** draw_callback)(void),
                               void (** uninit_callback)(void)) {
   {  // Set draw and uninit callback
     if (!draw_callback) {
-      TEST_ASSERT_MSG("!draw_callback", 1);
+      TEST_ASSERT_MSG("!draw_callback");
       return 1;
     }
     if (!uninit_callback) {
-      TEST_ASSERT_MSG("!uninit_callback", 1);
+      TEST_ASSERT_MSG("!uninit_callback");
       return 1;
     }
     *draw_callback = &internal_draw_callback;
@@ -131,21 +131,21 @@ size_t graphics_text_run_test(void (** draw_callback)(void),
 
   {  // Test internal_char_to_grid_coord
     GridCoord16x16 coord = internal_char_to_grid_coord((char)0);
-    TEST_ASSERT_EQUAL_UINT(coord.x, 0);
-    TEST_ASSERT_EQUAL_UINT(coord.y, 0);
+    TEST_ASSERT_TRUE(coord.x == 0);
+    TEST_ASSERT_TRUE(coord.y == 0);
 
     coord = internal_char_to_grid_coord((char)16);
-    TEST_ASSERT_EQUAL_UINT(coord.x, 0);
-    TEST_ASSERT_EQUAL_UINT(coord.y, 1);
+    TEST_ASSERT_TRUE(coord.x == 0);
+    TEST_ASSERT_TRUE(coord.y == 1);
 
     // Overflow
     coord = internal_char_to_grid_coord((char)256);
-    TEST_ASSERT_EQUAL_UINT(coord.x, 0);
-    TEST_ASSERT_EQUAL_UINT(coord.y, 0);
+    TEST_ASSERT_TRUE(coord.x == 0);
+    TEST_ASSERT_TRUE(coord.y == 0);
 
     coord = internal_char_to_grid_coord((char)34);
-    TEST_ASSERT_EQUAL_UINT(coord.x, 2);
-    TEST_ASSERT_EQUAL_UINT(coord.y, 2);
+    TEST_ASSERT_TRUE(coord.x == 2);
+    TEST_ASSERT_TRUE(coord.y == 2);
   }
 
   return 0;

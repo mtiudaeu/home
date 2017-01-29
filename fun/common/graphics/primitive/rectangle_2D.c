@@ -194,7 +194,7 @@ static void internal_draw_callback() {
     internal_bo_texture =
         graphics_shader_texture_buffer_create(tileset_filename);
     if (!internal_bo_texture) {
-      TEST_ASSERT_MSG("internal_bo_texture", 1)
+      TEST_ASSERT_MSG("internal_bo_texture")
     }
   }
 
@@ -236,11 +236,11 @@ size_t graphics_primitive_rectangle_2D_run_test(void (** draw_callback)(void),
 {
   {  // Set draw and uninit callback
     if (!draw_callback) {
-      TEST_ASSERT_MSG("!draw_callback", 1);
+      TEST_ASSERT_MSG("!draw_callback");
       return 1;
     }
     if (!uninit_callback) {
-      TEST_ASSERT_MSG("!uninit_callback", 1);
+      TEST_ASSERT_MSG("!uninit_callback");
       return 1;
     }
     *draw_callback = &internal_draw_callback;
