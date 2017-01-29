@@ -3,7 +3,9 @@
 
 #include "common/graphics/point.h"
 
-enum TetrisPieceType {
+#include <stddef.h>
+
+typedef enum TetrisPieceType {
   PIECE_LINE,
   PIECE_L_LEFT,
   PIECE_L_RIGHT,
@@ -11,7 +13,7 @@ enum TetrisPieceType {
   PIECE_Z_LEFT,
   PIECE_T,
   PIECE_Z_RIGHT
-};
+} TetrisPieceType;
 
 typedef struct TetrisPiece TetrisPiece;
 
@@ -21,6 +23,6 @@ void tetris_piece_free(TetrisPiece* tetris_piece);
 void tetris_piece_set_type(TetrisPiece* tetris_piece, TetrisPieceType type);
 void tetris_piece_set_position(TetrisPiece* tetris_piece, GraphicsPoint2D position);
 
-void tetris_piece_draw(const TetrisPiece tetris_piece[], size_t length);
+void tetris_piece_draw(TetrisPiece* tetris_piece[], size_t length);
 
 #endif // TETRIS_PIECE_H
