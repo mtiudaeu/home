@@ -3,28 +3,15 @@
 
 #ifdef INCLUDE_RUN_TEST
 
-#include <stddef.h>
+#define TEST_ASSERT_MSG(msg)                                    \
+  printf("Test Error : %s, %s:%d\n", msg, __FILE__, __LINE__); \
 
-// Need different implementation to print values accordingly for different
-// types.
-
-#define TEST_ASSERT_EQUAL_STR(a, b) \
-  test_assert_equal_str(a, b, __FILE__, __LINE__);
-void test_assert_equal_str(const char* a, const char* b, const char* file_name,
-                           int line);
-
-#define TEST_ASSERT_EQUAL_UINT(a, b) \
-  test_assert_equal_uint(a, b, __FILE__, __LINE__);
-void test_assert_equal_uint(unsigned int a, unsigned int b,
-                            const char* file_name, int line);
-
-#define TEST_ASSERT_TRUE_PTR(a) \
-  test_assert_true_ptr(a, __FILE__, __LINE__);
-void test_assert_true_ptr(void* a, const char* file_name, int line);
-
-#define TEST_ASSERT_MSG(msg, value) \
-  test_assert_msg(msg, value, __FILE__, __LINE__);
-void test_assert_msg(const char* msg, size_t value, const char* file_name, int line);
+#define TEST_ASSERT_TRUE(expr)                                     \
+  if (expr) {                                                      \
+    printf("Test Success\n");                                      \
+  } else {                                                         \
+    printf("Test Error : %s, %s:%d\n", #expr, __FILE__, __LINE__); \
+  }
 
 #endif // INCLUDE_RUN_TEST
 
