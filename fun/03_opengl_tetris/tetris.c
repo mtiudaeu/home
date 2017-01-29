@@ -1,8 +1,10 @@
-#include <common/ui/ui_text.h>
+#include "03_opengl_tetris/piece.h"
+
+#include "common/ui/ui_text.h"
 
 #include "common/graphics/context.h"
 
-#include "common/log.h"
+#include "common/log/log.h"
 
 #include <GL/glew.h>
 
