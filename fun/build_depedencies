@@ -1,2 +1,2 @@
-./common/file_dependency.py common > common/Makefile_generated
-./common/file_dependency.py 03_opengl_tetris > 03_opengl_tetris/Makefile_generated
+./common/tool/file_dependency.py common > common/Makefile_generated
+./common/tool/file_dependency.py 03_opengl_tetris > 03_opengl_tetris/Makefile_generated

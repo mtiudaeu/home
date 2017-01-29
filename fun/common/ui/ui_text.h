@@ -1,6 +1,8 @@
 #ifndef UI_TEXT_H
 #define UI_TEXT_H
 
+//MDTMP add test
+
 #include "common/graphics/point.h"
 
 typedef struct UIText UIText;

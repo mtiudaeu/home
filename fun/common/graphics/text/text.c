@@ -8,7 +8,7 @@
 
 #include "common/test/test.h"
 
-#include "common/log.h"
+#include "common/log/log.h"
 
 #include <GL/glew.h>
 

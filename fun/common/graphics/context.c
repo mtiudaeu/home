@@ -4,7 +4,7 @@
 
 #include "common/graphics/primitive/rectangle_2D.h"
 
-#include "common/log.h"
+#include "common/log/log.h"
 
 #include <stdlib.h>
 #include <assert.h>
