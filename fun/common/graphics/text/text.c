@@ -3,7 +3,7 @@
 #include "common/graphics/point.h"
 #include "common/graphics/context.h"
 
-#include "common/graphics/primitive/square_2D.h"
+#include "common/graphics/primitive/rectangle_2D.h"
 #include "common/graphics/shader.h"
 
 #include "common/test/test.h"
@@ -67,20 +67,20 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
 
   const size_t length_msg = strlen(msg);
 
-  const size_t square_2D_sizeof = sizeof(Square2D) * length_msg;
-  Square2D* const array_context_position = (Square2D*)malloc(square_2D_sizeof);
+  const size_t rectangle_2D_sizeof = sizeof(Rectangle2D) * length_msg;
+  Rectangle2D* const array_context_position = (Rectangle2D*)malloc(rectangle_2D_sizeof);
   size_t i;
   const float width = internal_square_vertices_half_width(scale) * 2.0f;
   for (i = 0; i < length_msg; ++i, position.x += width) {
-    internal_text_square_2D(array_context_position + i, scale, position);
+    internal_text_rectangle_2D(array_context_position + i, scale, position);
   }
 
-  Square2D* const array_texture_position = (Square2D*)malloc(square_2D_sizeof);
+  Rectangle2D* const array_texture_position = (Rectangle2D*)malloc(rectangle_2D_sizeof);
   for (i = 0; i < length_msg; ++i) {
-    internal_text_square_2D_texture(array_texture_position + i, msg[i]);
+    internal_text_rectangle_2D_texture(array_texture_position + i, msg[i]);
   }
 
-  graphics_primitive_square_2D_draw(graphics_text->tbo_texture_tileset,
+  graphics_primitive_rectangle_2D_draw(graphics_text->tbo_texture_tileset,
                                     array_context_position,
                                     array_texture_position,
                                     length_msg);

@@ -20,15 +20,15 @@ static GridCoord16x16 internal_char_to_grid_coord(char value) {
 #define TEXTURE_CHARACTER_HALF_WIDTH (TEXTURE_CHARACTER_WIDTH / 2.0f);
 
 //--------------------------------------------------------------------------------
-// square_2D (0.0,0.0) is bottom left
+// rectangle_2D (0.0,0.0) is bottom left
 //MDTMP add test
-static void internal_text_square_2D_texture(Square2D* square_2D, char value) {
-  assert(square_2D);
+static void internal_text_rectangle_2D_texture(Rectangle2D* rectangle_2D, char value) {
+  assert(rectangle_2D);
 
   const GridCoord16x16 character_coord = internal_char_to_grid_coord(value);
-  square_2D->x = character_coord.x * TEXTURE_CHARACTER_WIDTH + TEXTURE_CHARACTER_HALF_WIDTH;
-  square_2D->y = 1.0f - (character_coord.y  * TEXTURE_CHARACTER_WIDTH) - TEXTURE_CHARACTER_HALF_WIDTH;
-  square_2D->half_width = TEXTURE_CHARACTER_HALF_WIDTH;
+  rectangle_2D->x = character_coord.x * TEXTURE_CHARACTER_WIDTH + TEXTURE_CHARACTER_HALF_WIDTH;
+  rectangle_2D->y = 1.0f - (character_coord.y  * TEXTURE_CHARACTER_WIDTH) - TEXTURE_CHARACTER_HALF_WIDTH;
+  rectangle_2D->half_width = TEXTURE_CHARACTER_HALF_WIDTH;
 }
 
 #endif  // GRAPHICS_TEXT_SQUARE_TEXTURE_H

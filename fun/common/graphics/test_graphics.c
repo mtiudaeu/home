@@ -3,7 +3,7 @@
 #include "common/graphics/context.h"
 #include "common/graphics/text/text.h"
 
-#include "common/graphics/primitive/square_2D.h"
+#include "common/graphics/primitive/rectangle_2D.h"
 
 #include <GL/glew.h>
 
@@ -63,9 +63,9 @@ int main() {
     uninit_callback = 0x0;
   }
 
-  { // graphics_primitive_square_2D
-    ret = graphics_primitive_square_2D_run_test(&draw_callback, &uninit_callback);
-    TEST_ASSERT_MSG("graphics_primitive_square_2D_run_test", ret);
+  { // graphics_primitive_rectangle_2D
+    ret = graphics_primitive_rectangle_2D_run_test(&draw_callback, &uninit_callback);
+    TEST_ASSERT_MSG("graphics_primitive_rectangle_2D_run_test", ret);
     if (ret != 0) {
       return ret;
     }

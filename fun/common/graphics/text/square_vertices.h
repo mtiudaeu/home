@@ -11,13 +11,13 @@ static float internal_square_vertices_half_width(float scale) {
 
 //--------------------------------------------------------------------------------
 //MDTMP add test
-static void internal_text_square_2D(Square2D* square_2D, float scale,
+static void internal_text_rectangle_2D(Rectangle2D* rectangle_2D, float scale,
                              GraphicsPoint2D position) {
-  assert(square_2D);
+  assert(rectangle_2D);
 
-  square_2D->x = position.x;
-  square_2D->y = position.y;
-  square_2D->half_width = internal_square_vertices_half_width(scale);
+  rectangle_2D->x = position.x;
+  rectangle_2D->y = position.y;
+  rectangle_2D->half_width = internal_square_vertices_half_width(scale);
 }
 
 #endif  // GRAPHICS_TEXT_SQUARE_VERTICES_H

@@ -1,4 +1,4 @@
-#include "common/graphics/primitive/square_2D.h"
+#include "common/graphics/primitive/rectangle_2D.h"
 
 #include "common/graphics/primitive/triangle_vertices_2D.h"
 
@@ -45,7 +45,7 @@ void main(void) {\
 }
 
 //--------------------------------------------------------------------------------
-size_t graphics_primitive_square_2D_init() {
+size_t graphics_primitive_rectangle_2D_init() {
   if (internal_program_id) {
     LOG_ERROR("internal_program_init : already initialized");
     return 1;
@@ -62,7 +62,7 @@ size_t graphics_primitive_square_2D_init() {
       glGetUniformLocation(internal_program_id, uniform_name);
   if (internal_uniform_texture_tileset == -1) {
     LOG_ERROR("glGetUniformLocation %s", uniform_name);
-    graphics_primitive_square_2D_uninit();
+    graphics_primitive_rectangle_2D_uninit();
     return 1;
   }
 
@@ -74,7 +74,7 @@ size_t graphics_primitive_square_2D_init() {
         glGetAttribLocation(internal_program_id, attribute_name);
     if (internal_attribute_vertices_coord == -1) {
       LOG_ERROR("glGetAttribLocation %s", attribute_name);
-      graphics_primitive_square_2D_uninit();
+      graphics_primitive_rectangle_2D_uninit();
       return 1;
     }
   }
@@ -87,7 +87,7 @@ size_t graphics_primitive_square_2D_init() {
         glGetAttribLocation(internal_program_id, attribute_name);
     if (internal_attribute_texture_coord == -1) {
       LOG_ERROR("glGetAttribLocation %s", attribute_name);
-      graphics_primitive_square_2D_uninit();
+      graphics_primitive_rectangle_2D_uninit();
       return 1;
     }
   }
@@ -96,7 +96,7 @@ size_t graphics_primitive_square_2D_init() {
 }
 
 //--------------------------------------------------------------------------------
-void graphics_primitive_square_2D_uninit()
+void graphics_primitive_rectangle_2D_uninit()
 {
   glDeleteProgram(internal_program_id);
   internal_program_id = 0;
@@ -109,9 +109,9 @@ void graphics_primitive_square_2D_uninit()
 }
 
 //--------------------------------------------------------------------------------
-void graphics_primitive_square_2D_draw(GLuint bo_texture,
-                                       const Square2D* array_context_position,
-                                       const Square2D* array_texture_position,
+void graphics_primitive_rectangle_2D_draw(GLuint bo_texture,
+                                       const Rectangle2D* array_context_position,
+                                       const Rectangle2D* array_texture_position,
                                        size_t square_length)
 {
   assert(internal_program_id);
@@ -131,7 +131,7 @@ void graphics_primitive_square_2D_draw(GLuint bo_texture,
         (TriangleVertices2D*)malloc(vertices_sizeof);
     size_t i = 0;
     for (; i < length_triangles; i += 2) {
-      graphics_primitive_triangle_vertices_from_square_2D(
+      graphics_primitive_triangle_vertices_from_rectangle_2D(
           array_triangle_vertices + i, array_context_position[i / 2]);
     }
 
@@ -157,7 +157,7 @@ void graphics_primitive_square_2D_draw(GLuint bo_texture,
         (TriangleVertices2D*)malloc(vertices_sizeof);
     size_t i = 0;
     for (; i < length_triangles; i+=2) {
-      graphics_primitive_triangle_vertices_from_square_2D(
+      graphics_primitive_triangle_vertices_from_rectangle_2D(
           array_texture_coord + i, array_texture_position[i / 2]);
     }
 
@@ -198,31 +198,31 @@ static void internal_draw_callback() {
     }
   }
 
-  Square2D square_2D;
-  square_2D.x = -0.2f;
-  square_2D.y = -0.2f;
-  square_2D.half_width = 0.2f;
+  Rectangle2D rectangle_2D;
+  rectangle_2D.x = -0.2f;
+  rectangle_2D.y = -0.2f;
+  rectangle_2D.half_width = 0.2f;
 
-  Square2D array_context_position[2];
-  array_context_position[0] = square_2D;
-  square_2D.y = 0.6f;
-  array_context_position[1] = square_2D;
+  Rectangle2D array_context_position[2];
+  array_context_position[0] = rectangle_2D;
+  rectangle_2D.y = 0.6f;
+  array_context_position[1] = rectangle_2D;
 
 
-  square_2D.x = 0.5f;
-  square_2D.y = 0.5f;
-  square_2D.half_width = 0.5f;
+  rectangle_2D.x = 0.5f;
+  rectangle_2D.y = 0.5f;
+  rectangle_2D.half_width = 0.5f;
   float texture_increment_x = 1.0f / 15.0f;
   float texture_increment_y = 1.0f / 5.0f;
-  square_2D.x = (1.0f * texture_increment_x) + (texture_increment_x/2.0f);
-  square_2D.y = (3.0f * texture_increment_y) + (texture_increment_y/2.0f);
-  square_2D.half_width = 0.1f;
+  rectangle_2D.x = (1.0f * texture_increment_x) + (texture_increment_x/2.0f);
+  rectangle_2D.y = (3.0f * texture_increment_y) + (texture_increment_y/2.0f);
+  rectangle_2D.half_width = 0.1f;
 
-  Square2D array_texture_position[2];
-  array_texture_position[0] = square_2D;
-  array_texture_position[1] = square_2D;
+  Rectangle2D array_texture_position[2];
+  array_texture_position[0] = rectangle_2D;
+  array_texture_position[1] = rectangle_2D;
 
-  graphics_primitive_square_2D_draw(internal_bo_texture, array_context_position,
+  graphics_primitive_rectangle_2D_draw(internal_bo_texture, array_context_position,
                                     array_texture_position, 2);
 }
 
@@ -233,7 +233,7 @@ static void internal_uninit_callback()
 }
 
 //--------------------------------------------------------------------------------
-size_t graphics_primitive_square_2D_run_test(void (** draw_callback)(void),
+size_t graphics_primitive_rectangle_2D_run_test(void (** draw_callback)(void),
                                              void (** uninit_callback)(void))
 {
   {  // Set draw and uninit callback

@@ -23,7 +23,7 @@ all: gcc_targets emcc_targets
 gcc_targets : $(TARGETS_ALL)
 emcc_targets : $(TARGETS_ALL:.out=.html)
 
-TEST_GRAPHICS_DEP_EXEC = $(addprefix $(BUILD_PATH),common_graphics_test_graphics.o common_graphics_text_text.o common_graphics_shader.o common_graphics_context.o common_graphics_primitive_square_2D.o common_test_test.o)
+TEST_GRAPHICS_DEP_EXEC = $(addprefix $(BUILD_PATH),common_graphics_test_graphics.o common_graphics_text_text.o common_graphics_shader.o common_graphics_context.o common_graphics_primitive_rectangle_2D.o common_test_test.o)
 TEST_GRAPHICS_DEP_EXEC_EMCC = $(TEST_GRAPHICS_DEP_EXEC:.o=.bc)
 
 $(BUILD_PATH)test_graphics.out : $(TEST_GRAPHICS_DEP_EXEC)
