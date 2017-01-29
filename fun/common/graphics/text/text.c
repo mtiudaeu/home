@@ -4,6 +4,7 @@
 #include "common/graphics/context.h"
 
 #include "common/graphics/primitive/square_2D.h"
+#include "common/graphics/shader.h"
 
 #include "common/test/test.h"
 

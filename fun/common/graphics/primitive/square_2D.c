@@ -190,7 +190,6 @@ static GLuint internal_bo_texture = 0;
 static void internal_draw_callback() {
 
   if (!internal_bo_texture) {
-//MDTMP const char* tileset_filename = "common/assets/text/ASCII_tileset.png";
     const char* tileset_filename = "common/assets/tmp/tetris_texture.png";
     internal_bo_texture =
         graphics_shader_texture_buffer_create(tileset_filename);
@@ -213,21 +212,15 @@ static void internal_draw_callback() {
   square_2D.x = 0.5f;
   square_2D.y = 0.5f;
   square_2D.half_width = 0.5f;
+  float texture_increment_x = 1.0f / 15.0f;
+  float texture_increment_y = 1.0f / 5.0f;
+  square_2D.x = (1.0f * texture_increment_x) + (texture_increment_x/2.0f);
+  square_2D.y = (3.0f * texture_increment_y) + (texture_increment_y/2.0f);
+  square_2D.half_width = 0.1f;
+
   Square2D array_texture_position[2];
   array_texture_position[0] = square_2D;
   array_texture_position[1] = square_2D;
-
-//MDTMP
-/*
-  float texture_increment_x = 1.0f / 15.0f;
-  float texture_increment_y = 1.0f / 5.0f;
-  square_2D.x = 1.0f * texture_increment_x - texture_increment_x/2.0f;
-  square_2D.y = 3.0f * texture_increment_y - texture_increment_y/2.0f;
-  square_2D.half_width = texture_increment_x;
-//MDTMP Square2D array_texture_position[2];
-  array_texture_position[0] = square_2D;
-  array_texture_position[1] = square_2D;
-*/
 
   graphics_primitive_square_2D_draw(internal_bo_texture, array_context_position,
                                     array_texture_position, 2);
