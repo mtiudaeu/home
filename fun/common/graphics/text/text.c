@@ -70,7 +70,7 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
   const size_t rectangle_2D_sizeof = sizeof(Rectangle2D) * length_msg;
   Rectangle2D* const array_context_position = (Rectangle2D*)malloc(rectangle_2D_sizeof);
   size_t i;
-  const float width = internal_square_vertices_half_width(scale) * 2.0f;
+  const float width = internal_square_vertices_width(scale);
   for (i = 0; i < length_msg; ++i, position.x += width) {
     internal_text_rectangle_2D(array_context_position + i, scale, position);
   }
@@ -99,7 +99,7 @@ static void internal_draw_callback()
     internal_graphics_text = graphics_text_calloc();
     TEST_ASSERT_TRUE_PTR(internal_graphics_text);
   } else {
-    const float scale = 0.5f;
+    const float scale = 1.0f;
     const GraphicsPoint2D position = {0.1, 0.5};
     graphics_text_draw(internal_graphics_text, scale, position, "test");
   }

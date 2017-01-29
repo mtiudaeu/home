@@ -14,10 +14,10 @@ void graphics_primitive_triangle_vertices_from_rectangle_2D(
     TriangleVertices2D triangle_vertices[2], const Rectangle2D rectangle_2D) {
   // FIXME Need unit test. Cannot compare float by memcmp on struct.
 
-  const GLfloat x_left = rectangle_2D.x - rectangle_2D.half_width;
-  const GLfloat x_right = rectangle_2D.x + rectangle_2D.half_width;
-  const GLfloat y_bottom = rectangle_2D.y - rectangle_2D.half_width;
-  const GLfloat y_top = rectangle_2D.y + rectangle_2D.half_width;
+  const GLfloat x_left = rectangle_2D.x;
+  const GLfloat x_right = rectangle_2D.x + rectangle_2D.width;
+  const GLfloat y_bottom = rectangle_2D.y;
+  const GLfloat y_top = rectangle_2D.y + rectangle_2D.height;
 
   // bottom left
   triangle_vertices[0].coord_1[0] = triangle_vertices[1].coord_1[0] = x_left;

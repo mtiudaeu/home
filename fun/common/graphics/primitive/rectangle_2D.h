@@ -11,9 +11,10 @@ size_t graphics_primitive_rectangle_2D_init();
 void graphics_primitive_rectangle_2D_uninit();
 
 typedef struct Rectangle2D {
-  float x;
-  float y;
-  float half_width;
+  float x; // Bottom left corner
+  float y; // Bottom left corner
+  float width;
+  float height;
 } Rectangle2D;
 
 void graphics_primitive_rectangle_2D_draw(GLuint bo_texture,

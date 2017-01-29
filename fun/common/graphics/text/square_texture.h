@@ -26,9 +26,10 @@ static void internal_text_rectangle_2D_texture(Rectangle2D* rectangle_2D, char v
   assert(rectangle_2D);
 
   const GridCoord16x16 character_coord = internal_char_to_grid_coord(value);
-  rectangle_2D->x = character_coord.x * TEXTURE_CHARACTER_WIDTH + TEXTURE_CHARACTER_HALF_WIDTH;
-  rectangle_2D->y = 1.0f - (character_coord.y  * TEXTURE_CHARACTER_WIDTH) - TEXTURE_CHARACTER_HALF_WIDTH;
-  rectangle_2D->half_width = TEXTURE_CHARACTER_HALF_WIDTH;
+  rectangle_2D->x = character_coord.x * TEXTURE_CHARACTER_WIDTH;
+  rectangle_2D->y = 1.0f - (character_coord.y  * TEXTURE_CHARACTER_WIDTH) - TEXTURE_CHARACTER_WIDTH;
+  rectangle_2D->width = TEXTURE_CHARACTER_WIDTH;
+  rectangle_2D->height = TEXTURE_CHARACTER_WIDTH; //MDTMP
 }
 
 #endif  // GRAPHICS_TEXT_SQUARE_TEXTURE_H

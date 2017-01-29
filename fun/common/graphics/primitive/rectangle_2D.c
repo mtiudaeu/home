@@ -201,22 +201,20 @@ static void internal_draw_callback() {
   Rectangle2D rectangle_2D;
   rectangle_2D.x = -0.2f;
   rectangle_2D.y = -0.2f;
-  rectangle_2D.half_width = 0.2f;
+  rectangle_2D.width = 0.2f;
+  rectangle_2D.height = 0.2f;
 
   Rectangle2D array_context_position[2];
   array_context_position[0] = rectangle_2D;
   rectangle_2D.y = 0.6f;
   array_context_position[1] = rectangle_2D;
 
-
-  rectangle_2D.x = 0.5f;
-  rectangle_2D.y = 0.5f;
-  rectangle_2D.half_width = 0.5f;
   float texture_increment_x = 1.0f / 15.0f;
   float texture_increment_y = 1.0f / 5.0f;
-  rectangle_2D.x = (1.0f * texture_increment_x) + (texture_increment_x/2.0f);
-  rectangle_2D.y = (3.0f * texture_increment_y) + (texture_increment_y/2.0f);
-  rectangle_2D.half_width = 0.1f;
+  rectangle_2D.width = texture_increment_x;
+  rectangle_2D.height = texture_increment_y;
+  rectangle_2D.x = (1.0f * texture_increment_x);
+  rectangle_2D.y = (3.0f * texture_increment_y);
 
   Rectangle2D array_texture_position[2];
   array_texture_position[0] = rectangle_2D;
