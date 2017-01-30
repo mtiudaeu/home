@@ -18,21 +18,72 @@ struct TetrisPiece {
 }; 
 
 //--------------------------------------------------------------------------------
-void internal_rectangle_2D_set_context_position(Rectangle2D * const rectangle_2D,
+void internal_rectangle_2D_set_context_position(Rectangle2D* const rectangle_2D,
                                                 const TetrisPieceType type) {
   assert(rectangle_2D);
 
-  rectangle_2D->x = -0.8f;
-  rectangle_2D->y = 0.8f - (0.2f*type);
-  rectangle_2D->width = 0.2f;
-  rectangle_2D->height = 0.2f;
-
+  // initialize 4 square to init pos.
   size_t i;
-  for (i = 1; i < internal_pieces_block_nb; ++i) {
-    rectangle_2D[i].width = rectangle_2D->width;
-    rectangle_2D[i].height = rectangle_2D->height;
-    rectangle_2D[i].x = rectangle_2D->x + ((float)i*0.2f);
-    rectangle_2D[i].y = rectangle_2D->y;
+  for (i = 0; i < internal_pieces_block_nb; ++i) {
+    rectangle_2D[i].width = 0.1f;
+    rectangle_2D[i].height = 0.1f;
+    rectangle_2D[i].x = -0.6f;
+    rectangle_2D[i].y = 0.8f - (rectangle_2D[i].height * 2.0f * type);
+  }
+
+  switch (type) {
+    case PIECE_LINE: {
+      // horizontal line of 4
+      for (i = 1; i < internal_pieces_block_nb; ++i) {
+        rectangle_2D[i].x += ((float)i * rectangle_2D->width);
+      }
+    } break;
+    case PIECE_L_LEFT: {
+      // horizontal line of 3
+      for (i = 1; i < internal_pieces_block_nb-1; ++i) {
+        rectangle_2D[i].x += ((float)i * rectangle_2D->width);
+      }
+      // + 1 top left
+      rectangle_2D[3].y += rectangle_2D->height;
+    } break;
+    case PIECE_L_RIGHT: {
+      // horizontal line of 3
+      for (i = 1; i < internal_pieces_block_nb-1; ++i) {
+        rectangle_2D[i].x += ((float)i * rectangle_2D->width);
+      }
+      // + 1 top right
+      rectangle_2D[3].x = rectangle_2D[2].x;
+      rectangle_2D[3].y += rectangle_2D->height;
+    } break;
+    case PIECE_SQUARE: {
+      rectangle_2D[1].x += rectangle_2D[1].width;
+      rectangle_2D[2].y += rectangle_2D[2].height;
+      rectangle_2D[3].x += rectangle_2D[1].width;
+      rectangle_2D[3].y += rectangle_2D[2].height;
+    } break;
+    case PIECE_Z_LEFT: {
+      rectangle_2D[1].x += rectangle_2D[1].width;
+      rectangle_2D[2].x = rectangle_2D[1].x;
+      rectangle_2D[2].y += rectangle_2D[2].height;
+      rectangle_2D[3].x = rectangle_2D[2].x + rectangle_2D[3].width;
+      rectangle_2D[3].y = rectangle_2D[2].y;
+    } break;
+    case PIECE_T: {
+      // horizontal line of 3
+      for (i = 1; i < internal_pieces_block_nb-1; ++i) {
+        rectangle_2D[i].x += ((float)i * rectangle_2D->width);
+      }
+      // + 1 top middle
+      rectangle_2D[3].x += rectangle_2D->width;
+      rectangle_2D[3].y += rectangle_2D->height;
+    } break;
+    case PIECE_Z_RIGHT: {
+      rectangle_2D[0].y += rectangle_2D[0].height;
+      rectangle_2D[1].y = rectangle_2D[0].y;
+      rectangle_2D[1].x += rectangle_2D[1].width;
+      rectangle_2D[2].x = rectangle_2D[1].x;
+      rectangle_2D[3].x = rectangle_2D[2].x + rectangle_2D[3].width;
+    } break;
   }
 }
 
