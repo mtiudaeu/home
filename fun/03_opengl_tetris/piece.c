@@ -7,8 +7,9 @@
 #include <stdlib.h>
 #include <assert.h>
 
+static const size_t internal_pieces_block_nb = 4;
+
 static GLuint internal_bo_texture = 0;
-//MDTMP add layout of every piece. (static)
 
 //--------------------------------------------------------------------------------
 struct TetrisPiece {
@@ -17,7 +18,7 @@ struct TetrisPiece {
 }; 
 
 //--------------------------------------------------------------------------------
-void internal_rectangle_2D_set_context_position(Rectangle2D* rectangle_2D,
+void internal_rectangle_2D_set_context_position(Rectangle2D * const rectangle_2D,
                                                 const TetrisPieceType type) {
   assert(rectangle_2D);
 
@@ -25,9 +26,18 @@ void internal_rectangle_2D_set_context_position(Rectangle2D* rectangle_2D,
   rectangle_2D->y = 0.8f - (0.2f*type);
   rectangle_2D->width = 0.2f;
   rectangle_2D->height = 0.2f;
+
+  size_t i;
+  for (i = 1; i < internal_pieces_block_nb; ++i) {
+    rectangle_2D[i].width = rectangle_2D->width;
+    rectangle_2D[i].height = rectangle_2D->height;
+    rectangle_2D[i].x = rectangle_2D->x + ((float)i*0.2f);
+    rectangle_2D[i].y = rectangle_2D->y;
+  }
 }
+
 //--------------------------------------------------------------------------------
-void internal_rectangle_2D_set_texture(Rectangle2D* rectangle_2D,
+void internal_rectangle_2D_set_texture(Rectangle2D* const rectangle_2D,
                                        const TetrisPieceType type) {
   assert(rectangle_2D);
 
@@ -66,7 +76,16 @@ void internal_rectangle_2D_set_texture(Rectangle2D* rectangle_2D,
       rectangle_2D->y = 0.0f;
       break;
   }
+
+  size_t i;
+  for (i = 1; i < internal_pieces_block_nb; ++i) {
+    rectangle_2D[i].width = rectangle_2D->width;
+    rectangle_2D[i].height = rectangle_2D->height;
+    rectangle_2D[i].x = rectangle_2D->x;
+    rectangle_2D[i].y = rectangle_2D->y;
+  }
 }
+
 //--------------------------------------------------------------------------------
 TetrisPiece* tetris_piece_calloc()
 {
@@ -105,18 +124,19 @@ void tetris_piece_draw(TetrisPiece* tetris_piece[], size_t length)
   }
 
   const size_t piece_nb = 7;
-  Rectangle2D array_context_position[piece_nb];
-  Rectangle2D array_texture_position[piece_nb];
+  const size_t rectangle_2D_size = piece_nb*internal_pieces_block_nb;
+  Rectangle2D array_context_position[rectangle_2D_size];
+  Rectangle2D array_texture_position[rectangle_2D_size];
 
   size_t i;
   for (i = 0; i < piece_nb; ++i) {
-    internal_rectangle_2D_set_context_position(&array_context_position[i], i);
+    internal_rectangle_2D_set_context_position(&array_context_position[i*internal_pieces_block_nb], i);
   }
   for (i = 0; i < piece_nb; ++i) {
-    internal_rectangle_2D_set_texture(&array_texture_position[i], i);
+    internal_rectangle_2D_set_texture(&array_texture_position[i*internal_pieces_block_nb], i);
   }
 
   graphics_primitive_rectangle_2D_draw(internal_bo_texture, array_context_position,
-                                    array_texture_position, piece_nb);
+                                    array_texture_position, rectangle_2D_size);
 }
 
