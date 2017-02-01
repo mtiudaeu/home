@@ -1,4 +1,4 @@
-#include "03_opengl_tetris/piece.h"
+#include "03_opengl_tetris/board.h"
 
 #include "common/ui/ui_text.h"
 
@@ -13,9 +13,11 @@
 static UIText* internal_ui_text = 0x0;
 GraphicsPoint2D internal_position = {0.1, 0.5};
 
-#define ARRAY_TETRIS_PIECES_SIZE_MAX = 10
+//MDTMP
+/*
 static TetrisPiece* array_tetris_pieces[] = {0x0};
 size_t array_tetris_pieces_size = 0;
+*/
 
 
 
@@ -52,7 +54,9 @@ static void internal_mainCallback() {
     ui_text_draw(internal_ui_text);
   }
 
-  tetris_piece_draw(array_tetris_pieces, array_tetris_pieces_size);
+  tetris_board_draw();
+
+//MDTMP tetris_piece_draw(array_tetris_pieces, array_tetris_pieces_size);
 }
 
 //--------------------------------------------------------------------------------
@@ -74,10 +78,12 @@ int main() {
     ui_text_set_position(internal_ui_text, internal_position);
     ui_text_set_msg(internal_ui_text, "test");
 
+/*
     TetrisPiece* piece = tetris_piece_calloc();
     if (piece) {
       array_tetris_pieces[array_tetris_pieces_size++] = piece;
     }
+*/
   }
 
   { // main loop
@@ -90,10 +96,12 @@ int main() {
   }
 
   { // uninitialization
+/*
     size_t i;
     for (i = 0; i < array_tetris_pieces_size; ++i) {
       tetris_piece_free(array_tetris_pieces[i]);
     }
+*/
 
     ui_text_free(internal_ui_text);
     internal_ui_text = 0x0;
