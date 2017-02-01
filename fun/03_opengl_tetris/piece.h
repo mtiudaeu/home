@@ -42,4 +42,10 @@ void tetris_piece_draw_2(struct grid_position* const array_block_position,
                          TetrisPieceType* const array_block_type,
                          size_t length);
 
+void tetris_piece_generate_4_blocks(struct grid_position block_position[4],
+                                    const struct grid_position piece_position,
+                                    const TetrisPieceType type,
+                                    const TetrisPieceRotation rotation);
+
+
 #endif // TETRIS_PIECE_H

@@ -27,16 +27,17 @@ static void internal_handle_hotkey_cb(SDL_Event* ev) {
   if (ev->type == SDL_KEYDOWN) {
     switch (ev->key.keysym.sym) {
       case SDLK_LEFT:
-        internal_position.x -= 0.1;
+//MDTMP internal_position.x -= 0.1;
         break;
       case SDLK_RIGHT:
-        internal_position.x += 0.1;
+//MDTMP internal_position.x += 0.1;
         break;
       case SDLK_UP:
-        internal_position.y += 0.1;
+//MDTMP internal_position.y += 0.1;
         break;
       case SDLK_DOWN:
-        internal_position.y -= 0.1;
+//MDTMP internal_position.y -= 0.1;
+        tetris_board_update();
         break;
     }
   }
