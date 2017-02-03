@@ -5,12 +5,14 @@
 
 #include <stddef.h>
 
+//--------------------------------------------------------------------------------
+// public data
 struct grid_position {
   size_t x;
   size_t y;
 };
 
-typedef enum TetrisPieceType {
+enum tetris_piece_type {
   PIECE_LINE,
   PIECE_L_LEFT,
   PIECE_L_RIGHT,
@@ -18,37 +20,28 @@ typedef enum TetrisPieceType {
   PIECE_Z_LEFT,
   PIECE_T,
   PIECE_Z_RIGHT
-} TetrisPieceType;
+};
 
-typedef enum TetrisPieceRotation {
+enum tetris_piece_rotation {
   PIECE_ROT_0,
   PIECE_ROT_1,
   PIECE_ROT_2,
-  PIECE_ROT_3
-} TetrisPieceRotation;
+  PIECE_ROT_3,
+  PIECE_ROT_NB_MAX
+};
 
+//--------------------------------------------------------------------------------
+// public interface
 size_t tetris_piece_init();
 void tetris_piece_uninit();
 
-
-//MDTMP typedef struct TetrisPiece TetrisPiece;
-
-//MDTMP TetrisPiece* tetris_piece_calloc();
-//MDTMP void tetris_piece_free(TetrisPiece* tetris_piece);
-
-//MDTMP void tetris_piece_set_type(TetrisPiece* tetris_piece, TetrisPieceType type);
-//MDTMP void tetris_piece_set_position(TetrisPiece* tetris_piece, GraphicsPoint2D position);
-
-//MDTMP void tetris_piece_draw(TetrisPiece* tetris_piece[], size_t length);
-
-void tetris_piece_draw_2(struct grid_position* const array_block_position,
-                         TetrisPieceType* const array_block_type,
+void tetris_piece_draw(struct grid_position* const array_block_position,
+                         enum tetris_piece_type* const array_block_type,
                          size_t length);
 
-void tetris_piece_generate_4_blocks(struct grid_position block_position[4],
+void tetris_piece_generate_piece(struct grid_position block_position[4],
                                     const struct grid_position piece_position,
-                                    const TetrisPieceType type,
-                                    const TetrisPieceRotation rotation);
-
+                                    const enum tetris_piece_type type,
+                                    const enum tetris_piece_rotation rotation);
 
 #endif // TETRIS_PIECE_H

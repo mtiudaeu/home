@@ -58,6 +58,7 @@ static size_t tetris_init()
     ui_text_set_position(internal_ui_text, internal_position);
     ui_text_set_msg(internal_ui_text, "test");
   }
+  return 0;
 }
 
 //--------------------------------------------------------------------------------
@@ -69,8 +70,6 @@ static void tetris_uninit()
   }
 
   { // uninitialize static modules
-
-
     tetris_board_uninit();
 
     graphics_primitive_rectangle_2D_uninit();
@@ -88,13 +87,16 @@ static void tetris_handle_hotkey_cb(SDL_Event* ev) {
   if (ev->type == SDL_KEYDOWN) {
     switch (ev->key.keysym.sym) {
       case SDLK_LEFT:
+        tetris_board_send_command( BOARD_CMD_MOV_LEFT );
         break;
       case SDLK_RIGHT:
+        tetris_board_send_command( BOARD_CMD_MOV_RIGHT );
         break;
       case SDLK_UP:
+        tetris_board_send_command( BOARD_CMD_ROT );
         break;
       case SDLK_DOWN:
-        tetris_board_update();
+        tetris_board_send_command( BOARD_CMD_MOV_DOWN );
         break;
     }
   }
@@ -115,13 +117,13 @@ static void tetris_mainCallback() {
 int main() {
   { // init
     size_t ret = tetris_init();
-    assert(ret);
+    assert(ret == 0);
   }
 
   { // main loop
     size_t ret = graphics_context_global_run(&tetris_mainCallback,
                                              tetris_handle_hotkey_cb);
-    assert(ret);
+    assert(ret == 0);
   }
 
   { // uninit
