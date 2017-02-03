@@ -27,16 +27,19 @@ typedef enum TetrisPieceRotation {
   PIECE_ROT_3
 } TetrisPieceRotation;
 
+size_t tetris_piece_init();
+void tetris_piece_uninit();
 
-typedef struct TetrisPiece TetrisPiece;
 
-TetrisPiece* tetris_piece_calloc();
-void tetris_piece_free(TetrisPiece* tetris_piece);
+//MDTMP typedef struct TetrisPiece TetrisPiece;
 
-void tetris_piece_set_type(TetrisPiece* tetris_piece, TetrisPieceType type);
-void tetris_piece_set_position(TetrisPiece* tetris_piece, GraphicsPoint2D position);
+//MDTMP TetrisPiece* tetris_piece_calloc();
+//MDTMP void tetris_piece_free(TetrisPiece* tetris_piece);
 
-void tetris_piece_draw(TetrisPiece* tetris_piece[], size_t length);
+//MDTMP void tetris_piece_set_type(TetrisPiece* tetris_piece, TetrisPieceType type);
+//MDTMP void tetris_piece_set_position(TetrisPiece* tetris_piece, GraphicsPoint2D position);
+
+//MDTMP void tetris_piece_draw(TetrisPiece* tetris_piece[], size_t length);
 
 void tetris_piece_draw_2(struct grid_position* const array_block_position,
                          TetrisPieceType* const array_block_type,

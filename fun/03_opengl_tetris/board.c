@@ -2,6 +2,11 @@
 
 #include "03_opengl_tetris/piece.h"
 
+#include "common/log/log.h"
+
+//MDTMP all this should probably not be a singleton
+//--------------------------------------------------------------------------------
+// static members
 static size_t grid_position_x_max = 10;
 static size_t grid_position_y_max = 100;
 
@@ -20,12 +25,12 @@ static struct grid_position new_piece_position;
 static TetrisPieceRotation new_piece_rotation;
 static struct grid_position new_array_block_position[4];
 
-
-
-static size_t tmp_init = 0;
+//--------------------------------------------------------------------------------
+// private methods
+static void board_check_collision_and_move();
 
 //--------------------------------------------------------------------------------
-static void internal_check_collision_and_move()
+static void board_check_collision_and_move()
 {
   // check if out of board
   if (new_piece_position.x > grid_position_x_max ||
@@ -54,27 +59,17 @@ static void internal_check_collision_and_move()
 }
 
 //--------------------------------------------------------------------------------
-void tetris_board_update()
+size_t tetris_board_init()
 {
-  { // set future position
-    new_piece_position = current_piece_position;
-    --new_piece_position.y;
-    new_piece_rotation = current_piece_rotation;
-    tetris_piece_generate_4_blocks(
-        new_array_block_position, new_piece_position,
-        current_block_type[0], new_piece_rotation);
+  { // init modules
+    size_t ret = tetris_piece_init();
+    if (!ret) {
+      LOG_ERROR("tetris_piece_init");
+      return ret;
+    }
   }
 
-  // validate collision
-  internal_check_collision_and_move();
-}
-
-//--------------------------------------------------------------------------------
-void tetris_board_draw()
-{
-  if (!tmp_init) {
-    tmp_init = 1;
-
+  { // init static members
     array_block_position[0].x = 0;
     array_block_position[0].y = 0;
     array_block_position[1].x = 5;
@@ -101,6 +96,35 @@ void tetris_board_draw()
                                    current_piece_position, current_block_type[0],
                                    current_piece_rotation);
   }
+
+  return 0;
+}
+
+//--------------------------------------------------------------------------------
+void tetris_board_uninit()
+{
+  tetris_piece_uninit();
+}
+
+//--------------------------------------------------------------------------------
+void tetris_board_update()
+{
+  { // set future position
+    new_piece_position = current_piece_position;
+    --new_piece_position.y;
+    new_piece_rotation = current_piece_rotation;
+    tetris_piece_generate_4_blocks(
+        new_array_block_position, new_piece_position,
+        current_block_type[0], new_piece_rotation);
+  }
+
+  // validate collision
+  board_check_collision_and_move();
+}
+
+//--------------------------------------------------------------------------------
+void tetris_board_draw()
+{
 
   // draw all left over block.
   tetris_piece_draw_2(array_block_position, array_block_type, array_block_size);

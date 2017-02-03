@@ -3,7 +3,6 @@
 
 #include <GL/glew.h>
 
-//MDTMP change to rectangle..
 // MDTMP rename Rectangle2D
 // MDTMP could be move out of here (reuse in physics etc..)
 

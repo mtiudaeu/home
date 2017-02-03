@@ -11,6 +11,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
+//--------------------------------------------------------------------------------
+// static members
 static GLuint internal_program_id = 0;
 
 static GLuint internal_vbo_vertices_coord = 0;
@@ -21,7 +23,11 @@ static GLuint internal_vbo_texture_coord = 0;
 static GLint internal_attribute_texture_coord = 0;
 
 //--------------------------------------------------------------------------------
-static GLuint internal_program_create() {
+// private methods
+static GLuint graphics_primitive_rectangle_2D_program_create();
+
+//--------------------------------------------------------------------------------
+static GLuint graphics_primitive_rectangle_2D_program_create() {
   const char vertex_source[] =
       "attribute vec2 vertices_coord;\
 attribute vec2 texture_coord;\
@@ -51,7 +57,7 @@ size_t graphics_primitive_rectangle_2D_init() {
     return 1;
   }
 
-  internal_program_id = internal_program_create();
+  internal_program_id = graphics_primitive_rectangle_2D_program_create();
   if (!internal_program_id) {
     LOG_ERROR("!internal_program_init");
     return 1;

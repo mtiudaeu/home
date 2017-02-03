@@ -2,8 +2,6 @@
 
 #include "common/test/test.h"
 
-#include "common/graphics/primitive/rectangle_2D.h"
-
 #include "common/log/log.h"
 
 #include <stdlib.h>
@@ -71,16 +69,6 @@ size_t graphics_context_global_init()
     }
   }
 
-  size_t ret = 0;
-  { // Primitive
-    ret = graphics_primitive_rectangle_2D_init();
-    if (ret != 0) {
-      LOG_ERROR("graphics_primitive_rectangle_2D_init");
-      graphics_context_global_uninit();
-      return ret;
-    }
-  }
-
   return 0;
 }
 
@@ -102,10 +90,6 @@ size_t graphics_context_global_uninit()
     }
 
     SDL_Quit();
-  }
-
-  {  // Primitive
-    graphics_primitive_rectangle_2D_uninit();
   }
 
   free(global_graphics_context);
