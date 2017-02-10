@@ -9,6 +9,6 @@ TETRIS_DEP_EXEC_EMCC = $(TETRIS_DEP_EXEC:.o=.bc)
 $(BUILD_PATH)tetris.out : $(TETRIS_DEP_EXEC)
 	$(GCC) $^ -o $@ -lGL -lGLEW -lSDL2 -lSDL2_image
 $(BUILD_PATH)tetris.html : $(TETRIS_DEP_EXEC_EMCC)
-	$(EMCC) $^ -o $@ --preload-file common/assets/text/ASCII_tileset.png
+	$(EMCC) $^ -o $@ --preload-file common/assets/text/ASCII_tileset.png --preload-file common/assets/tmp/tetris_texture.png
 
 include 03_opengl_tetris/Makefile_generated

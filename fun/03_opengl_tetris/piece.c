@@ -62,6 +62,8 @@ static void internal_rectangle_2D_set_texture(Rectangle2D* const rectangle_2D,
       rectangle_2D->x = (11.0f * texture_increment_x);
       rectangle_2D->y = 0.0f;
       break;
+    case PIECE_NB:
+      assert(0); // invalid case
   }
 
 /*
@@ -189,6 +191,8 @@ void tetris_piece_generate_piece(struct grid_position block_position[4],
       block_position[2].x = block_position[1].x;
       block_position[3].x = block_position[2].x + 1;
     } break;
+    case PIECE_NB:
+      assert(0); // invalid case
   }
 }
 
