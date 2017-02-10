@@ -51,13 +51,12 @@ void tetris_piece_uninit();
 void tetris_piece_draw_blocks(struct grid_position* const array_block_position,
                          enum tetris_piece_type* const array_block_type,
                          size_t length);
-void tetris_piece_draw_piece(struct grid_position* const array_block_position,
-                       struct tetris_piece_desc tetris_piece_desc,
-                       size_t length);
+void tetris_piece_draw_piece(
+    struct tetris_piece_blocks tetris_piece_blocks,
+                       struct tetris_piece_desc tetris_piece_desc );
 
 void tetris_piece_generate_piece(
-    struct grid_position block_position[4],  // MDTMP replace with
-                                             // testris_piece_blocks
+    struct tetris_piece_blocks tetris_piece_blocks,
     const struct tetris_piece_desc);
 
 #endif // TETRIS_PIECE_H

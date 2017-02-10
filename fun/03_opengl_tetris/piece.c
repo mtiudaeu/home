@@ -120,86 +120,87 @@ void tetris_piece_draw_blocks(struct grid_position* const array_block_position,
 }
 
 //--------------------------------------------------------------------------------
-void tetris_piece_draw_piece(struct grid_position* const array_block_position,
-                       struct tetris_piece_desc tetris_piece_desc,
-                       size_t length) {
+void tetris_piece_draw_piece(
+    struct tetris_piece_blocks tetris_piece_blocks,
+                       struct tetris_piece_desc tetris_piece_desc ){
 
-  enum tetris_piece_type array_block_type[length];
+  enum tetris_piece_type array_block_type[tetris_piece_block_nb];
   size_t i;
-  for (i = 0; i < length; ++i) {
+  for (i = 0; i < tetris_piece_block_nb; ++i) {
     array_block_type[i] = tetris_piece_desc.type;
   }
-  tetris_piece_draw_blocks(array_block_position, array_block_type, length);
+  tetris_piece_draw_blocks(tetris_piece_blocks.blocks, array_block_type, tetris_piece_block_nb);
 }
 
 //--------------------------------------------------------------------------------
-void tetris_piece_generate_piece(struct grid_position block_position[4],
+void tetris_piece_generate_piece(
+    struct tetris_piece_blocks tetris_piece_blocks,
                                  const struct tetris_piece_desc tetris_piece_desc) {
   // MDTMP finish rotation for every one.
 
   size_t i;
   for (i = 0; i < tetris_piece_block_nb; ++i) {
-    block_position[i].x = tetris_piece_desc.position.x;
-    block_position[i].y = tetris_piece_desc.position.y;
+    tetris_piece_blocks.blocks[i].x = tetris_piece_desc.position.x;
+    tetris_piece_blocks.blocks[i].y = tetris_piece_desc.position.y;
   }
 
   switch (tetris_piece_desc.type) {
     case PIECE_LINE: {
       if (tetris_piece_desc.rotation % 2) {
         for (i = 1; i < tetris_piece_block_nb; ++i) {
-          block_position[i].x += i;
+          tetris_piece_blocks.blocks[i].x += i;
         }
       } else {
         for (i = 1; i < tetris_piece_block_nb; ++i) {
-          block_position[i].y += i;
+          tetris_piece_blocks.blocks[i].y += i;
         }
       }
     } break;
     case PIECE_L_LEFT: {
       // horizontal line of 3
       for (i = 1; i < tetris_piece_block_nb - 1; ++i) {
-        block_position[i].x += i;
+        tetris_piece_blocks.blocks[i].x += i;
       }
       // + 1 top left
-      ++block_position[3].y;
+      ++tetris_piece_blocks.blocks[3].y;
     } break;
     case PIECE_L_RIGHT: {
       // horizontal line of 3
       for (i = 1; i < tetris_piece_block_nb - 1; ++i) {
-        block_position[i].x += i;
+        tetris_piece_blocks.blocks[i].x += i;
       }
       // + 1 top right
-      block_position[3].x = block_position[2].x;
-      ++block_position[3].y;
+      tetris_piece_blocks.blocks[3].x = tetris_piece_blocks.blocks[2].x;
+      ++tetris_piece_blocks.blocks[3].y;
     } break;
     case PIECE_SQUARE: {
-      ++block_position[1].x;
-      ++block_position[2].y;
-      ++block_position[3].x;
-      ++block_position[3].y;
+      ++tetris_piece_blocks.blocks[1].x;
+      ++tetris_piece_blocks.blocks[2].y;
+      ++tetris_piece_blocks.blocks[3].x;
+      ++tetris_piece_blocks.blocks[3].y;
     } break;
     case PIECE_Z_LEFT: {
-      ++block_position[1].x;
-      block_position[2].x = block_position[1].x;
-      ++block_position[2].y;
-      block_position[3].x = block_position[2].x + 1;
-      block_position[3].y = block_position[2].y;
+      ++tetris_piece_blocks.blocks[1].x;
+      tetris_piece_blocks.blocks[2].x = tetris_piece_blocks.blocks[1].x;
+      ++tetris_piece_blocks.blocks[2].y;
+      tetris_piece_blocks.blocks[3].x = tetris_piece_blocks.blocks[2].x + 1;
+      tetris_piece_blocks.blocks[3].y = tetris_piece_blocks.blocks[2].y;
     } break;
     case PIECE_T: {
       // horizontal line of 3
       for (i = 1; i < tetris_piece_block_nb - 1; ++i) {
-        block_position[i].x += i;
+        tetris_piece_blocks.blocks[i].x += i;
       }
       // + 1 top middle
-      ++block_position[3].x;
-      ++block_position[3].y;
+      ++tetris_piece_blocks.blocks[3].x;
+      ++tetris_piece_blocks.blocks[3].y;
     } break;
     case PIECE_Z_RIGHT: {
-      ++block_position[0].y;
-      block_position[1].y = block_position[0].y;
-      ++block_position[1].x;
-      block_position[2].x = block_position[1].x;
-      block_position[3].x = block_position[2].x + 1;
+      ++tetris_piece_blocks.blocks[0].y;
+      tetris_piece_blocks.blocks[1].y = tetris_piece_blocks.blocks[0].y;
+      ++tetris_piece_blocks.blocks[1].x;
+      tetris_piece_blocks.blocks[2].x = tetris_piece_blocks.blocks[1].x;
+      tetris_piece_blocks.blocks[3].x = tetris_piece_blocks.blocks[2].x + 1;
     } break;
     case PIECE_NB:
       assert(0);  // invalid case
