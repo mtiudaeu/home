@@ -1,5 +1,7 @@
 #include "03_opengl_tetris/piece.h"
 
+#include "03_opengl_tetris/piece.internal.h"
+
 #include "common/graphics/primitive/rectangle_2D.h"
 
 #include "common/graphics/shader.h"
@@ -65,16 +67,6 @@ static void internal_rectangle_2D_set_texture(
     case PIECE_NB:
       assert(0);  // invalid case
   }
-
-  /*
-    size_t i;
-    for (i = 1; i < internal_pieces_block_nb; ++i) {
-      rectangle_2D[i].width = rectangle_2D->width;
-      rectangle_2D[i].height = rectangle_2D->height;
-      rectangle_2D[i].x = rectangle_2D->x;
-      rectangle_2D[i].y = rectangle_2D->y;
-    }
-  */
 }
 
 //--------------------------------------------------------------------------------
@@ -134,71 +126,29 @@ void tetris_piece_draw_piece(struct tetris_piece_blocks tetris_piece_blocks,
 void tetris_piece_generate_piece(
     struct tetris_piece_blocks* const tetris_piece_blocks,
     const struct tetris_piece_desc tetris_piece_desc) {
-  // MDTMP finish rotation for every one.
-
-  size_t i;
-  for (i = 0; i < tetris_piece_block_nb; ++i) {
-    tetris_piece_blocks->blocks[i].x = tetris_piece_desc.position.x;
-    tetris_piece_blocks->blocks[i].y = tetris_piece_desc.position.y;
-  }
+  assert(tetris_piece_blocks);
 
   switch (tetris_piece_desc.type) {
     case PIECE_LINE: {
-      if (tetris_piece_desc.rotation % 2) {
-        for (i = 1; i < tetris_piece_block_nb; ++i) {
-          tetris_piece_blocks->blocks[i].x += i;
-        }
-      } else {
-        for (i = 1; i < tetris_piece_block_nb; ++i) {
-          tetris_piece_blocks->blocks[i].y += i;
-        }
-      }
+      draw_piece_line(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_L_LEFT: {
-      // horizontal line of 3
-      for (i = 1; i < tetris_piece_block_nb - 1; ++i) {
-        tetris_piece_blocks->blocks[i].x += i;
-      }
-      // + 1 top left
-      ++tetris_piece_blocks->blocks[3].y;
+      draw_piece_l_left(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_L_RIGHT: {
-      // horizontal line of 3
-      for (i = 1; i < tetris_piece_block_nb - 1; ++i) {
-        tetris_piece_blocks->blocks[i].x += i;
-      }
-      // + 1 top right
-      tetris_piece_blocks->blocks[3].x = tetris_piece_blocks->blocks[2].x;
-      ++tetris_piece_blocks->blocks[3].y;
+      draw_piece_l_right(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_SQUARE: {
-      ++tetris_piece_blocks->blocks[1].x;
-      ++tetris_piece_blocks->blocks[2].y;
-      ++tetris_piece_blocks->blocks[3].x;
-      ++tetris_piece_blocks->blocks[3].y;
+      draw_piece_square(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_Z_LEFT: {
-      ++tetris_piece_blocks->blocks[1].x;
-      tetris_piece_blocks->blocks[2].x = tetris_piece_blocks->blocks[1].x;
-      ++tetris_piece_blocks->blocks[2].y;
-      tetris_piece_blocks->blocks[3].x = tetris_piece_blocks->blocks[2].x + 1;
-      tetris_piece_blocks->blocks[3].y = tetris_piece_blocks->blocks[2].y;
+      draw_piece_z_left(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_T: {
-      // horizontal line of 3
-      for (i = 1; i < tetris_piece_block_nb - 1; ++i) {
-        tetris_piece_blocks->blocks[i].x += i;
-      }
-      // + 1 top middle
-      ++tetris_piece_blocks->blocks[3].x;
-      ++tetris_piece_blocks->blocks[3].y;
+      draw_piece_t(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_Z_RIGHT: {
-      ++tetris_piece_blocks->blocks[0].y;
-      tetris_piece_blocks->blocks[1].y = tetris_piece_blocks->blocks[0].y;
-      ++tetris_piece_blocks->blocks[1].x;
-      tetris_piece_blocks->blocks[2].x = tetris_piece_blocks->blocks[1].x;
-      tetris_piece_blocks->blocks[3].x = tetris_piece_blocks->blocks[2].x + 1;
+      draw_piece_z_right(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_NB:
       assert(0);  // invalid case
