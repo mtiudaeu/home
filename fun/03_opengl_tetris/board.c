@@ -9,7 +9,6 @@
 #include <time.h>
 #include <stdlib.h>
 
-// MDTMP all this should probably not be a singleton
 //--------------------------------------------------------------------------------
 // static members
 
@@ -25,52 +24,11 @@ static size_t array_block_size = 0;
 
 // current moving piece
 static struct tetris_piece_desc current_piece_desc;
-static struct tetris_piece_desc new_piece_desc;
-
 static struct tetris_piece_blocks current_piece_blocks;
-static struct tetris_piece_blocks new_piece_blocks;
 
 //--------------------------------------------------------------------------------
 // private methods
-static size_t board_check_collision_and_move();
 static void board_current_piece_reset();
-
-//--------------------------------------------------------------------------------
-static size_t board_check_collision_and_move() {
-  enum {
-    UPDATED = 0,
-    NO_CHANGE = 1
-  };
-
-  {  // check if out of board
-    size_t i;
-    for (i = 0; i < tetris_piece_block_nb; ++i) {
-      if (new_piece_blocks.blocks[i].x >= grid_position_x_max ||
-          new_piece_blocks.blocks[i].y >= grid_position_y_max) {
-        return NO_CHANGE;
-      }
-    }
-  }
-
-  {  // check collision with block on the board
-    size_t i, j;
-    for (i = 0; i < array_block_size; ++i) {
-      for (j = 0; j < tetris_piece_block_nb; ++j) {
-        if (array_block_position[i].x == new_piece_blocks.blocks[j].x &&
-            array_block_position[i].y == new_piece_blocks.blocks[j].y) {
-          return NO_CHANGE;
-        }
-      }
-    }
-  }
-
-  {  // update current piece
-    current_piece_desc = new_piece_desc;
-    current_piece_blocks = new_piece_blocks;
-  }
-
-  return UPDATED;
-}
 
 //--------------------------------------------------------------------------------
 static void board_current_piece_reset() {
@@ -107,9 +65,10 @@ void tetris_board_uninit() { tetris_piece_uninit(); }
 
 //--------------------------------------------------------------------------------
 size_t tetris_board_send_command(enum tetris_board_command cmd) {
-  {  // generate new potential position
-    new_piece_desc = current_piece_desc;
+  struct tetris_piece_desc new_piece_desc = current_piece_desc;
+  struct tetris_piece_blocks new_piece_blocks;
 
+  {  // generate new blocks position
     switch (cmd) {
       case BOARD_CMD_ROT:
         ++new_piece_desc.rotation;
@@ -130,8 +89,41 @@ size_t tetris_board_send_command(enum tetris_board_command cmd) {
     tetris_piece_generate_piece(&new_piece_blocks, new_piece_desc);
   }
 
-  // validate collision and update current position
-  return board_check_collision_and_move();
+  {  // validate collision and update current position
+    enum {
+      UPDATED = 0,
+      NO_CHANGE = 1
+    };
+
+    {  // check if out of board
+      size_t i;
+      for (i = 0; i < tetris_piece_block_nb; ++i) {
+        if (new_piece_blocks.blocks[i].x >= grid_position_x_max ||
+            new_piece_blocks.blocks[i].y >= grid_position_y_max) {
+          return NO_CHANGE;
+        }
+      }
+    }
+
+    {  // check collision with block on the board
+      size_t i, j;
+      for (i = 0; i < array_block_size; ++i) {
+        for (j = 0; j < tetris_piece_block_nb; ++j) {
+          if (array_block_position[i].x == new_piece_blocks.blocks[j].x &&
+              array_block_position[i].y == new_piece_blocks.blocks[j].y) {
+            return NO_CHANGE;
+          }
+        }
+      }
+    }
+
+    {  // update current piece
+      current_piece_desc = new_piece_desc;
+      current_piece_blocks = new_piece_blocks;
+    }
+
+    return UPDATED;
+  }
 }
 
 //--------------------------------------------------------------------------------
