@@ -25,15 +25,14 @@ static size_t array_block_size = 0;
 
 // current moving piece
 #define current_block_max_size 4 // MDTMP get value from piece object.
-static enum tetris_piece_type current_block_type[current_block_max_size];
 
-static struct grid_position current_piece_position;
-static struct grid_position new_piece_position;
+static struct tetris_piece_desc current_piece_desc;
+static struct tetris_piece_desc new_piece_desc;
 
-static enum tetris_piece_rotation current_piece_rotation;
+static struct tetris_piece_blocks current_piece_blocks;
+static struct tetris_piece_blocks new_piece_blocks;
+
 static struct grid_position current_array_block_position[current_block_max_size];
-
-static enum tetris_piece_rotation new_piece_rotation;
 static struct grid_position new_array_block_position[current_block_max_size];
 
 
@@ -52,7 +51,7 @@ static size_t board_check_collision_and_move()
 
   {  // check if out of board
     size_t i;
-    for (i = 0; i < current_block_max_size; ++i) {
+    for (i = 0; i < tetris_piece_block_nb; ++i) {
       if (new_array_block_position[i].x >= grid_position_x_max ||
           new_array_block_position[i].y >= grid_position_y_max) {
         return NO_CHANGE;
@@ -63,7 +62,7 @@ static size_t board_check_collision_and_move()
   {  // check collision with block on the board
     size_t i, j;
     for (i = 0; i < array_block_size; ++i) {
-      for (j = 0; j < current_block_max_size; ++j) {
+      for (j = 0; j < tetris_piece_block_nb; ++j) {
         if (array_block_position[i].x == new_array_block_position[j].x &&
             array_block_position[i].y == new_array_block_position[j].y) {
           return NO_CHANGE;
@@ -73,10 +72,14 @@ static size_t board_check_collision_and_move()
   }
 
   {  // update current piece
-    current_piece_position = new_piece_position;
-    current_piece_rotation = new_piece_rotation;
+    current_piece_desc = new_piece_desc;
+    current_piece_blocks = new_piece_blocks;
+
+//MDTMP
+/*
     memcpy(current_array_block_position, new_array_block_position,
            sizeof(current_array_block_position));
+*/
   }
 
   return UPDATED;
@@ -86,19 +89,14 @@ static size_t board_check_collision_and_move()
 static void board_current_piece_reset()
 {
   // piece initial position
-  current_piece_position.x = 5;
-  current_piece_position.y = 15;
+  current_piece_desc.position.x = 5;
+  current_piece_desc.position.y = 15;
 
-  const int type = rand() % PIECE_NB;
-  size_t i;
-  for (i = 0; i < current_block_max_size; ++i) {
-    current_block_type[i] = type;
-  }
-  current_piece_rotation = 0;
+  current_piece_desc.type = rand() % PIECE_NB;
+  current_piece_desc.rotation = 0;
 
   tetris_piece_generate_piece(current_array_block_position,
-                              current_piece_position, current_block_type[0],
-                              current_piece_rotation);
+                              current_piece_desc);
 }
 
 //--------------------------------------------------------------------------------
@@ -130,28 +128,26 @@ void tetris_board_uninit()
 size_t tetris_board_send_command(enum tetris_board_command cmd)
 {
   { // generate new potential position
-    new_piece_position = current_piece_position;
-    new_piece_rotation = current_piece_rotation;
+    new_piece_desc = current_piece_desc;
 
     switch (cmd) {
       case BOARD_CMD_ROT:
-        ++new_piece_rotation;
-        if (new_piece_rotation >= PIECE_ROT_NB_MAX) {
-          new_piece_rotation = PIECE_ROT_0;
+        ++new_piece_desc.rotation;
+        if (new_piece_desc.rotation >= PIECE_ROT_NB_MAX) {
+          new_piece_desc.rotation = PIECE_ROT_0;
         }
         break;
       case BOARD_CMD_MOV_LEFT:
-        --new_piece_position.x;
+        --new_piece_desc.position.x;
         break;
       case BOARD_CMD_MOV_RIGHT:
-        ++new_piece_position.x;
+        ++new_piece_desc.position.x;
         break;
       case BOARD_CMD_MOV_DOWN:
-        --new_piece_position.y;
+        --new_piece_desc.position.y;
         break;
     }
-    tetris_piece_generate_piece(new_array_block_position, new_piece_position,
-                                current_block_type[0], new_piece_rotation);
+    tetris_piece_generate_piece(new_array_block_position, new_piece_desc);
   }
 
   // validate collision and update current position
@@ -169,10 +165,10 @@ void tetris_board_update()
 
   {  // add current piece to board
     size_t i;
-    for (i = 0; i < current_block_max_size; ++i) {
+    for (i = 0; i < tetris_piece_block_nb; ++i) {
       assert(array_block_size <= array_block_max_size);
       array_block_position[array_block_size] = current_array_block_position[i];
-      array_block_type[array_block_size] = current_block_type[i];
+      array_block_type[array_block_size] = current_piece_desc.type;
       ++array_block_size;
     }
   }
@@ -245,7 +241,7 @@ void tetris_board_draw()
 {
 
   // draw all left over block.
-  tetris_piece_draw(array_block_position, array_block_type, array_block_size);
+  tetris_piece_draw_blocks(array_block_position, array_block_type, array_block_size);
   // draw current moving piece.
-  tetris_piece_draw(current_array_block_position, current_block_type, 4);
+  tetris_piece_draw_piece(current_array_block_position, current_piece_desc, tetris_piece_block_nb);
 }

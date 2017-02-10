@@ -31,18 +31,33 @@ enum tetris_piece_rotation {
   PIECE_ROT_NB_MAX
 };
 
+struct tetris_piece_desc {
+  enum tetris_piece_type type;
+  enum tetris_piece_rotation rotation;
+  struct grid_position position;
+};
+
+#define tetris_piece_block_nb 4
+struct tetris_piece_blocks {
+  struct grid_position blocks[tetris_piece_block_nb];
+};
+
+
 //--------------------------------------------------------------------------------
 // public interface
 size_t tetris_piece_init();
 void tetris_piece_uninit();
 
-void tetris_piece_draw(struct grid_position* const array_block_position,
+void tetris_piece_draw_blocks(struct grid_position* const array_block_position,
                          enum tetris_piece_type* const array_block_type,
                          size_t length);
+void tetris_piece_draw_piece(struct grid_position* const array_block_position,
+                       struct tetris_piece_desc tetris_piece_desc,
+                       size_t length);
 
-void tetris_piece_generate_piece(struct grid_position block_position[4],
-                                    const struct grid_position piece_position,
-                                    const enum tetris_piece_type type,
-                                    const enum tetris_piece_rotation rotation);
+void tetris_piece_generate_piece(
+    struct grid_position block_position[4],  // MDTMP replace with
+                                             // testris_piece_blocks
+    const struct tetris_piece_desc);
 
 #endif // TETRIS_PIECE_H

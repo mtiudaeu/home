@@ -95,7 +95,7 @@ void tetris_piece_uninit()
 }
 
 //--------------------------------------------------------------------------------
-void tetris_piece_draw(struct grid_position* const array_block_position,
+void tetris_piece_draw_blocks(struct grid_position* const array_block_position,
                          enum tetris_piece_type* const array_block_type,
                          size_t length) {
   Rectangle2D array_context_position[length];
@@ -120,34 +120,44 @@ void tetris_piece_draw(struct grid_position* const array_block_position,
 }
 
 //--------------------------------------------------------------------------------
-void tetris_piece_generate_piece(struct grid_position block_position[4],
-                                    const struct grid_position piece_position,
-                                    const enum tetris_piece_type type,
-                                    const enum tetris_piece_rotation rotation) {
-//MDTMP finish rotation for every one.
+void tetris_piece_draw_piece(struct grid_position* const array_block_position,
+                       struct tetris_piece_desc tetris_piece_desc,
+                       size_t length) {
 
-  const size_t block_nb = 4;
+  enum tetris_piece_type array_block_type[length];
   size_t i;
-  for (i = 0; i < block_nb; ++i) {
-    block_position[i].x = piece_position.x;
-    block_position[i].y = piece_position.y;
+  for (i = 0; i < length; ++i) {
+    array_block_type[i] = tetris_piece_desc.type;
+  }
+  tetris_piece_draw_blocks(array_block_position, array_block_type, length);
+}
+
+//--------------------------------------------------------------------------------
+void tetris_piece_generate_piece(struct grid_position block_position[4],
+                                 const struct tetris_piece_desc tetris_piece_desc) {
+  // MDTMP finish rotation for every one.
+
+  size_t i;
+  for (i = 0; i < tetris_piece_block_nb; ++i) {
+    block_position[i].x = tetris_piece_desc.position.x;
+    block_position[i].y = tetris_piece_desc.position.y;
   }
 
-  switch (type) {
+  switch (tetris_piece_desc.type) {
     case PIECE_LINE: {
-      if (rotation % 2) {
-        for (i = 1; i < block_nb; ++i) {
+      if (tetris_piece_desc.rotation % 2) {
+        for (i = 1; i < tetris_piece_block_nb; ++i) {
           block_position[i].x += i;
         }
       } else {
-        for (i = 1; i < block_nb; ++i) {
+        for (i = 1; i < tetris_piece_block_nb; ++i) {
           block_position[i].y += i;
         }
       }
     } break;
     case PIECE_L_LEFT: {
       // horizontal line of 3
-      for (i = 1; i < block_nb - 1; ++i) {
+      for (i = 1; i < tetris_piece_block_nb - 1; ++i) {
         block_position[i].x += i;
       }
       // + 1 top left
@@ -155,7 +165,7 @@ void tetris_piece_generate_piece(struct grid_position block_position[4],
     } break;
     case PIECE_L_RIGHT: {
       // horizontal line of 3
-      for (i = 1; i < block_nb - 1; ++i) {
+      for (i = 1; i < tetris_piece_block_nb - 1; ++i) {
         block_position[i].x += i;
       }
       // + 1 top right
@@ -177,7 +187,7 @@ void tetris_piece_generate_piece(struct grid_position block_position[4],
     } break;
     case PIECE_T: {
       // horizontal line of 3
-      for (i = 1; i < internal_pieces_block_nb - 1; ++i) {
+      for (i = 1; i < tetris_piece_block_nb - 1; ++i) {
         block_position[i].x += i;
       }
       // + 1 top middle
@@ -192,7 +202,6 @@ void tetris_piece_generate_piece(struct grid_position block_position[4],
       block_position[3].x = block_position[2].x + 1;
     } break;
     case PIECE_NB:
-      assert(0); // invalid case
+      assert(0);  // invalid case
   }
 }
-
