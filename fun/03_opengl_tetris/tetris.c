@@ -14,13 +14,14 @@
 //--------------------------------------------------------------------------------
 // static members
 static UIText* internal_ui_text = 0x0;
+static float time_until_last_update = 0.0f;
 
 //--------------------------------------------------------------------------------
 // private methods
 static size_t tetris_init();
 static void tetris_uninit();
 static void tetris_handle_hotkey_cb(SDL_Event* ev);
-static void tetris_mainCallback();
+static void tetris_mainCallback(const float time_delta);
 int main();
 
 //--------------------------------------------------------------------------------
@@ -103,7 +104,14 @@ static void tetris_handle_hotkey_cb(SDL_Event* ev) {
 }
 
 //--------------------------------------------------------------------------------
-static void tetris_mainCallback() {
+static void tetris_mainCallback(const float time_delta) {
+  time_until_last_update += time_delta;
+  const float time_update_frequency = 1.0f;
+  if ( time_until_last_update >= time_update_frequency ) {
+    time_until_last_update -= time_update_frequency;
+    tetris_board_update();
+  }
+
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 

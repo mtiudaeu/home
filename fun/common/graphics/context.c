@@ -16,9 +16,11 @@
 typedef struct {
   SDL_Window* window;
   SDL_GLContext gl_context;
-  void (*main_loop_cb)();
+  void (*main_loop_cb)(float);
   void (*handle_hotkey_cb)(SDL_Event*);
   size_t leave_main_loop;
+  int time_current;
+  int time_last;
 } InternalGraphicsContext;
 static InternalGraphicsContext* global_graphics_context;
 
@@ -111,12 +113,18 @@ void internal_main_loop() {
     }
   }
 
-  global_graphics_context->main_loop_cb();
+  global_graphics_context->time_current = SDL_GetTicks();
+  const float time_delta = (float)(global_graphics_context->time_current -
+                                   global_graphics_context->time_last) /
+                           1000.0f;
+  global_graphics_context->time_last = global_graphics_context->time_current;
+
+  global_graphics_context->main_loop_cb(time_delta);
   SDL_GL_SwapWindow(global_graphics_context->window);
 }
 
 //--------------------------------------------------------------------------------
-size_t graphics_context_global_run(void (*main_loop_cb)(),
+size_t graphics_context_global_run(void (*main_loop_cb)(float),
                                    void (*handle_hotkey_cb)(SDL_Event*)) {
   if (!global_graphics_context) {
     LOG_ERROR("global_graphics_context is not initialize");
@@ -126,10 +134,17 @@ size_t graphics_context_global_run(void (*main_loop_cb)(),
     LOG_ERROR("main_loop_cb is null");
     return 1;
   }
-  global_graphics_context->main_loop_cb = main_loop_cb;
-  if (handle_hotkey_cb) {
-    global_graphics_context->handle_hotkey_cb = handle_hotkey_cb;
+
+  { // prepare loop callbacks.
+    global_graphics_context->main_loop_cb = main_loop_cb;
+    if (handle_hotkey_cb) {
+      global_graphics_context->handle_hotkey_cb = handle_hotkey_cb;
+    }
+
+    global_graphics_context->time_current = SDL_GetTicks();
+    global_graphics_context->time_last = global_graphics_context->time_current;
   }
+
 
 #ifdef EMSCRIPTEN
   emscripten_set_main_loop(&internal_main_loop,

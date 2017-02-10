@@ -18,7 +18,7 @@ typedef void (*UninitCallback)(void);
 DrawCallback uninit_callbacks[CALLBACKS_MAX_SIZE];
 
 //--------------------------------------------------------------------------------
-static void internal_mainCallback() {
+static void internal_mainCallback(const float time_delta) {
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 

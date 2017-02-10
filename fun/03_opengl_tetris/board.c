@@ -163,23 +163,26 @@ void tetris_board_update()
     return;
   }
 
-  // collision detected, update board and create new piece.
-  size_t i;
-  for (i = 0; i < current_block_max_size; ++i) {
-    // MDTMP array_block_size
-    // MDTMP array_block_max_size
+  // collision detected -> update board and create new piece.
 
-    assert(array_block_size > array_block_max_size);
-    array_block_position[array_block_size] = current_array_block_position[i];
-    array_block_type[array_block_size] = current_block_type[i];
-    ;
-    ++array_block_size;
+  { // add current piece to board
+    size_t i;
+    for (i = 0; i < current_block_max_size; ++i) {
+      assert(array_block_size <= array_block_max_size);
+      array_block_position[array_block_size] = current_array_block_position[i];
+      array_block_type[array_block_size] = current_block_type[i];
+      ;
+      ++array_block_size;
+    }
   }
 
-  //MDTMP detect tetris.
-  //MDTMP create new piece.
-  board_current_piece_reset();
+  {  // detect tetris
+    // MDTMP detect tetris
+  }
 
+  {  // create new piece
+    board_current_piece_reset();
+  }
 }
 
 //--------------------------------------------------------------------------------
