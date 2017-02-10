@@ -19,7 +19,8 @@ enum tetris_piece_type {
   PIECE_SQUARE,
   PIECE_Z_LEFT,
   PIECE_T,
-  PIECE_Z_RIGHT
+  PIECE_Z_RIGHT,
+  PIECE_NB
 };
 
 enum tetris_piece_rotation {

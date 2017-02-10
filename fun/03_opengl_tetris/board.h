@@ -13,7 +13,7 @@ enum tetris_board_command {
 size_t tetris_board_init();
 void tetris_board_uninit();
 
-void tetris_board_send_command(enum tetris_board_command cmd);
+size_t tetris_board_send_command(enum tetris_board_command cmd);
 
 void tetris_board_update();
 void tetris_board_draw();
