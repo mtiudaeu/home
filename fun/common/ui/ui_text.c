@@ -13,7 +13,7 @@
 //--------------------------------------------------------------------------------
 struct UIText {
   GraphicsText* graphics_text;
-  GraphicsPoint2D position;
+  struct graphics_coord_2d position;
   float scale;
   char* msg;
 };
@@ -48,7 +48,7 @@ void ui_text_set_scale(UIText* ui_text, float scale) {
 }
 
 //--------------------------------------------------------------------------------
-void ui_text_set_position(UIText* ui_text, GraphicsPoint2D position) {
+void ui_text_set_position(UIText* ui_text, struct graphics_coord_2d position) {
   assert(ui_text);
   ui_text->position = position;
 }
@@ -89,7 +89,7 @@ size_t test_ui_text_init()
   assert(test_ui_text );
 
   ui_text_set_scale(test_ui_text, 1.2f);
-  GraphicsPoint2D position = {-0.8f, 0.2};
+  struct graphics_coord_2d position = {-0.8f, 0.2};
   ui_text_set_position(test_ui_text, position);
   ui_text_set_msg(test_ui_text, "ui_test_ whoo!");
 

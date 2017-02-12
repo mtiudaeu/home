@@ -1,7 +1,7 @@
 #include "common/graphics/text/text.h"
 
 #include "common/graphics/context.h"
-#include "common/graphics/point.h"
+#include "common/graphics/coord.h"
 
 #include "common/graphics/primitive/rectangle_2D.h"
 #include "common/graphics/shader.h"
@@ -58,7 +58,7 @@ void graphics_text_free(GraphicsText* graphics_text) {
 //--------------------------------------------------------------------------------
 // FIXME  Could accumulate all text to draw on screen and call glDrawArray once.
 void graphics_text_draw(const GraphicsText* graphics_text, float scale,
-                        GraphicsPoint2D position, const char* msg) {
+                        struct graphics_coord_2d position, const char* msg) {
   assert(graphics_text);
   if (!msg || !msg[0]) {
     LOG_ERROR("graphics_text_draw : invalid msg");
@@ -112,7 +112,7 @@ size_t test_graphics_text_uninit() {
 void test_graphics_text_draw() {
   assert(graphics_text_graphics_text);
   const float scale = 1.0f;
-  const GraphicsPoint2D position = {0.1, 0.5};
+  const struct graphics_coord_2d position = {0.1, 0.5};
   graphics_text_draw(graphics_text_graphics_text, scale, position, "test");
 }
 

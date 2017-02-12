@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_TEXT_TEXT_H
 #define GRAPHICS_TEXT_TEXT_H
 
-#include "common/graphics/point.h"
+#include "common/graphics/coord.h"
 
 #include <stddef.h>
 
@@ -11,7 +11,7 @@ GraphicsText* graphics_text_calloc();
 void graphics_text_free(GraphicsText* graphics_text);
 
 void graphics_text_draw(const GraphicsText* graphics_text, float scale,
-                        GraphicsPoint2D position, const char* msg);
+                        struct graphics_coord_2d position, const char* msg);
 
 #ifdef INCLUDE_RUN_TEST
 size_t test_graphics_text_init();

@@ -1,4 +1,4 @@
-bin/03_opengl_tetris_piece.h: 03_opengl_tetris/piece.h bin/common_graphics_point.h
+bin/03_opengl_tetris_piece.h: 03_opengl_tetris/piece.h bin/common_graphics_coord.h
 	touch bin/03_opengl_tetris_piece.h
 bin/03_opengl_tetris_board.h: 03_opengl_tetris/board.h 
 	touch bin/03_opengl_tetris_board.h
