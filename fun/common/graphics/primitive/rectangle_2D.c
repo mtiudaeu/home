@@ -126,6 +126,7 @@ void graphics_primitive_rectangle_2D_draw(GLuint bo_texture,
     glUseProgram(internal_program_id);
 
     glActiveTexture(GL_TEXTURE0);
+
     glUniform1i(internal_uniform_texture_tileset, /*GL_TEXTURE*/ 0);
     glBindTexture(GL_TEXTURE_2D, bo_texture);
   }
@@ -194,15 +195,20 @@ static GLuint internal_bo_texture = 0;
 
 //--------------------------------------------------------------------------------
 static void internal_draw_callback() {
-
-  if (!internal_bo_texture) {
-    const char* tileset_filename = "common/assets/tmp/tetris_texture.png";
-    internal_bo_texture =
-        graphics_shader_texture_buffer_create(tileset_filename);
+  { // init
+    if (!internal_program_id) {
+      graphics_primitive_rectangle_2D_init();
+    }
     if (!internal_bo_texture) {
-      TEST_ASSERT_MSG("internal_bo_texture")
+      const char* tileset_filename = "common/assets/tmp/tetris.png";
+      internal_bo_texture =
+          graphics_shader_texture_buffer_create(tileset_filename);
+      if (!internal_bo_texture) {
+        TEST_ASSERT_MSG("internal_bo_texture")
+      }
     }
   }
+
 
   Rectangle2D rectangle_2D;
   rectangle_2D.x = -0.2f;
@@ -215,8 +221,8 @@ static void internal_draw_callback() {
   rectangle_2D.y = 0.6f;
   array_context_position[1] = rectangle_2D;
 
-  float texture_increment_x = 1.0f / 15.0f;
-  float texture_increment_y = 1.0f / 5.0f;
+  float texture_increment_x = 1.0f / 5.0f;
+  float texture_increment_y = 1.0f / 2.0f;
   rectangle_2D.width = texture_increment_x;
   rectangle_2D.height = texture_increment_y;
   rectangle_2D.x = (1.0f * texture_increment_x);
@@ -234,6 +240,7 @@ static void internal_draw_callback() {
 static void internal_uninit_callback()
 {
   glDeleteTextures(1, &internal_bo_texture);
+  graphics_primitive_rectangle_2D_uninit();
 }
 
 //--------------------------------------------------------------------------------
