@@ -21,11 +21,6 @@ static size_t grid_position_x_max = 10;
 static size_t grid_position_y_max = 100;
 
 //--------------------------------------------------------------------------------
-// private methods
-static void internal_rectangle_2D_set_texture(
-    Rectangle2D* const rectangle_2D, const enum tetris_piece_type type);
-
-//--------------------------------------------------------------------------------
 static void internal_rectangle_2D_set_texture(
     Rectangle2D* const rectangle_2D, const enum tetris_piece_type type) {
   assert(rectangle_2D);

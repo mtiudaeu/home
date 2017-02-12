@@ -83,46 +83,40 @@ void ui_text_draw(const UIText* ui_text) {
 static UIText* test_ui_text = 0x0;
 
 //--------------------------------------------------------------------------------
-static void test_ui_test_draw_callback()
+size_t test_ui_text_init()
 {
-  if (!test_ui_text) {
-    test_ui_text = ui_text_calloc();
-    assert(test_ui_text );
+  test_ui_text = ui_text_calloc();
+  assert(test_ui_text );
 
-    ui_text_set_scale(test_ui_text, 1.2f);
-    GraphicsPoint2D position = {-0.8f, 0.2};
-    ui_text_set_position(test_ui_text, position);
-    ui_text_set_msg(test_ui_text, "ui_test_ whoo!");
-  } else {
-    ui_text_draw(test_ui_text);
-  }
+  ui_text_set_scale(test_ui_text, 1.2f);
+  GraphicsPoint2D position = {-0.8f, 0.2};
+  ui_text_set_position(test_ui_text, position);
+  ui_text_set_msg(test_ui_text, "ui_test_ whoo!");
+
+  return 0;
 }
 
 //--------------------------------------------------------------------------------
-static void test_ui_test_uninit_callback()
+size_t test_ui_text_uninit()
 {
   assert(test_ui_text);
   ui_text_free(test_ui_text);
   test_ui_text = 0x0;
+
+  return 0;
 }
 
 //--------------------------------------------------------------------------------
-size_t ui_text_run_test(void (** draw_callback)(void),
-                        void (** uninit_callback)(void))
+void test_ui_text_draw()
 {
-  {  // Set draw and uninit callback
-    if (!draw_callback) {
-      TEST_ASSERT_MSG("!draw_callback");
-      return 1;
-    }
-    if (!uninit_callback) {
-      TEST_ASSERT_MSG("!uninit_callback");
-      return 1;
-    }
-    *draw_callback = &test_ui_test_draw_callback;
-    *uninit_callback = &test_ui_test_uninit_callback;
-  }
+  assert(test_ui_text);
+  ui_text_draw(test_ui_text);
+}
 
+//--------------------------------------------------------------------------------
+size_t test_ui_text_run()
+{
+  //MDTMP nothing to do
   return 0;
 }
 #endif // INCLUDE_RUN_TEST

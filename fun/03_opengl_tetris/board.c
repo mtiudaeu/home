@@ -27,10 +27,6 @@ static struct tetris_piece_desc current_piece_desc;
 static struct tetris_piece_blocks current_piece_blocks;
 
 //--------------------------------------------------------------------------------
-// private methods
-static void board_current_piece_reset();
-
-//--------------------------------------------------------------------------------
 static void board_current_piece_reset() {
   // piece initial position
   current_piece_desc.position.x = 5;

@@ -1,27 +1,4 @@
 //--------------------------------------------------------------------------------
-// private methods
-static void draw_piece_line(
-    struct tetris_piece_blocks* const tetris_piece_blocks,
-    const struct tetris_piece_desc tetris_piece_desc);
-static void draw_piece_l_left(
-    struct tetris_piece_blocks* const tetris_piece_blocks,
-    const struct tetris_piece_desc tetris_piece_desc);
-static void draw_piece_l_right(
-    struct tetris_piece_blocks* const tetris_piece_blocks,
-    const struct tetris_piece_desc tetris_piece_desc);
-static void draw_piece_square(
-    struct tetris_piece_blocks* const tetris_piece_blocks,
-    const struct tetris_piece_desc tetris_piece_desc);
-static void draw_piece_z_left(
-    struct tetris_piece_blocks* const tetris_piece_blocks,
-    const struct tetris_piece_desc tetris_piece_desc);
-static void draw_piece_t(struct tetris_piece_blocks* const tetris_piece_blocks,
-                         const struct tetris_piece_desc tetris_piece_desc);
-static void draw_piece_z_right(
-    struct tetris_piece_blocks* const tetris_piece_blocks,
-    const struct tetris_piece_desc tetris_piece_desc);
-
-//--------------------------------------------------------------------------------
 static void draw_piece_line(
     struct tetris_piece_blocks* const tetris_piece_blocks,
     const struct tetris_piece_desc tetris_piece_desc) {

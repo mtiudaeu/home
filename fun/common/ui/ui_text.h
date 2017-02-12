@@ -17,8 +17,11 @@ void ui_text_set_msg(UIText* ui_text, const char* msg);
 void ui_text_draw(const UIText* ui_text);
 
 #ifdef INCLUDE_RUN_TEST
-size_t ui_text_run_test(void (** draw_callback)(void),
-                        void (** uninit_callback)(void));
+size_t test_ui_text_init();
+size_t test_ui_text_uninit();
+void test_ui_text_draw();
+
+size_t test_ui_text_run();
 #endif  // INCLUDE_RUN_TEST
 
 #endif  // UI_TEXT_H

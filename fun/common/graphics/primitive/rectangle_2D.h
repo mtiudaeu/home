@@ -22,8 +22,11 @@ void graphics_primitive_rectangle_2D_draw(GLuint bo_texture,
                                        size_t square_length);
 
 #ifdef INCLUDE_RUN_TEST
-size_t graphics_primitive_rectangle_2D_run_test(void (** draw_callback)(void),
-                                             void (** uninit_callback)(void));
+size_t test_graphics_primitive_rectangle_2D_init();
+size_t test_graphics_primitive_rectangle_2D_uninit();
+void test_graphics_primitive_rectangle_2D_draw();
+
+size_t test_graphics_primitive_rectangle_2D_run();
 
 #endif  // INCLUDE_RUN_TEST
 

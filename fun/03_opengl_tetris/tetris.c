@@ -17,14 +17,6 @@ static UIText* tetris_ui_text = 0x0;
 static float tetris_time_until_last_update = 0.0f;
 
 //--------------------------------------------------------------------------------
-// private methods
-static size_t tetris_init();
-static void tetris_uninit();
-static void tetris_handle_hotkey_cb(SDL_Event* ev);
-static void tetris_mainCallback(const float time_delta);
-int main();
-
-//--------------------------------------------------------------------------------
 static size_t tetris_init()
 {
   { // initialize static modules
