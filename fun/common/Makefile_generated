@@ -8,14 +8,10 @@ bin/common_graphics_text_text.private.h: common/graphics/text/text.private.h
 	touch bin/common_graphics_text_text.private.h
 bin/common_graphics_text_text.h: common/graphics/text/text.h bin/common_graphics_coord.h
 	touch bin/common_graphics_text_text.h
-bin/common_graphics_text_square_vertices.h: common/graphics/text/square_vertices.h 
-	touch bin/common_graphics_text_square_vertices.h
-bin/common_graphics_text_square_texture.h: common/graphics/text/square_texture.h 
-	touch bin/common_graphics_text_square_texture.h
 bin/common_graphics_primitive_rectangle_2D.h: common/graphics/primitive/rectangle_2D.h 
 	touch bin/common_graphics_primitive_rectangle_2D.h
-bin/common_graphics_primitive_triangle_vertices_2D.h: common/graphics/primitive/triangle_vertices_2D.h 
-	touch bin/common_graphics_primitive_triangle_vertices_2D.h
+bin/common_graphics_primitive_rectangle_2D.private.h: common/graphics/primitive/rectangle_2D.private.h 
+	touch bin/common_graphics_primitive_rectangle_2D.private.h
 bin/common_graphics_context.h: common/graphics/context.h 
 	touch bin/common_graphics_context.h
 bin/common_graphics_coord.h: common/graphics/coord.h 
@@ -28,9 +24,9 @@ bin/common_ui_ui_text.c: common/ui/ui_text.c bin/common_graphics_text_text.h bin
 	touch bin/common_ui_ui_text.c
 bin/common_graphics_context.c: common/graphics/context.c bin/common_graphics_context.h bin/common_test_test.h bin/common_log_log.h
 	touch bin/common_graphics_context.c
-bin/common_graphics_text_text.c: common/graphics/text/text.c bin/common_graphics_text_text.h bin/common_graphics_text_text.private.h bin/common_graphics_context.h bin/common_graphics_coord.h bin/common_graphics_primitive_rectangle_2D.h bin/common_graphics_shader.h bin/common_test_test.h bin/common_log_log.h
+bin/common_graphics_text_text.c: common/graphics/text/text.c bin/common_graphics_text_text.h bin/common_graphics_context.h bin/common_graphics_coord.h bin/common_graphics_primitive_rectangle_2D.h bin/common_graphics_shader.h bin/common_test_test.h bin/common_log_log.h bin/common_graphics_text_text.private.h
 	touch bin/common_graphics_text_text.c
-bin/common_graphics_primitive_rectangle_2D.c: common/graphics/primitive/rectangle_2D.c bin/common_graphics_primitive_rectangle_2D.h bin/common_graphics_primitive_triangle_vertices_2D.h bin/common_graphics_shader.h bin/common_test_test.h bin/common_log_log.h
+bin/common_graphics_primitive_rectangle_2D.c: common/graphics/primitive/rectangle_2D.c bin/common_graphics_primitive_rectangle_2D.h bin/common_graphics_shader.h bin/common_test_test.h bin/common_log_log.h bin/common_graphics_primitive_rectangle_2D.private.h
 	touch bin/common_graphics_primitive_rectangle_2D.c
 bin/common_graphics_shader.c: common/graphics/shader.c bin/common_graphics_shader.h bin/common_log_log.h
 	touch bin/common_graphics_shader.c

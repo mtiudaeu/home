@@ -24,7 +24,7 @@ struct graphics_text {
 };
 
 //--------------------------------------------------------------------------------
-struct graphics_text* graphics_text_calloc() {
+struct graphics_text* graphics_text_new() {
   struct graphics_text* graphics_text = calloc(1, sizeof(struct graphics_text));
 
   {  // Create texture map objects
@@ -33,7 +33,7 @@ struct graphics_text* graphics_text_calloc() {
         graphics_shader_texture_buffer_create(tileset_filename);
     if (!graphics_text->tbo_texture_tileset) {
       LOG_ERROR("!graphics_text->tbo_texture_tileset");
-      graphics_text_free(graphics_text);
+      graphics_text_delete(graphics_text);
       return 0x0;
     }
   }
@@ -42,7 +42,7 @@ struct graphics_text* graphics_text_calloc() {
 }
 
 //--------------------------------------------------------------------------------
-void graphics_text_free(struct graphics_text* graphics_text) {
+void graphics_text_delete(struct graphics_text* graphics_text) {
   assert(graphics_text);
 
   glDeleteTextures(1, &graphics_text->tbo_texture_tileset);
@@ -90,7 +90,7 @@ static struct graphics_text* graphics_text_graphics_text = 0x0;
 
 //--------------------------------------------------------------------------------
 size_t test_graphics_text_init() {
-  graphics_text_graphics_text = graphics_text_calloc();
+  graphics_text_graphics_text = graphics_text_new();
   assert(graphics_text_graphics_text);
   return 0;
 }
@@ -98,7 +98,7 @@ size_t test_graphics_text_init() {
 //--------------------------------------------------------------------------------
 size_t test_graphics_text_uninit() {
   assert(graphics_text_graphics_text);
-  graphics_text_free(graphics_text_graphics_text);
+  graphics_text_delete(graphics_text_graphics_text);
   graphics_text_graphics_text = 0x0;
   return 0;
 }

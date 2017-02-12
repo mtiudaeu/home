@@ -40,7 +40,7 @@ static size_t tetris_init()
   }
 
   {  // initialize tetris members
-    tetris_ui_text = ui_text_calloc();
+    tetris_ui_text = ui_text_new();
     if (!tetris_ui_text) {
       LOG_ERROR("!tetris_ui_text");
       return 1;
@@ -58,7 +58,7 @@ static size_t tetris_init()
 static void tetris_uninit()
 {
   {  // uninitialize tetris members
-    ui_text_free(tetris_ui_text);
+    ui_text_delete(tetris_ui_text);
     tetris_ui_text = 0x0;
   }
 

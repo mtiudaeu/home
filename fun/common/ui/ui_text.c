@@ -19,9 +19,9 @@ struct ui_text {
 };
 
 //--------------------------------------------------------------------------------
-struct ui_text* ui_text_calloc() {
+struct ui_text* ui_text_new() {
   struct ui_text* ui_text = calloc(1, sizeof(struct ui_text));
-  ui_text->graphics_text = graphics_text_calloc();
+  ui_text->graphics_text = graphics_text_new();
   if (!ui_text->graphics_text) {
     LOG_ERROR("!ui_text->graphics_text");
     return 0x0;
@@ -32,9 +32,9 @@ struct ui_text* ui_text_calloc() {
 }
 
 //--------------------------------------------------------------------------------
-void ui_text_free(struct ui_text* ui_text) {
+void ui_text_delete(struct ui_text* ui_text) {
   assert(ui_text);
-  graphics_text_free(ui_text->graphics_text);
+  graphics_text_delete(ui_text->graphics_text);
   if (ui_text->msg) {
     free(ui_text->msg);
   }
@@ -85,7 +85,7 @@ static struct ui_text* test_ui_text = 0x0;
 //--------------------------------------------------------------------------------
 size_t test_ui_text_init()
 {
-  test_ui_text = ui_text_calloc();
+  test_ui_text = ui_text_new();
   assert(test_ui_text );
 
   ui_text_set_scale(test_ui_text, 1.2f);
@@ -100,7 +100,7 @@ size_t test_ui_text_init()
 size_t test_ui_text_uninit()
 {
   assert(test_ui_text);
-  ui_text_free(test_ui_text);
+  ui_text_delete(test_ui_text);
   test_ui_text = 0x0;
 
   return 0;

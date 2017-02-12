@@ -7,8 +7,8 @@
 
 struct graphics_text;
 
-struct graphics_text* graphics_text_calloc();
-void graphics_text_free(struct graphics_text* graphics_text);
+struct graphics_text* graphics_text_new();
+void graphics_text_delete(struct graphics_text* graphics_text);
 
 void graphics_text_draw(const struct graphics_text* graphics_text, float scale,
                         struct graphics_coord_2d position, const char* msg);

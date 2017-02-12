@@ -7,8 +7,8 @@
 
 struct ui_text;
 
-struct ui_text* ui_text_calloc();
-void ui_text_free(struct ui_text* ui_text);
+struct ui_text* ui_text_new();
+void ui_text_delete(struct ui_text* ui_text);
 
 void ui_text_set_scale(struct ui_text* ui_text, float scale);
 void ui_text_set_position(struct ui_text* ui_text, struct graphics_coord_2d position);
