@@ -6,19 +6,19 @@ bin/03_opengl_tetris_piece.private.h: 03_opengl_tetris/piece.private.h
 	touch bin/03_opengl_tetris_piece.private.h
 bin/03_opengl_tetris_tetris.c: 03_opengl_tetris/tetris.c bin/03_opengl_tetris_board.h bin/common_ui_ui_text.h bin/common_graphics_primitive_rectangle_2D.h bin/common_graphics_context.h bin/common_log_log.h
 	touch bin/03_opengl_tetris_tetris.c
-bin/03_opengl_tetris_piece.c: 03_opengl_tetris/piece.c bin/03_opengl_tetris_piece.h bin/03_opengl_tetris_piece.private.h bin/common_graphics_primitive_rectangle_2D.h bin/common_graphics_shader.h
-	touch bin/03_opengl_tetris_piece.c
 bin/03_opengl_tetris_board.c: 03_opengl_tetris/board.c bin/03_opengl_tetris_board.h bin/03_opengl_tetris_piece.h bin/common_log_log.h
 	touch bin/03_opengl_tetris_board.c
+bin/03_opengl_tetris_piece.c: 03_opengl_tetris/piece.c bin/03_opengl_tetris_piece.h bin/03_opengl_tetris_piece.private.h bin/common_graphics_primitive_rectangle_2D.h bin/common_graphics_shader.h
+	touch bin/03_opengl_tetris_piece.c
 bin/03_opengl_tetris_tetris.o: 03_opengl_tetris/tetris.c bin/03_opengl_tetris_tetris.c
 	$(GCC) -c $< -o $@
 bin/03_opengl_tetris_tetris.bc: 03_opengl_tetris/tetris.c bin/03_opengl_tetris_tetris.c
 	$(EMCC) -c $< -o $@
-bin/03_opengl_tetris_piece.o: 03_opengl_tetris/piece.c bin/03_opengl_tetris_piece.c
-	$(GCC) -c $< -o $@
-bin/03_opengl_tetris_piece.bc: 03_opengl_tetris/piece.c bin/03_opengl_tetris_piece.c
-	$(EMCC) -c $< -o $@
 bin/03_opengl_tetris_board.o: 03_opengl_tetris/board.c bin/03_opengl_tetris_board.c
 	$(GCC) -c $< -o $@
 bin/03_opengl_tetris_board.bc: 03_opengl_tetris/board.c bin/03_opengl_tetris_board.c
+	$(EMCC) -c $< -o $@
+bin/03_opengl_tetris_piece.o: 03_opengl_tetris/piece.c bin/03_opengl_tetris_piece.c
+	$(GCC) -c $< -o $@
+bin/03_opengl_tetris_piece.bc: 03_opengl_tetris/piece.c bin/03_opengl_tetris_piece.c
 	$(EMCC) -c $< -o $@

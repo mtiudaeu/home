@@ -5,7 +5,7 @@
 
 #include <stddef.h>
 
-struct GraphicsText;
+struct graphics_text;
 
 struct graphics_text* graphics_text_calloc();
 void graphics_text_free(struct graphics_text* graphics_text);

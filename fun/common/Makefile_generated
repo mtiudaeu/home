@@ -1,37 +1,51 @@
-bin/common_graphics_coord.h: common/graphics/coord.h 
-	touch bin/common_graphics_coord.h
-bin/common_graphics_text_text.h: common/graphics/text/text.h bin/common_graphics_coord.h
-	touch bin/common_graphics_text_text.h
-bin/common_graphics_text_square_texture.h: common/graphics/text/square_texture.h 
-	touch bin/common_graphics_text_square_texture.h
-bin/common_graphics_text_square_vertices.h: common/graphics/text/square_vertices.h 
-	touch bin/common_graphics_text_square_vertices.h
-bin/common_graphics_primitive_triangle_vertices_2D.h: common/graphics/primitive/triangle_vertices_2D.h 
-	touch bin/common_graphics_primitive_triangle_vertices_2D.h
-bin/common_graphics_primitive_rectangle_2D.h: common/graphics/primitive/rectangle_2D.h 
-	touch bin/common_graphics_primitive_rectangle_2D.h
-bin/common_graphics_shader.h: common/graphics/shader.h 
-	touch bin/common_graphics_shader.h
-bin/common_graphics_context.h: common/graphics/context.h 
-	touch bin/common_graphics_context.h
-bin/common_test_test.h: common/test/test.h 
-	touch bin/common_test_test.h
 bin/common_ui_ui_text.h: common/ui/ui_text.h bin/common_graphics_coord.h
 	touch bin/common_ui_ui_text.h
 bin/common_log_log.h: common/log/log.h 
 	touch bin/common_log_log.h
-bin/common_graphics_text_text.c: common/graphics/text/text.c bin/common_graphics_text_text.h bin/common_graphics_coord.h bin/common_graphics_context.h bin/common_graphics_primitive_rectangle_2D.h bin/common_graphics_shader.h bin/common_test_test.h bin/common_log_log.h bin/common_graphics_text_square_texture.h bin/common_graphics_text_square_vertices.h
+bin/common_test_test.h: common/test/test.h 
+	touch bin/common_test_test.h
+bin/common_graphics_text_text.private.h: common/graphics/text/text.private.h 
+	touch bin/common_graphics_text_text.private.h
+bin/common_graphics_text_text.h: common/graphics/text/text.h bin/common_graphics_coord.h
+	touch bin/common_graphics_text_text.h
+bin/common_graphics_text_square_vertices.h: common/graphics/text/square_vertices.h 
+	touch bin/common_graphics_text_square_vertices.h
+bin/common_graphics_text_square_texture.h: common/graphics/text/square_texture.h 
+	touch bin/common_graphics_text_square_texture.h
+bin/common_graphics_primitive_rectangle_2D.h: common/graphics/primitive/rectangle_2D.h 
+	touch bin/common_graphics_primitive_rectangle_2D.h
+bin/common_graphics_primitive_triangle_vertices_2D.h: common/graphics/primitive/triangle_vertices_2D.h 
+	touch bin/common_graphics_primitive_triangle_vertices_2D.h
+bin/common_graphics_context.h: common/graphics/context.h 
+	touch bin/common_graphics_context.h
+bin/common_graphics_coord.h: common/graphics/coord.h 
+	touch bin/common_graphics_coord.h
+bin/common_graphics_shader.h: common/graphics/shader.h 
+	touch bin/common_graphics_shader.h
+bin/common_run_test.c: common/run_test.c bin/common_test_test.h bin/common_ui_ui_text.h bin/common_graphics_context.h bin/common_graphics_text_text.h bin/common_graphics_primitive_rectangle_2D.h
+	touch bin/common_run_test.c
+bin/common_ui_ui_text.c: common/ui/ui_text.c bin/common_graphics_text_text.h bin/common_log_log.h bin/common_test_test.h
+	touch bin/common_ui_ui_text.c
+bin/common_graphics_context.c: common/graphics/context.c bin/common_graphics_context.h bin/common_test_test.h bin/common_log_log.h
+	touch bin/common_graphics_context.c
+bin/common_graphics_text_text.c: common/graphics/text/text.c bin/common_graphics_text_text.h bin/common_graphics_text_text.private.h bin/common_graphics_context.h bin/common_graphics_coord.h bin/common_graphics_primitive_rectangle_2D.h bin/common_graphics_shader.h bin/common_test_test.h bin/common_log_log.h
 	touch bin/common_graphics_text_text.c
 bin/common_graphics_primitive_rectangle_2D.c: common/graphics/primitive/rectangle_2D.c bin/common_graphics_primitive_rectangle_2D.h bin/common_graphics_primitive_triangle_vertices_2D.h bin/common_graphics_shader.h bin/common_test_test.h bin/common_log_log.h
 	touch bin/common_graphics_primitive_rectangle_2D.c
 bin/common_graphics_shader.c: common/graphics/shader.c bin/common_graphics_shader.h bin/common_log_log.h
 	touch bin/common_graphics_shader.c
-bin/common_graphics_context.c: common/graphics/context.c bin/common_graphics_context.h bin/common_test_test.h bin/common_log_log.h
-	touch bin/common_graphics_context.c
-bin/common_ui_ui_text.c: common/ui/ui_text.c bin/common_graphics_text_text.h bin/common_log_log.h bin/common_test_test.h
-	touch bin/common_ui_ui_text.c
-bin/common_run_test.c: common/run_test.c bin/common_test_test.h bin/common_ui_ui_text.h bin/common_graphics_context.h bin/common_graphics_text_text.h bin/common_graphics_primitive_rectangle_2D.h
-	touch bin/common_run_test.c
+bin/common_run_test.o: common/run_test.c bin/common_run_test.c
+	$(GCC) -c $< -o $@
+bin/common_run_test.bc: common/run_test.c bin/common_run_test.c
+	$(EMCC) -c $< -o $@
+bin/common_ui_ui_text.o: common/ui/ui_text.c bin/common_ui_ui_text.c
+	$(GCC) -c $< -o $@
+bin/common_ui_ui_text.bc: common/ui/ui_text.c bin/common_ui_ui_text.c
+	$(EMCC) -c $< -o $@
+bin/common_graphics_context.o: common/graphics/context.c bin/common_graphics_context.c
+	$(GCC) -c $< -o $@
+bin/common_graphics_context.bc: common/graphics/context.c bin/common_graphics_context.c
+	$(EMCC) -c $< -o $@
 bin/common_graphics_text_text.o: common/graphics/text/text.c bin/common_graphics_text_text.c
 	$(GCC) -c $< -o $@
 bin/common_graphics_text_text.bc: common/graphics/text/text.c bin/common_graphics_text_text.c
@@ -43,16 +57,4 @@ bin/common_graphics_primitive_rectangle_2D.bc: common/graphics/primitive/rectang
 bin/common_graphics_shader.o: common/graphics/shader.c bin/common_graphics_shader.c
 	$(GCC) -c $< -o $@
 bin/common_graphics_shader.bc: common/graphics/shader.c bin/common_graphics_shader.c
-	$(EMCC) -c $< -o $@
-bin/common_graphics_context.o: common/graphics/context.c bin/common_graphics_context.c
-	$(GCC) -c $< -o $@
-bin/common_graphics_context.bc: common/graphics/context.c bin/common_graphics_context.c
-	$(EMCC) -c $< -o $@
-bin/common_ui_ui_text.o: common/ui/ui_text.c bin/common_ui_ui_text.c
-	$(GCC) -c $< -o $@
-bin/common_ui_ui_text.bc: common/ui/ui_text.c bin/common_ui_ui_text.c
-	$(EMCC) -c $< -o $@
-bin/common_run_test.o: common/run_test.c bin/common_run_test.c
-	$(GCC) -c $< -o $@
-bin/common_run_test.bc: common/run_test.c bin/common_run_test.c
 	$(EMCC) -c $< -o $@

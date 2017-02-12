@@ -11,7 +11,7 @@
 #include <string.h>
 
 //--------------------------------------------------------------------------------
-// This function was not tested much...
+// FIXME This function was not tested much...
 static void graphics_shader_gl_log_error(GLuint object) {
   GLint log_length = 0;
   if (glIsShader(object)) {

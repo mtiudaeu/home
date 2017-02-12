@@ -16,8 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "common/graphics/text/square_texture.h"
-#include "common/graphics/text/square_vertices.h"
+#include "common/graphics/text/text.private.h"
 
 //--------------------------------------------------------------------------------
 struct graphics_text {
@@ -26,10 +25,6 @@ struct graphics_text {
 
 //--------------------------------------------------------------------------------
 struct graphics_text* graphics_text_calloc() {
-  if (graphics_context_global_ready() != 0) {
-    LOG_ERROR("graphics_context_global_ready != 0");
-    return 0x0;
-  }
   struct graphics_text* graphics_text = calloc(1, sizeof(struct graphics_text));
 
   {  // Create texture map objects
@@ -72,14 +67,14 @@ void graphics_text_draw(const struct graphics_text* graphics_text, float scale,
   size_t i;
   const float width = graphics_text_square_vertices_width(scale);
   for (i = 0; i < length_msg; ++i, position.x += width) {
-    graphics_text_text_rectangle_2D(array_context_position + i, scale,
+    graphics_text_rectangle_2D(array_context_position + i, scale,
                                     position);
   }
 
   struct rectangle_2d* const array_texture_position =
       (struct rectangle_2d*)malloc(rectangle_2D_sizeof);
   for (i = 0; i < length_msg; ++i) {
-    graphics_text_text_rectangle_2D_texture(array_texture_position + i, msg[i]);
+    graphics_text_rectangle_2D_texture(array_texture_position + i, msg[i]);
   }
 
   graphics_primitive_rectangle_2D_draw(graphics_text->tbo_texture_tileset,

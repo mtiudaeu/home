@@ -1,5 +1,20 @@
-#ifndef GRAPHICS_TEXT_SQUARE_TEXTURE_H
-#define GRAPHICS_TEXT_SQUARE_TEXTURE_H
+//--------------------------------------------------------------------------------
+static float graphics_text_square_vertices_width(float scale) {
+  const float size_ratio = 0.1f;
+  return scale * size_ratio;
+}
+
+//--------------------------------------------------------------------------------
+static void graphics_text_rectangle_2D(struct rectangle_2d* rectangle_2D, float scale,
+                             struct graphics_coord_2d position) {
+  assert(rectangle_2D);
+
+  rectangle_2D->x = position.x;
+  rectangle_2D->y = position.y;
+  rectangle_2D->width = graphics_text_square_vertices_width(scale);
+  // FIXME add height.
+  rectangle_2D->height = graphics_text_square_vertices_width(scale);
+}
 
 //--------------------------------------------------------------------------------
 struct grid_16x16 {  // (0,0) is top left
@@ -21,7 +36,7 @@ static struct grid_16x16 graphics_text_char_to_grid_coord(char value) {
 
 //--------------------------------------------------------------------------------
 // rectangle_2D (0.0,0.0) is bottom left
-static void graphics_text_text_rectangle_2D_texture(struct rectangle_2d* rectangle_2D, char value) {
+static void graphics_text_rectangle_2D_texture(struct rectangle_2d* rectangle_2D, char value) {
   assert(rectangle_2D);
 
   const struct grid_16x16 character_coord = graphics_text_char_to_grid_coord(value);
@@ -31,4 +46,3 @@ static void graphics_text_text_rectangle_2D_texture(struct rectangle_2d* rectang
   rectangle_2D->height = TEXTURE_CHARACTER_HEIGHT;
 }
 
-#endif  // GRAPHICS_TEXT_SQUARE_TEXTURE_H

@@ -1,7 +1,5 @@
 #include "common/graphics/primitive/rectangle_2D.h"
 
-#include "common/graphics/primitive/triangle_vertices_2D.h"
-
 #include "common/graphics/shader.h"
 
 #include "common/test/test.h"
@@ -11,8 +9,11 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#include "common/graphics/primitive/rectangle_2D.private.h"
+
 //--------------------------------------------------------------------------------
 // static members
+//MDTMP remove singleton, at least group in a struct.
 static GLuint graphics_primitive_rectangle_2D_program_id = 0;
 
 static GLuint graphics_primitive_rectangle_2D_vbo_vertices_coord = 0;

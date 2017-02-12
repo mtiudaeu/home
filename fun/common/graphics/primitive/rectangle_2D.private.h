@@ -1,6 +1,3 @@
-#ifndef GRAPHICS_PRIMITIVE_TRIANGLE_VERTICES_2D_H
-#define GRAPHICS_PRIMITIVE_TRIANGLE_VERTICES_2D_H
-
 //--------------------------------------------------------------------------------
 struct triangle_verticles_2d {  // (-1.0,-1.0) is bottom left;
   GLfloat coord_1[2];
@@ -32,5 +29,3 @@ void graphics_primitive_triangle_vertices_from_rectangle_2D(
   triangle_vertices[1].coord_3[0] = x_right;
   triangle_vertices[1].coord_3[1] = y_bottom;
 }
-
-#endif  // GRAPHICS_PRIMITIVE_TRIANGLE_VERTICES_2D_H
