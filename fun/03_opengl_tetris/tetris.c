@@ -47,7 +47,7 @@ static size_t tetris_init()
     }
 
     ui_text_set_scale(tetris_ui_text, 1.0f);
-    const graphics_coord_2d MDTMP_position = {0.1, 0.5};
+    const struct graphics_coord_2d MDTMP_position = {0.1, 0.5};
     ui_text_set_position(tetris_ui_text, MDTMP_position);
     ui_text_set_msg(tetris_ui_text, "test");
   }
