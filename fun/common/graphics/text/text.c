@@ -70,14 +70,14 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
   const size_t rectangle_2D_sizeof = sizeof(Rectangle2D) * length_msg;
   Rectangle2D* const array_context_position = (Rectangle2D*)malloc(rectangle_2D_sizeof);
   size_t i;
-  const float width = internal_square_vertices_width(scale);
+  const float width = graphics_text_square_vertices_width(scale);
   for (i = 0; i < length_msg; ++i, position.x += width) {
-    internal_text_rectangle_2D(array_context_position + i, scale, position);
+    graphics_text_text_rectangle_2D(array_context_position + i, scale, position);
   }
 
   Rectangle2D* const array_texture_position = (Rectangle2D*)malloc(rectangle_2D_sizeof);
   for (i = 0; i < length_msg; ++i) {
-    internal_text_rectangle_2D_texture(array_texture_position + i, msg[i]);
+    graphics_text_text_rectangle_2D_texture(array_texture_position + i, msg[i]);
   }
 
   graphics_primitive_rectangle_2D_draw(graphics_text->tbo_texture_tileset,
@@ -90,27 +90,27 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
 }
 
 #ifdef INCLUDE_RUN_TEST
-static GraphicsText* internal_graphics_text = 0x0;
+static GraphicsText* graphics_text_graphics_text = 0x0;
 
 //--------------------------------------------------------------------------------
-static void internal_draw_callback()
+static void graphics_text_draw_callback()
 {
-  if (!internal_graphics_text) {
-    internal_graphics_text = graphics_text_calloc();
-    assert(internal_graphics_text);
+  if (!graphics_text_graphics_text) {
+    graphics_text_graphics_text = graphics_text_calloc();
+    assert(graphics_text_graphics_text);
   } else {
     const float scale = 1.0f;
     const GraphicsPoint2D position = {0.1, 0.5};
-    graphics_text_draw(internal_graphics_text, scale, position, "test");
+    graphics_text_draw(graphics_text_graphics_text, scale, position, "test");
   }
 }
 
 //--------------------------------------------------------------------------------
-static void internal_uninit_callback()
+static void graphics_text_uninit_callback()
 {
-  assert(internal_graphics_text);
-  graphics_text_free(internal_graphics_text);
-  internal_graphics_text = 0x0;
+  assert(graphics_text_graphics_text);
+  graphics_text_free(graphics_text_graphics_text);
+  graphics_text_graphics_text = 0x0;
 }
 
 //--------------------------------------------------------------------------------
@@ -125,25 +125,25 @@ size_t graphics_text_run_test(void (** draw_callback)(void),
       TEST_ASSERT_MSG("!uninit_callback");
       return 1;
     }
-    *draw_callback = &internal_draw_callback;
-    *uninit_callback = &internal_uninit_callback;
+    *draw_callback = &graphics_text_draw_callback;
+    *uninit_callback = &graphics_text_uninit_callback;
   }
 
-  {  // Test internal_char_to_grid_coord
-    GridCoord16x16 coord = internal_char_to_grid_coord((char)0);
+  {  // Test graphics_text_char_to_grid_coord
+    GridCoord16x16 coord = graphics_text_char_to_grid_coord((char)0);
     TEST_ASSERT_TRUE(coord.x == 0);
     TEST_ASSERT_TRUE(coord.y == 0);
 
-    coord = internal_char_to_grid_coord((char)16);
+    coord = graphics_text_char_to_grid_coord((char)16);
     TEST_ASSERT_TRUE(coord.x == 0);
     TEST_ASSERT_TRUE(coord.y == 1);
 
     // Overflow
-    coord = internal_char_to_grid_coord((char)256);
+    coord = graphics_text_char_to_grid_coord((char)256);
     TEST_ASSERT_TRUE(coord.x == 0);
     TEST_ASSERT_TRUE(coord.y == 0);
 
-    coord = internal_char_to_grid_coord((char)34);
+    coord = graphics_text_char_to_grid_coord((char)34);
     TEST_ASSERT_TRUE(coord.x == 2);
     TEST_ASSERT_TRUE(coord.y == 2);
   }

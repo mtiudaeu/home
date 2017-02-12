@@ -11,17 +11,6 @@
 #include <string.h>
 
 //--------------------------------------------------------------------------------
-// private methods
-static void graphics_shader_gl_log_error(GLuint object);
-static char* graphics_shader_file_read_malloc(const char* filename);
-static GLuint graphics_shader_shader_create_str(const char* source,
-                                                GLenum type);
-static GLuint graphics_shader_shader_create_file(const char* filename,
-                                                 GLenum type);
-static GLuint graphics_shader_program_create(GLuint vertex_shader,
-                                             GLuint fragment_shader);
-
-//--------------------------------------------------------------------------------
 // This function was not tested much...
 static void graphics_shader_gl_log_error(GLuint object) {
   GLint log_length = 0;

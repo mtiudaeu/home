@@ -13,6 +13,7 @@
 #include <emscripten.h>
 #endif
 
+//--------------------------------------------------------------------------------
 typedef struct {
   SDL_Window* window;
   SDL_GLContext gl_context;
@@ -23,6 +24,29 @@ typedef struct {
   int time_last;
 } InternalGraphicsContext;
 static InternalGraphicsContext* global_graphics_context;
+
+//--------------------------------------------------------------------------------
+static void graphics_context_main_loop() {
+  SDL_Event ev;
+  while (SDL_PollEvent(&ev)) {
+    if (ev.type == SDL_QUIT) {
+      global_graphics_context->leave_main_loop = 1;
+      return;
+    }
+    if (global_graphics_context->handle_hotkey_cb) {
+      global_graphics_context->handle_hotkey_cb(&ev);
+    }
+  }
+
+  global_graphics_context->time_current = SDL_GetTicks();
+  const float time_delta = (float)(global_graphics_context->time_current -
+                                   global_graphics_context->time_last) /
+                           1000.0f;
+  global_graphics_context->time_last = global_graphics_context->time_current;
+
+  global_graphics_context->main_loop_cb(time_delta);
+  SDL_GL_SwapWindow(global_graphics_context->window);
+}
 
 //--------------------------------------------------------------------------------
 size_t graphics_context_global_init()
@@ -101,29 +125,6 @@ size_t graphics_context_global_uninit()
 }
 
 //--------------------------------------------------------------------------------
-void internal_main_loop() {
-  SDL_Event ev;
-  while (SDL_PollEvent(&ev)) {
-    if (ev.type == SDL_QUIT) {
-      global_graphics_context->leave_main_loop = 1;
-      return;
-    }
-    if (global_graphics_context->handle_hotkey_cb) {
-      global_graphics_context->handle_hotkey_cb(&ev);
-    }
-  }
-
-  global_graphics_context->time_current = SDL_GetTicks();
-  const float time_delta = (float)(global_graphics_context->time_current -
-                                   global_graphics_context->time_last) /
-                           1000.0f;
-  global_graphics_context->time_last = global_graphics_context->time_current;
-
-  global_graphics_context->main_loop_cb(time_delta);
-  SDL_GL_SwapWindow(global_graphics_context->window);
-}
-
-//--------------------------------------------------------------------------------
 size_t graphics_context_global_run(void (*main_loop_cb)(float),
                                    void (*handle_hotkey_cb)(SDL_Event*)) {
   if (!global_graphics_context) {
@@ -147,13 +148,13 @@ size_t graphics_context_global_run(void (*main_loop_cb)(float),
 
 
 #ifdef EMSCRIPTEN
-  emscripten_set_main_loop(&internal_main_loop,
+  emscripten_set_main_loop(&graphics_context_main_loop,
                            0,  // fps
                            1   // simulate infinite loop
                            );
 #else
   while (global_graphics_context->leave_main_loop == 0) {
-    internal_main_loop();
+    graphics_context_main_loop();
   }
 #endif
 

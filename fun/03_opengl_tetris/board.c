@@ -197,6 +197,11 @@ void tetris_board_update() {
               --array_block_position[i].y;
             }
           }
+          for (i = line_nb; i < grid_position_y_max-1; ++i) {
+            block_nb_per_line[i] = block_nb_per_line[i+1]; 
+          }
+          block_nb_per_line[grid_position_y_max] = 0;
+
           --line_nb; // recheck same line index which is a new line that was moved down
         }
       }
