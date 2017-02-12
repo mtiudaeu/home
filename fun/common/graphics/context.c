@@ -14,7 +14,7 @@
 #endif
 
 //--------------------------------------------------------------------------------
-typedef struct {
+struct graphics_context{
   SDL_Window* window;
   SDL_GLContext gl_context;
   void (*main_loop_cb)(float);
@@ -22,8 +22,8 @@ typedef struct {
   size_t leave_main_loop;
   int time_current;
   int time_last;
-} InternalGraphicsContext;
-static InternalGraphicsContext* global_graphics_context;
+};
+static struct graphics_context* global_graphics_context;
 
 //--------------------------------------------------------------------------------
 static void graphics_context_main_loop() {
