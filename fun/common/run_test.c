@@ -10,17 +10,6 @@
 #include <GL/glew.h>
 
 //--------------------------------------------------------------------------------
-// static members
-#define CALLBACKS_MAX_SIZE 100
-size_t callbacks_size = 0;
-
-//MDTMP remove all of that!!
-typedef void (*DrawCallback)(void);
-DrawCallback draw_callbacks[CALLBACKS_MAX_SIZE];
-typedef void (*UninitCallback)(void);
-DrawCallback uninit_callbacks[CALLBACKS_MAX_SIZE];
-
-//--------------------------------------------------------------------------------
 static void run_test_mainCallback(const float time_delta) {
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -108,7 +97,6 @@ static size_t run_test_uninit()
     TEST_ASSERT_MSG("graphics_context_global_uninit");
     return ret;
   }
-
   ret = test_graphics_text_uninit();
   if (ret != 0) {
     TEST_ASSERT_MSG("test_graphics_text_uninit");
@@ -127,10 +115,8 @@ static size_t run_test_uninit()
   return ret;
 }
 
-
 //--------------------------------------------------------------------------------
 int main() {
-
   size_t ret = run_test_init();
   if (ret != 0) {
     return ret;
@@ -152,7 +138,6 @@ int main() {
   if (ret != 0) {
     return ret;
   }
-
 
   return ret;
 }

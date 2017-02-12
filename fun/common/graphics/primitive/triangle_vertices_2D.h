@@ -9,11 +9,8 @@ typedef struct TriangleVertices2D {  // (-1.0,-1.0) is bottom left;
 } TriangleVertices2D;
 
 //--------------------------------------------------------------------------------
-//MDTMP add test
 void graphics_primitive_triangle_vertices_from_rectangle_2D(
     TriangleVertices2D triangle_vertices[2], const Rectangle2D rectangle_2D) {
-  // FIXME Need unit test. Cannot compare float by memcmp on struct.
-
   const GLfloat x_left = rectangle_2D.x;
   const GLfloat x_right = rectangle_2D.x + rectangle_2D.width;
   const GLfloat y_bottom = rectangle_2D.y;

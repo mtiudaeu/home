@@ -3,9 +3,6 @@
 
 #include <GL/glew.h>
 
-// MDTMP rename Rectangle2D
-// MDTMP could be move out of here (reuse in physics etc..)
-
 size_t graphics_primitive_rectangle_2D_init();
 void graphics_primitive_rectangle_2D_uninit();
 

@@ -8,7 +8,6 @@ static float graphics_text_square_vertices_width(float scale) {
 }
 
 //--------------------------------------------------------------------------------
-//MDTMP add test
 static void graphics_text_text_rectangle_2D(Rectangle2D* rectangle_2D, float scale,
                              GraphicsPoint2D position) {
   assert(rectangle_2D);

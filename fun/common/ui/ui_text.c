@@ -116,7 +116,6 @@ void test_ui_text_draw()
 //--------------------------------------------------------------------------------
 size_t test_ui_text_run()
 {
-  //MDTMP nothing to do
   return 0;
 }
 #endif // INCLUDE_RUN_TEST

@@ -13,14 +13,14 @@
 
 //--------------------------------------------------------------------------------
 // static members
-static GLuint graphics_primitive_rectangle_2Dprogram_id = 0;
+static GLuint graphics_primitive_rectangle_2D_program_id = 0;
 
-static GLuint graphics_primitive_rectangle_2Dvbo_vertices_coord = 0;
-static GLint graphics_primitive_rectangle_2Dattribute_vertices_coord = 0;
+static GLuint graphics_primitive_rectangle_2D_vbo_vertices_coord = 0;
+static GLint graphics_primitive_rectangle_2D_attribute_vertices_coord = 0;
 
-static GLuint graphics_primitive_rectangle_2Duniform_texture_tileset;
-static GLuint graphics_primitive_rectangle_2Dvbo_texture_coord = 0;
-static GLint graphics_primitive_rectangle_2Dattribute_texture_coord = 0;
+static GLuint graphics_primitive_rectangle_2D_uniform_texture_tileset;
+static GLuint graphics_primitive_rectangle_2D_vbo_texture_coord = 0;
+static GLint graphics_primitive_rectangle_2D_attribute_texture_coord = 0;
 
 //--------------------------------------------------------------------------------
 static GLuint graphics_primitive_rectangle_2D_program_create() {
@@ -48,36 +48,36 @@ void main(void) {\
 
 //--------------------------------------------------------------------------------
 size_t graphics_primitive_rectangle_2D_init() {
-  if (graphics_primitive_rectangle_2Dprogram_id) {
+  if (graphics_primitive_rectangle_2D_program_id) {
     LOG_ERROR(
         "graphics_primitive_rectangle_2Dprogram_init : already initialized");
     return 1;
   }
 
-  graphics_primitive_rectangle_2Dprogram_id =
+  graphics_primitive_rectangle_2D_program_id =
       graphics_primitive_rectangle_2D_program_create();
-  if (!graphics_primitive_rectangle_2Dprogram_id) {
+  if (!graphics_primitive_rectangle_2D_program_id) {
     LOG_ERROR("!graphics_primitive_rectangle_2Dprogram_init");
     return 1;
   }
 
   const char* uniform_name = "texture_tileset";
-  graphics_primitive_rectangle_2Duniform_texture_tileset = glGetUniformLocation(
-      graphics_primitive_rectangle_2Dprogram_id, uniform_name);
-  if (graphics_primitive_rectangle_2Duniform_texture_tileset == -1) {
+  graphics_primitive_rectangle_2D_uniform_texture_tileset = glGetUniformLocation(
+      graphics_primitive_rectangle_2D_program_id, uniform_name);
+  if (graphics_primitive_rectangle_2D_uniform_texture_tileset == -1) {
     LOG_ERROR("glGetUniformLocation %s", uniform_name);
     graphics_primitive_rectangle_2D_uninit();
     return 1;
   }
 
   {  // Create vertices objects
-    glGenBuffers(1, &graphics_primitive_rectangle_2Dvbo_vertices_coord);
+    glGenBuffers(1, &graphics_primitive_rectangle_2D_vbo_vertices_coord);
 
     const char* attribute_name = "vertices_coord";
-    graphics_primitive_rectangle_2Dattribute_vertices_coord =
-        glGetAttribLocation(graphics_primitive_rectangle_2Dprogram_id,
+    graphics_primitive_rectangle_2D_attribute_vertices_coord =
+        glGetAttribLocation(graphics_primitive_rectangle_2D_program_id,
                             attribute_name);
-    if (graphics_primitive_rectangle_2Dattribute_vertices_coord == -1) {
+    if (graphics_primitive_rectangle_2D_attribute_vertices_coord == -1) {
       LOG_ERROR("glGetAttribLocation %s", attribute_name);
       graphics_primitive_rectangle_2D_uninit();
       return 1;
@@ -85,13 +85,13 @@ size_t graphics_primitive_rectangle_2D_init() {
   }
 
   {  // Create texture coord objects
-    glGenBuffers(1, &graphics_primitive_rectangle_2Dvbo_texture_coord);
+    glGenBuffers(1, &graphics_primitive_rectangle_2D_vbo_texture_coord);
 
     const char* attribute_name = "texture_coord";
-    graphics_primitive_rectangle_2Dattribute_texture_coord =
-        glGetAttribLocation(graphics_primitive_rectangle_2Dprogram_id,
+    graphics_primitive_rectangle_2D_attribute_texture_coord =
+        glGetAttribLocation(graphics_primitive_rectangle_2D_program_id,
                             attribute_name);
-    if (graphics_primitive_rectangle_2Dattribute_texture_coord == -1) {
+    if (graphics_primitive_rectangle_2D_attribute_texture_coord == -1) {
       LOG_ERROR("glGetAttribLocation %s", attribute_name);
       graphics_primitive_rectangle_2D_uninit();
       return 1;
@@ -103,28 +103,28 @@ size_t graphics_primitive_rectangle_2D_init() {
 
 //--------------------------------------------------------------------------------
 void graphics_primitive_rectangle_2D_uninit() {
-  glDeleteProgram(graphics_primitive_rectangle_2Dprogram_id);
-  graphics_primitive_rectangle_2Dprogram_id = 0;
+  glDeleteProgram(graphics_primitive_rectangle_2D_program_id);
+  graphics_primitive_rectangle_2D_program_id = 0;
 
-  glDeleteBuffers(1, &graphics_primitive_rectangle_2Dvbo_vertices_coord);
-  graphics_primitive_rectangle_2Dvbo_vertices_coord = 0;
+  glDeleteBuffers(1, &graphics_primitive_rectangle_2D_vbo_vertices_coord);
+  graphics_primitive_rectangle_2D_vbo_vertices_coord = 0;
 
-  glDeleteBuffers(1, &graphics_primitive_rectangle_2Dvbo_texture_coord);
-  graphics_primitive_rectangle_2Dvbo_texture_coord = 0;
+  glDeleteBuffers(1, &graphics_primitive_rectangle_2D_vbo_texture_coord);
+  graphics_primitive_rectangle_2D_vbo_texture_coord = 0;
 }
 
 //--------------------------------------------------------------------------------
 void graphics_primitive_rectangle_2D_draw(
     GLuint bo_texture, const Rectangle2D* array_context_position,
     const Rectangle2D* array_texture_position, size_t square_length) {
-  assert(graphics_primitive_rectangle_2Dprogram_id);
+  assert(graphics_primitive_rectangle_2D_program_id);
 
   {  // Bind program and text texture
-    glUseProgram(graphics_primitive_rectangle_2Dprogram_id);
+    glUseProgram(graphics_primitive_rectangle_2D_program_id);
 
     glActiveTexture(GL_TEXTURE0);
 
-    glUniform1i(graphics_primitive_rectangle_2Duniform_texture_tileset,
+    glUniform1i(graphics_primitive_rectangle_2D_uniform_texture_tileset,
                 /*GL_TEXTURE*/ 0);
     glBindTexture(GL_TEXTURE_2D, bo_texture);
   }
@@ -142,15 +142,15 @@ void graphics_primitive_rectangle_2D_draw(
     }
 
     glBindBuffer(GL_ARRAY_BUFFER,
-                 graphics_primitive_rectangle_2Dvbo_vertices_coord);
+                 graphics_primitive_rectangle_2D_vbo_vertices_coord);
     glBufferData(GL_ARRAY_BUFFER, vertices_sizeof, array_triangle_vertices,
                  GL_STATIC_DRAW);
     free(array_triangle_vertices);
 
     glEnableVertexAttribArray(
-        graphics_primitive_rectangle_2Dattribute_vertices_coord);
+        graphics_primitive_rectangle_2D_attribute_vertices_coord);
     glVertexAttribPointer(
-        graphics_primitive_rectangle_2Dattribute_vertices_coord,  // attribute
+        graphics_primitive_rectangle_2D_attribute_vertices_coord,  // attribute
         2,         // number of elements per vertex,
         GL_FLOAT,  // the type of each element
         GL_FALSE,  // take our values as-is
@@ -171,15 +171,15 @@ void graphics_primitive_rectangle_2D_draw(
     }
 
     glBindBuffer(GL_ARRAY_BUFFER,
-                 graphics_primitive_rectangle_2Dvbo_texture_coord);
+                 graphics_primitive_rectangle_2D_vbo_texture_coord);
     glBufferData(GL_ARRAY_BUFFER, vertices_sizeof, array_texture_coord,
                  GL_STATIC_DRAW);
     free(array_texture_coord);
 
     glEnableVertexAttribArray(
-        graphics_primitive_rectangle_2Dattribute_texture_coord);
+        graphics_primitive_rectangle_2D_attribute_texture_coord);
     glVertexAttribPointer(
-        graphics_primitive_rectangle_2Dattribute_texture_coord,  // attribute
+        graphics_primitive_rectangle_2D_attribute_texture_coord,  // attribute
         2,         // number of elements per vertex,
         GL_FLOAT,  // the type of each element
         GL_FALSE,  // take our values as-is
@@ -191,9 +191,9 @@ void graphics_primitive_rectangle_2D_draw(
   glDrawArrays(GL_TRIANGLES, 0, 3 * length_triangles);
 
   glDisableVertexAttribArray(
-      graphics_primitive_rectangle_2Dattribute_vertices_coord);
+      graphics_primitive_rectangle_2D_attribute_vertices_coord);
   glDisableVertexAttribArray(
-      graphics_primitive_rectangle_2Dattribute_texture_coord);
+      graphics_primitive_rectangle_2D_attribute_texture_coord);
 }
 
 #ifdef INCLUDE_RUN_TEST
@@ -201,8 +201,7 @@ static GLuint graphics_primitive_rectangle_2Dbo_texture = 0;
 
 //--------------------------------------------------------------------------------
 size_t test_graphics_primitive_rectangle_2D_init() {
-  // MDTMP ret ?
-  graphics_primitive_rectangle_2D_init();
+  assert(graphics_primitive_rectangle_2D_init() == 0);
   const char* tileset_filename = "common/assets/tmp/tetris.png";
   graphics_primitive_rectangle_2Dbo_texture =
       graphics_shader_texture_buffer_create(tileset_filename);
@@ -250,7 +249,6 @@ void test_graphics_primitive_rectangle_2D_draw() {
 
 //--------------------------------------------------------------------------------
 size_t test_graphics_primitive_rectangle_2D_run() {
-  // MDTMP nothing to do.
   return 0;
 }
 #endif  // INCLUDE_RUN_TEST
