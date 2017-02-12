@@ -9,6 +9,8 @@
 
 #include <GL/glew.h>
 
+//--------------------------------------------------------------------------------
+// static members
 #define CALLBACKS_MAX_SIZE 100
 size_t callbacks_size = 0;
 
@@ -18,7 +20,12 @@ typedef void (*UninitCallback)(void);
 DrawCallback uninit_callbacks[CALLBACKS_MAX_SIZE];
 
 //--------------------------------------------------------------------------------
-static void internal_mainCallback(const float time_delta) {
+// private methods
+static void run_test_mainCallback(const float time_delta);
+static size_t run_test_integration_draw();
+
+//--------------------------------------------------------------------------------
+static void run_test_mainCallback(const float time_delta) {
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
@@ -29,9 +36,9 @@ static void internal_mainCallback(const float time_delta) {
 }
 
 //--------------------------------------------------------------------------------
-static size_t internal_test_integration_draw()
+static size_t run_test_integration_draw()
 {
-  const size_t ret = graphics_context_global_run(&internal_mainCallback,
+  const size_t ret = graphics_context_global_run(&run_test_mainCallback,
                                                  0x0  // handle_hotkey_cb
                                                  );
   size_t i = 0;
@@ -91,9 +98,9 @@ int main() {
     uninit_callback = 0x0;
   }
 
-  ret = internal_test_integration_draw();
+  ret = run_test_integration_draw();
   if (ret != 0) {
-    TEST_ASSERT_MSG("internal_test_integration_draw");
+    TEST_ASSERT_MSG("run_test_integration_draw");
     return ret;
   }
 

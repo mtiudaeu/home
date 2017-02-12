@@ -80,30 +80,30 @@ void ui_text_draw(const UIText* ui_text) {
 }
 
 #ifdef INCLUDE_RUN_TEST
-static UIText* internal_ui_text = 0x0;
+static UIText* test_ui_text = 0x0;
 
 //--------------------------------------------------------------------------------
-static void internal_draw_callback()
+static void test_ui_test_draw_callback()
 {
-  if (!internal_ui_text) {
-    internal_ui_text = ui_text_calloc();
-    assert(internal_ui_text );
+  if (!test_ui_text) {
+    test_ui_text = ui_text_calloc();
+    assert(test_ui_text );
 
-    ui_text_set_scale(internal_ui_text, 1.2f);
-    GraphicsPoint2D internal_position = {-0.8f, 0.2};
-    ui_text_set_position(internal_ui_text, internal_position);
-    ui_text_set_msg(internal_ui_text, "ui_test_ whoo!");
+    ui_text_set_scale(test_ui_text, 1.2f);
+    GraphicsPoint2D position = {-0.8f, 0.2};
+    ui_text_set_position(test_ui_text, position);
+    ui_text_set_msg(test_ui_text, "ui_test_ whoo!");
   } else {
-    ui_text_draw(internal_ui_text);
+    ui_text_draw(test_ui_text);
   }
 }
 
 //--------------------------------------------------------------------------------
-static void internal_uninit_callback()
+static void test_ui_test_uninit_callback()
 {
-  assert(internal_ui_text);
-  ui_text_free(internal_ui_text);
-  internal_ui_text = 0x0;
+  assert(test_ui_text);
+  ui_text_free(test_ui_text);
+  test_ui_text = 0x0;
 }
 
 //--------------------------------------------------------------------------------
@@ -119,8 +119,8 @@ size_t ui_text_run_test(void (** draw_callback)(void),
       TEST_ASSERT_MSG("!uninit_callback");
       return 1;
     }
-    *draw_callback = &internal_draw_callback;
-    *uninit_callback = &internal_uninit_callback;
+    *draw_callback = &test_ui_test_draw_callback;
+    *uninit_callback = &test_ui_test_uninit_callback;
   }
 
   return 0;

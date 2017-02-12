@@ -197,6 +197,7 @@ void tetris_board_update() {
               --array_block_position[i].y;
             }
           }
+          --line_nb; // recheck same line index which is a new line that was moved down
         }
       }
     }

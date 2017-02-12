@@ -14,7 +14,7 @@
 //--------------------------------------------------------------------------------
 // static members
 static UIText* tetris_ui_text = 0x0;
-static float time_until_last_update = 0.0f;
+static float tetris_time_until_last_update = 0.0f;
 
 //--------------------------------------------------------------------------------
 // private methods
@@ -105,10 +105,10 @@ static void tetris_handle_hotkey_cb(SDL_Event* ev) {
 
 //--------------------------------------------------------------------------------
 static void tetris_mainCallback(const float time_delta) {
-  time_until_last_update += time_delta;
+  tetris_time_until_last_update += time_delta;
   const float time_update_frequency = 1.0f;
-  if ( time_until_last_update >= time_update_frequency ) {
-    time_until_last_update -= time_update_frequency;
+  if ( tetris_time_until_last_update >= time_update_frequency ) {
+    tetris_time_until_last_update -= time_update_frequency;
     tetris_board_update();
   }
 
