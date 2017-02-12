@@ -22,7 +22,7 @@ static size_t grid_position_y_max = 100;
 
 //--------------------------------------------------------------------------------
 static void internal_rectangle_2D_set_texture(
-    Rectangle2D* const rectangle_2D, const enum tetris_piece_type type) {
+    struct rectangle_2d* const rectangle_2D, const enum tetris_piece_type type) {
   assert(rectangle_2D);
   assert(type < PIECE_NB);
   static const float texture_increment_x = 1.0f / 8.0f;
@@ -50,8 +50,8 @@ void tetris_piece_uninit() { glDeleteTextures(1, &internal_bo_texture); }
 void tetris_piece_draw_blocks(struct grid_position* const array_block_position,
                               enum tetris_piece_type* const array_block_type,
                               size_t length) {
-  Rectangle2D array_context_position[length];
-  Rectangle2D array_texture_position[length];
+  struct rectangle_2d array_context_position[length];
+  struct rectangle_2d array_texture_position[length];
 
   size_t i;
   for (i = 0; i < length; ++i) {

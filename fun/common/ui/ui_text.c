@@ -11,16 +11,16 @@
 #include <string.h>
 
 //--------------------------------------------------------------------------------
-struct UIText {
-  GraphicsText* graphics_text;
+struct ui_text {
+  struct graphics_text* graphics_text;
   struct graphics_coord_2d position;
   float scale;
   char* msg;
 };
 
 //--------------------------------------------------------------------------------
-UIText* ui_text_calloc() {
-  UIText* ui_text = calloc(1, sizeof(UIText));
+struct ui_text* ui_text_calloc() {
+  struct ui_text* ui_text = calloc(1, sizeof(struct ui_text));
   ui_text->graphics_text = graphics_text_calloc();
   if (!ui_text->graphics_text) {
     LOG_ERROR("!ui_text->graphics_text");
@@ -32,7 +32,7 @@ UIText* ui_text_calloc() {
 }
 
 //--------------------------------------------------------------------------------
-void ui_text_free(UIText* ui_text) {
+void ui_text_free(struct ui_text* ui_text) {
   assert(ui_text);
   graphics_text_free(ui_text->graphics_text);
   if (ui_text->msg) {
@@ -42,19 +42,19 @@ void ui_text_free(UIText* ui_text) {
 }
 
 //--------------------------------------------------------------------------------
-void ui_text_set_scale(UIText* ui_text, float scale) {
+void ui_text_set_scale(struct ui_text* ui_text, float scale) {
   assert(ui_text);
   ui_text->scale = scale;
 }
 
 //--------------------------------------------------------------------------------
-void ui_text_set_position(UIText* ui_text, struct graphics_coord_2d position) {
+void ui_text_set_position(struct ui_text* ui_text, struct graphics_coord_2d position) {
   assert(ui_text);
   ui_text->position = position;
 }
 
 //--------------------------------------------------------------------------------
-void ui_text_set_msg(UIText* ui_text, const char* msg) {
+void ui_text_set_msg(struct ui_text* ui_text, const char* msg) {
   if (!msg) {
     LOG_ERROR("!msg");
     return;
@@ -69,7 +69,7 @@ void ui_text_set_msg(UIText* ui_text, const char* msg) {
 }
 
 //--------------------------------------------------------------------------------
-void ui_text_draw(const UIText* ui_text) {
+void ui_text_draw(const struct ui_text* ui_text) {
   assert(ui_text);
 
   if (!ui_text->msg) {
@@ -80,7 +80,7 @@ void ui_text_draw(const UIText* ui_text) {
 }
 
 #ifdef INCLUDE_RUN_TEST
-static UIText* test_ui_text = 0x0;
+static struct ui_text* test_ui_text = 0x0;
 
 //--------------------------------------------------------------------------------
 size_t test_ui_text_init()

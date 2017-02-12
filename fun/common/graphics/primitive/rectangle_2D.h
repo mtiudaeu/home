@@ -6,16 +6,16 @@
 size_t graphics_primitive_rectangle_2D_init();
 void graphics_primitive_rectangle_2D_uninit();
 
-typedef struct Rectangle2D {
+struct rectangle_2d {
   float x; // Bottom left corner
   float y; // Bottom left corner
   float width;
   float height;
-} Rectangle2D;
+};
 
 void graphics_primitive_rectangle_2D_draw(GLuint bo_texture,
-                                       const Rectangle2D* array_context_position,
-                                       const Rectangle2D* array_texture_position,
+                                       const struct rectangle_2d* array_context_position,
+                                       const struct rectangle_2d* array_texture_position,
                                        size_t square_length);
 
 #ifdef INCLUDE_RUN_TEST

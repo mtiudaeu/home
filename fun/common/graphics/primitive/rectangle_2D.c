@@ -115,8 +115,8 @@ void graphics_primitive_rectangle_2D_uninit() {
 
 //--------------------------------------------------------------------------------
 void graphics_primitive_rectangle_2D_draw(
-    GLuint bo_texture, const Rectangle2D* array_context_position,
-    const Rectangle2D* array_texture_position, size_t square_length) {
+    GLuint bo_texture, const struct rectangle_2d* array_context_position,
+    const struct rectangle_2d* array_texture_position, size_t square_length) {
   assert(graphics_primitive_rectangle_2D_program_id);
 
   {  // Bind program and text texture
@@ -132,9 +132,9 @@ void graphics_primitive_rectangle_2D_draw(
   const size_t length_triangles = square_length * 2;
   {  // Set geometry position
     const size_t vertices_sizeof =
-        sizeof(TriangleVertices2D) * length_triangles;
-    TriangleVertices2D* const array_triangle_vertices =
-        (TriangleVertices2D*)malloc(vertices_sizeof);
+        sizeof(struct triangle_verticles_2d) * length_triangles;
+    struct triangle_verticles_2d* const array_triangle_vertices =
+        (struct triangle_verticles_2d*)malloc(vertices_sizeof);
     size_t i = 0;
     for (; i < length_triangles; i += 2) {
       graphics_primitive_triangle_vertices_from_rectangle_2D(
@@ -161,9 +161,9 @@ void graphics_primitive_rectangle_2D_draw(
 
   {  // Set texture vertices
     const size_t vertices_sizeof =
-        sizeof(TriangleVertices2D) * length_triangles;
-    TriangleVertices2D* const array_texture_coord =
-        (TriangleVertices2D*)malloc(vertices_sizeof);
+        sizeof(struct triangle_verticles_2d) * length_triangles;
+    struct triangle_verticles_2d* const array_texture_coord =
+        (struct triangle_verticles_2d*)malloc(vertices_sizeof);
     size_t i = 0;
     for (; i < length_triangles; i += 2) {
       graphics_primitive_triangle_vertices_from_rectangle_2D(
@@ -220,13 +220,13 @@ size_t test_graphics_primitive_rectangle_2D_uninit() {
 
 //--------------------------------------------------------------------------------
 void test_graphics_primitive_rectangle_2D_draw() {
-  Rectangle2D rectangle_2D;
+  struct rectangle_2d rectangle_2D;
   rectangle_2D.x = -0.2f;
   rectangle_2D.y = -0.2f;
   rectangle_2D.width = 0.2f;
   rectangle_2D.height = 0.2f;
 
-  Rectangle2D array_context_position[2];
+  struct rectangle_2d array_context_position[2];
   array_context_position[0] = rectangle_2D;
   rectangle_2D.y = 0.6f;
   array_context_position[1] = rectangle_2D;
@@ -238,7 +238,7 @@ void test_graphics_primitive_rectangle_2D_draw() {
   rectangle_2D.x = (1.0f * texture_increment_x);
   rectangle_2D.y = (3.0f * texture_increment_y);
 
-  Rectangle2D array_texture_position[2];
+  struct rectangle_2d array_texture_position[2];
   array_texture_position[0] = rectangle_2D;
   array_texture_position[1] = rectangle_2D;
 

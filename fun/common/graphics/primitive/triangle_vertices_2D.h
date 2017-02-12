@@ -2,15 +2,15 @@
 #define GRAPHICS_PRIMITIVE_TRIANGLE_VERTICES_2D_H
 
 //--------------------------------------------------------------------------------
-typedef struct TriangleVertices2D {  // (-1.0,-1.0) is bottom left;
+struct triangle_verticles_2d {  // (-1.0,-1.0) is bottom left;
   GLfloat coord_1[2];
   GLfloat coord_2[2];
   GLfloat coord_3[2];
-} TriangleVertices2D;
+};
 
 //--------------------------------------------------------------------------------
 void graphics_primitive_triangle_vertices_from_rectangle_2D(
-    TriangleVertices2D triangle_vertices[2], const Rectangle2D rectangle_2D) {
+    struct triangle_verticles_2d triangle_vertices[2], const struct rectangle_2d rectangle_2D) {
   const GLfloat x_left = rectangle_2D.x;
   const GLfloat x_right = rectangle_2D.x + rectangle_2D.width;
   const GLfloat y_bottom = rectangle_2D.y;

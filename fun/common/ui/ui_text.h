@@ -5,16 +5,16 @@
 
 #include <stddef.h>
 
-typedef struct UIText UIText;
+struct ui_text;
 
-UIText* ui_text_calloc();
-void ui_text_free(UIText* ui_text);
+struct ui_text* ui_text_calloc();
+void ui_text_free(struct ui_text* ui_text);
 
-void ui_text_set_scale(UIText* ui_text, float scale);
-void ui_text_set_position(UIText* ui_text, struct graphics_coord_2d position);
-void ui_text_set_msg(UIText* ui_text, const char* msg);
+void ui_text_set_scale(struct ui_text* ui_text, float scale);
+void ui_text_set_position(struct ui_text* ui_text, struct graphics_coord_2d position);
+void ui_text_set_msg(struct ui_text* ui_text, const char* msg);
 
-void ui_text_draw(const UIText* ui_text);
+void ui_text_draw(const struct ui_text* ui_text);
 
 #ifdef INCLUDE_RUN_TEST
 size_t test_ui_text_init();

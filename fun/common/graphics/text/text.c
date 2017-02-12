@@ -20,17 +20,17 @@
 #include "common/graphics/text/square_vertices.h"
 
 //--------------------------------------------------------------------------------
-struct GraphicsText {
+struct graphics_text {
   GLuint tbo_texture_tileset;
 };
 
 //--------------------------------------------------------------------------------
-GraphicsText* graphics_text_calloc() {
+struct graphics_text* graphics_text_calloc() {
   if (graphics_context_global_ready() != 0) {
     LOG_ERROR("graphics_context_global_ready != 0");
     return 0x0;
   }
-  GraphicsText* graphics_text = calloc(1, sizeof(GraphicsText));
+  struct graphics_text* graphics_text = calloc(1, sizeof(struct graphics_text));
 
   {  // Create texture map objects
     const char* tileset_filename = "common/assets/text/ASCII_tileset.png";
@@ -47,7 +47,7 @@ GraphicsText* graphics_text_calloc() {
 }
 
 //--------------------------------------------------------------------------------
-void graphics_text_free(GraphicsText* graphics_text) {
+void graphics_text_free(struct graphics_text* graphics_text) {
   assert(graphics_text);
 
   glDeleteTextures(1, &graphics_text->tbo_texture_tileset);
@@ -57,7 +57,7 @@ void graphics_text_free(GraphicsText* graphics_text) {
 
 //--------------------------------------------------------------------------------
 // FIXME  Could accumulate all text to draw on screen and call glDrawArray once.
-void graphics_text_draw(const GraphicsText* graphics_text, float scale,
+void graphics_text_draw(const struct graphics_text* graphics_text, float scale,
                         struct graphics_coord_2d position, const char* msg) {
   assert(graphics_text);
   if (!msg || !msg[0]) {
@@ -66,9 +66,9 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
 
   const size_t length_msg = strlen(msg);
 
-  const size_t rectangle_2D_sizeof = sizeof(Rectangle2D) * length_msg;
-  Rectangle2D* const array_context_position =
-      (Rectangle2D*)malloc(rectangle_2D_sizeof);
+  const size_t rectangle_2D_sizeof = sizeof(struct rectangle_2d) * length_msg;
+  struct rectangle_2d* const array_context_position =
+      (struct rectangle_2d*)malloc(rectangle_2D_sizeof);
   size_t i;
   const float width = graphics_text_square_vertices_width(scale);
   for (i = 0; i < length_msg; ++i, position.x += width) {
@@ -76,8 +76,8 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
                                     position);
   }
 
-  Rectangle2D* const array_texture_position =
-      (Rectangle2D*)malloc(rectangle_2D_sizeof);
+  struct rectangle_2d* const array_texture_position =
+      (struct rectangle_2d*)malloc(rectangle_2D_sizeof);
   for (i = 0; i < length_msg; ++i) {
     graphics_text_text_rectangle_2D_texture(array_texture_position + i, msg[i]);
   }
@@ -91,7 +91,7 @@ void graphics_text_draw(const GraphicsText* graphics_text, float scale,
 }
 
 #ifdef INCLUDE_RUN_TEST
-static GraphicsText* graphics_text_graphics_text = 0x0;
+static struct graphics_text* graphics_text_graphics_text = 0x0;
 
 //--------------------------------------------------------------------------------
 size_t test_graphics_text_init() {
@@ -119,7 +119,7 @@ void test_graphics_text_draw() {
 //--------------------------------------------------------------------------------
 size_t test_graphics_text_run() {
   {  // Test graphics_text_char_to_grid_coord
-    GridCoord16x16 coord = graphics_text_char_to_grid_coord((char)0);
+    struct grid_16x16 coord = graphics_text_char_to_grid_coord((char)0);
     TEST_ASSERT_TRUE(coord.x == 0);
     TEST_ASSERT_TRUE(coord.y == 0);
 

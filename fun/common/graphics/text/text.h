@@ -5,12 +5,12 @@
 
 #include <stddef.h>
 
-typedef struct GraphicsText GraphicsText;
+struct GraphicsText;
 
-GraphicsText* graphics_text_calloc();
-void graphics_text_free(GraphicsText* graphics_text);
+struct graphics_text* graphics_text_calloc();
+void graphics_text_free(struct graphics_text* graphics_text);
 
-void graphics_text_draw(const GraphicsText* graphics_text, float scale,
+void graphics_text_draw(const struct graphics_text* graphics_text, float scale,
                         struct graphics_coord_2d position, const char* msg);
 
 #ifdef INCLUDE_RUN_TEST

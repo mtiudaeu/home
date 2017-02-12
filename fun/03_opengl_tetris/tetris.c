@@ -13,7 +13,7 @@
 
 //--------------------------------------------------------------------------------
 // static members
-static UIText* tetris_ui_text = 0x0;
+static struct ui_text* tetris_ui_text = 0x0;
 static float tetris_time_until_last_update = 0.0f;
 
 //--------------------------------------------------------------------------------
