@@ -13,7 +13,7 @@
 
 //--------------------------------------------------------------------------------
 // static members
-static UIText* internal_ui_text = 0x0;
+static UIText* tetris_ui_text = 0x0;
 static float time_until_last_update = 0.0f;
 
 //--------------------------------------------------------------------------------
@@ -48,16 +48,16 @@ static size_t tetris_init()
   }
 
   {  // initialize tetris members
-    internal_ui_text = ui_text_calloc();
-    if (!internal_ui_text) {
-      LOG_ERROR("!internal_ui_text");
+    tetris_ui_text = ui_text_calloc();
+    if (!tetris_ui_text) {
+      LOG_ERROR("!tetris_ui_text");
       return 1;
     }
 
-    ui_text_set_scale(internal_ui_text, 1.0f);
-    const GraphicsPoint2D internal_position = {0.1, 0.5};
-    ui_text_set_position(internal_ui_text, internal_position);
-    ui_text_set_msg(internal_ui_text, "test");
+    ui_text_set_scale(tetris_ui_text, 1.0f);
+    const GraphicsPoint2D MDTMP_position = {0.1, 0.5};
+    ui_text_set_position(tetris_ui_text, MDTMP_position);
+    ui_text_set_msg(tetris_ui_text, "test");
   }
   return 0;
 }
@@ -66,8 +66,8 @@ static size_t tetris_init()
 static void tetris_uninit()
 {
   {  // uninitialize tetris members
-    ui_text_free(internal_ui_text);
-    internal_ui_text = 0x0;
+    ui_text_free(tetris_ui_text);
+    tetris_ui_text = 0x0;
   }
 
   { // uninitialize static modules
@@ -115,8 +115,8 @@ static void tetris_mainCallback(const float time_delta) {
   glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
-  assert(internal_ui_text);
-  ui_text_draw(internal_ui_text);
+  assert(tetris_ui_text);
+  ui_text_draw(tetris_ui_text);
 
   tetris_board_draw();
 }

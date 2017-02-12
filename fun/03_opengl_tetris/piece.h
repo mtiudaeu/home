@@ -4,6 +4,7 @@
 #include "common/graphics/point.h"
 
 #include <stddef.h>
+#include <assert.h>
 
 //--------------------------------------------------------------------------------
 // public data

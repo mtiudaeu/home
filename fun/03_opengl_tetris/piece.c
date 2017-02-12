@@ -1,6 +1,6 @@
 #include "03_opengl_tetris/piece.h"
 
-#include "03_opengl_tetris/piece.internal.h"
+#include "03_opengl_tetris/piece.private.h"
 
 #include "common/graphics/primitive/rectangle_2D.h"
 
@@ -29,50 +29,19 @@ static void internal_rectangle_2D_set_texture(
 static void internal_rectangle_2D_set_texture(
     Rectangle2D* const rectangle_2D, const enum tetris_piece_type type) {
   assert(rectangle_2D);
-
-  static const float texture_increment_x = 1.0f / 15.0f;
-  static const float texture_increment_y = 1.0f / 5.0f;
+  assert(type < PIECE_NB);
+  static const float texture_increment_x = 1.0f / 8.0f;
+  static const float texture_increment_y = 1.0f;
   rectangle_2D->width = texture_increment_x;
   rectangle_2D->height = texture_increment_y;
-
-  switch (type) {
-    case PIECE_LINE:
-      rectangle_2D->x = (1.0f * texture_increment_x);
-      rectangle_2D->y = (3.0f * texture_increment_y);
-      break;
-    case PIECE_L_LEFT:
-      rectangle_2D->x = (5.0f * texture_increment_x);
-      rectangle_2D->y = (3.0f * texture_increment_y);
-      break;
-    case PIECE_L_RIGHT:
-      rectangle_2D->x = (9.0f * texture_increment_x);
-      rectangle_2D->y = (3.0f * texture_increment_y);
-      break;
-    case PIECE_SQUARE:
-      rectangle_2D->x = (13.0f * texture_increment_x);
-      rectangle_2D->y = (3.0f * texture_increment_y);
-      break;
-    case PIECE_Z_LEFT:
-      rectangle_2D->x = (2.0f * texture_increment_x);
-      rectangle_2D->y = 0.0f;
-      break;
-    case PIECE_T:
-      rectangle_2D->x = (6.0f * texture_increment_x);
-      rectangle_2D->y = 0.0f;
-      break;
-    case PIECE_Z_RIGHT:
-      rectangle_2D->x = (11.0f * texture_increment_x);
-      rectangle_2D->y = 0.0f;
-      break;
-    case PIECE_NB:
-      assert(0);  // invalid case
-  }
+  rectangle_2D->x = (type * texture_increment_x);
+  rectangle_2D->y = texture_increment_y;
 }
 
 //--------------------------------------------------------------------------------
 size_t tetris_piece_init() {
   if (!internal_bo_texture) {
-    const char* tileset_filename = "common/assets/tmp/tetris_texture.png";
+    const char* tileset_filename = "common/assets/tmp/tetris.png";
     internal_bo_texture =
         graphics_shader_texture_buffer_create(tileset_filename);
   }
