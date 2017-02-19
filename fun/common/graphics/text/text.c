@@ -28,7 +28,7 @@ struct graphics_text* graphics_text_new() {
   struct graphics_text* graphics_text = calloc(1, sizeof(struct graphics_text));
 
   {  // Create texture map objects
-    const char* tileset_filename = "common/assets/text/ASCII_tileset.png";
+    const char* tileset_filename = "common/assets/text/tileset.png";
     graphics_text->tbo_texture_tileset =
         graphics_shader_texture_buffer_create(tileset_filename);
     if (!graphics_text->tbo_texture_tileset) {

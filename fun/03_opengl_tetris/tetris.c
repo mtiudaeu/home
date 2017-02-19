@@ -104,7 +104,10 @@ static void tetris_mainCallback(const float time_delta) {
     tetris_board_update();
   }
 
-  glClearColor(1.0, 1.0, 1.0, 1.0);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND);
+
+  glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
   assert(tetris_ui_text);

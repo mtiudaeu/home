@@ -29,7 +29,7 @@ RUN_TEST_DEP_EXEC_EMCC = $(RUN_TEST_DEP_EXEC:.o=.bc)
 $(BUILD_PATH)run_test.out : $(RUN_TEST_DEP_EXEC)
 	$(GCC) $^ -o $@ -lGL -lGLEW -lSDL2 -lSDL2_image
 $(BUILD_PATH)run_test.html : $(RUN_TEST_DEP_EXEC_EMCC)
-	$(EMCC) $^ -o $@ --preload-file common/assets/text/ASCII_tileset.png --preload-file common/assets/tmp/tetris.png
+	$(EMCC) $^ -o $@ --preload-file common/assets/text/tileset.png --preload-file common/assets/tmp/tetris.png
 
 # ---- clean ----
 clean : 
