@@ -68,9 +68,8 @@ size_t tetris_board_init() {
       return 1;
     }
 
-//MDTMP add width scale.
     ui_text_set_scale(ui_text_next_piece, ui_scale);
-    struct graphics_coord_2d position = {0.05, 0.8};
+    struct graphics_coord_2d position = {0.05, 0.82};
     ui_text_set_position(ui_text_next_piece, position);
     ui_text_set_msg(ui_text_next_piece, "next piece");
 
@@ -91,7 +90,7 @@ size_t tetris_board_init() {
     srand(time(NULL));
     next_piece_desc.type = rand() % PIECE_NB;
     next_piece_desc.rotation = 0;
-    next_piece_desc.position.x = 14;
+    next_piece_desc.position.x = 12;
     next_piece_desc.position.y = 14;
 
     board_current_piece_reset();

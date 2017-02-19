@@ -65,8 +65,8 @@ void graphics_text_draw(const struct graphics_text* graphics_text, float scale,
   struct rectangle_2d* const array_context_position =
       (struct rectangle_2d*)malloc(rectangle_2D_sizeof);
   size_t i;
-  const float width = graphics_text_square_vertices_width(scale);
-  for (i = 0; i < length_msg; ++i, position.x += width) {
+  const float width_offset = graphics_text_square_vertices_width(scale) * 0.5;
+  for (i = 0; i < length_msg; ++i, position.x += width_offset) {
     graphics_text_rectangle_2D(array_context_position + i, scale,
                                     position);
   }

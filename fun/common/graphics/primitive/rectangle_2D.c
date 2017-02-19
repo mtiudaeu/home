@@ -13,7 +13,7 @@
 
 //--------------------------------------------------------------------------------
 // static members
-//MDTMP remove singleton, at least group in a struct.
+//FIXME remove singleton, at least group in a struct.
 static GLuint graphics_primitive_rectangle_2D_program_id = 0;
 
 static GLuint graphics_primitive_rectangle_2D_vbo_vertices_coord = 0;
