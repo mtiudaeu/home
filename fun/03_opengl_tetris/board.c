@@ -2,6 +2,8 @@
 
 #include "03_opengl_tetris/piece.h"
 
+#include "common/ui/ui_text.h"
+
 #include "common/log/log.h"
 
 #include <string.h>
@@ -11,6 +13,9 @@
 
 //--------------------------------------------------------------------------------
 // static members
+static struct ui_text* ui_text_next_piece = 0x0;
+static struct ui_text* ui_text_score = 0x0;
+static size_t score = 0;
 
 // grid size
 static size_t grid_position_x_max = 10;
@@ -26,16 +31,22 @@ static size_t array_block_size = 0;
 static struct tetris_piece_desc current_piece_desc;
 static struct tetris_piece_blocks current_piece_blocks;
 
+static struct tetris_piece_desc next_piece_desc;
+static struct tetris_piece_blocks next_piece_blocks;
+
 //--------------------------------------------------------------------------------
 static void board_current_piece_reset() {
   // piece initial position
   current_piece_desc.position.x = 5;
   current_piece_desc.position.y = 15;
 
-  current_piece_desc.type = rand() % PIECE_NB;
+  current_piece_desc.type = next_piece_desc.type;
+  next_piece_desc.type = rand() % PIECE_NB;
+
   current_piece_desc.rotation = 0;
 
   tetris_piece_generate_piece(&current_piece_blocks, current_piece_desc);
+  tetris_piece_generate_piece(&next_piece_blocks, next_piece_desc);
 }
 
 //--------------------------------------------------------------------------------
@@ -48,8 +59,41 @@ size_t tetris_board_init() {
     }
   }
 
-  {  // init game board
+  {  // init text ui
+    const float ui_scale = 0.8f;
+
+    ui_text_next_piece = ui_text_new();
+    if (!ui_text_next_piece) {
+      LOG_ERROR("!ui_text_next_piece");
+      return 1;
+    }
+
+//MDTMP add width scale.
+    ui_text_set_scale(ui_text_next_piece, ui_scale);
+    struct graphics_coord_2d position = {0.05, 0.8};
+    ui_text_set_position(ui_text_next_piece, position);
+    ui_text_set_msg(ui_text_next_piece, "next piece");
+
+    ui_text_score = ui_text_new();
+    if (!ui_text_score) {
+      LOG_ERROR("!ui_text_score");
+      return 1;
+    }
+
+    ui_text_set_scale(ui_text_score, ui_scale);
+    position.y = 0.2f;
+    ui_text_set_position(ui_text_score, position);
+    ui_text_set_msg(ui_text_score, "score : 0");
+    score = 0;
+  }
+
+  {  // init game board pieces
     srand(time(NULL));
+    next_piece_desc.type = rand() % PIECE_NB;
+    next_piece_desc.rotation = 0;
+    next_piece_desc.position.x = 14;
+    next_piece_desc.position.y = 14;
+
     board_current_piece_reset();
   }
 
@@ -57,7 +101,17 @@ size_t tetris_board_init() {
 }
 
 //--------------------------------------------------------------------------------
-void tetris_board_uninit() { tetris_piece_uninit(); }
+void tetris_board_uninit() {
+{
+    ui_text_delete(ui_text_next_piece);
+    ui_text_next_piece = 0x0;
+
+    ui_text_delete(ui_text_score);
+    ui_text_score = 0x0;
+
+}
+ tetris_piece_uninit();
+ }
 
 //--------------------------------------------------------------------------------
 size_t tetris_board_send_command(enum tetris_board_command cmd) {
@@ -166,8 +220,17 @@ void tetris_board_update() {
         if (block_nb_per_line[line_nb] != grid_position_x_max) {
           continue;
         }
+        // we have a tetris!
+        {  // increase score
+           score += 1000;
+           char score_text[1000];
+           score_text[0] = 0;
+           snprintf(score_text, 1000, "score : %zu", score);
+           ui_text_set_msg(ui_text_score, score_text);
 
-        {  // we have a tetris, remove all blocks of that line
+        }
+
+        {  // remove all blocks of that line
           size_t i;
           for (i = 0; i < array_block_size; ++i) {
             if (array_block_position[i].y != line_nb) {
@@ -217,4 +280,15 @@ void tetris_board_draw() {
                            array_block_size);
   // draw current moving piece.
   tetris_piece_draw_piece(current_piece_blocks, current_piece_desc);
+  // draw preview of next piece.
+  tetris_piece_draw_piece(next_piece_blocks, next_piece_desc);
+
+  // draw text
+  {
+    assert(ui_text_next_piece);
+    ui_text_draw(ui_text_next_piece);
+
+    assert(ui_text_score);
+    ui_text_draw(ui_text_score);
+  }
 }

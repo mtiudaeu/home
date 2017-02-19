@@ -65,7 +65,7 @@ size_t graphics_context_global_init()
     global_graphics_context = calloc(1, sizeof(*global_graphics_context));
     global_graphics_context->window = SDL_CreateWindow(
         "Default Parameter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        640, 480, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+        1024, 768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
     if (!global_graphics_context->window) {
       graphics_context_global_uninit();
       LOG_ERROR("SDL_CreateWindow %s", SDL_GetError());
