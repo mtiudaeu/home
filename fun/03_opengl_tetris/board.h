@@ -15,7 +15,7 @@ void tetris_board_uninit();
 
 size_t tetris_board_send_command(enum tetris_board_command cmd);
 
-void tetris_board_update();
+void tetris_board_update(const float time_delta);
 void tetris_board_draw();
 
 #endif // TETRIS_BOARD_H

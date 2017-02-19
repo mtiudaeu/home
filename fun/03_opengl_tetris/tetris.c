@@ -10,10 +10,6 @@
 #include <assert.h>
 
 //--------------------------------------------------------------------------------
-// static members
-static float tetris_time_until_last_update = 0.0f;
-
-//--------------------------------------------------------------------------------
 static size_t tetris_init()
 {
   { // initialize static modules
@@ -77,12 +73,7 @@ static void tetris_handle_hotkey_cb(SDL_Event* ev) {
 
 //--------------------------------------------------------------------------------
 static void tetris_mainCallback(const float time_delta) {
-  tetris_time_until_last_update += time_delta;
-  const float time_update_frequency = 1.0f;
-  if ( tetris_time_until_last_update >= time_update_frequency ) {
-    tetris_time_until_last_update -= time_update_frequency;
-    tetris_board_update();
-  }
+  tetris_board_update(time_delta);
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);

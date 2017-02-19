@@ -15,7 +15,10 @@
 // static members
 static struct ui_text* ui_text_next_piece = 0x0;
 static struct ui_text* ui_text_score = 0x0;
+static struct ui_text* ui_text_score_level = 0x0;
 static size_t score = 0;
+static size_t score_level = 0;
+
 
 // grid size
 static size_t grid_position_x_max = 10;
@@ -78,12 +81,20 @@ size_t tetris_board_init() {
       LOG_ERROR("!ui_text_score");
       return 1;
     }
-
     ui_text_set_scale(ui_text_score, ui_scale);
     position.y = 0.2f;
     ui_text_set_position(ui_text_score, position);
     ui_text_set_msg(ui_text_score, "score : 0");
-    score = 0;
+
+    ui_text_score_level = ui_text_new();
+    if (!ui_text_score) {
+      LOG_ERROR("!ui_text_score");
+      return 1;
+    }
+    ui_text_set_scale(ui_text_score_level, ui_scale);
+    position.y = 0.1f;
+    ui_text_set_position(ui_text_score_level, position);
+    ui_text_set_msg(ui_text_score_level, "level : 0");
   }
 
   {  // init game board pieces
@@ -108,6 +119,8 @@ void tetris_board_uninit() {
     ui_text_delete(ui_text_score);
     ui_text_score = 0x0;
 
+    ui_text_delete(ui_text_score_level);
+    ui_text_score_level = 0x0;
 }
  tetris_piece_uninit();
  }
@@ -176,7 +189,16 @@ size_t tetris_board_send_command(enum tetris_board_command cmd) {
 }
 
 //--------------------------------------------------------------------------------
-void tetris_board_update() {
+void tetris_board_update(const float time_delta) {
+  static float time_until_last_update = 0.0f;
+  static float time_update_frequency = 1.0f;
+  time_until_last_update += time_delta;
+
+  if (time_until_last_update < time_update_frequency) {
+    return;
+  }
+  time_until_last_update -= time_update_frequency;
+
   if (tetris_board_send_command(BOARD_CMD_MOV_DOWN) == 0) {
     return;
   }
@@ -227,6 +249,15 @@ void tetris_board_update() {
            snprintf(score_text, 1000, "score : %zu", score);
            ui_text_set_msg(ui_text_score, score_text);
 
+           const size_t next_score_level = score / 10000;
+           if (score_level != next_score_level) {
+             time_update_frequency *= 0.75f;
+           }
+           score_level = next_score_level;
+           char score_level_text[1000];
+           score_level_text[0] = 0;
+           snprintf(score_level_text, 1000, "level : %zu", score_level);
+           ui_text_set_msg(ui_text_score_level, score_level_text);
         }
 
         {  // remove all blocks of that line
@@ -289,5 +320,8 @@ void tetris_board_draw() {
 
     assert(ui_text_score);
     ui_text_draw(ui_text_score);
-  }
+
+    assert(ui_text_score_level);
+    ui_text_draw(ui_text_score_level);
+}
 }
