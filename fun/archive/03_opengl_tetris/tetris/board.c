@@ -1,6 +1,6 @@
-#include "03_opengl_tetris/board.h"
+#include "tetris/board.h"
 
-#include "03_opengl_tetris/piece.h"
+#include "tetris/piece.h"
 
 #include "common/ui/ui_text.h"
 

@@ -3,7 +3,7 @@ INCLUDE_TEST = -DNO_RUN_TEST
 
 include common/Makefile
 
-TETRIS_DEP_EXEC = $(addprefix $(BUILD_PATH),03_opengl_tetris_tetris.o 03_opengl_tetris_piece.o 03_opengl_tetris_board.o common_ui_ui_text.o common_graphics_text_text.o  common_graphics_primitive_rectangle_2D.o common_graphics_shader.o common_graphics_context.o)
+TETRIS_DEP_EXEC = $(addprefix $(BUILD_PATH),tetris_tetris.o tetris_piece.o tetris_board.o common_ui_ui_text.o common_graphics_text_text.o  common_graphics_primitive_rectangle_2D.o common_graphics_shader.o common_graphics_context.o)
 TETRIS_DEP_EXEC_EMCC = $(TETRIS_DEP_EXEC:.o=.bc)
 
 $(BUILD_PATH)tetris.out : $(TETRIS_DEP_EXEC)
@@ -11,4 +11,4 @@ $(BUILD_PATH)tetris.out : $(TETRIS_DEP_EXEC)
 $(BUILD_PATH)tetris.html : $(TETRIS_DEP_EXEC_EMCC)
 	$(EMCC) $^ -o $@ --preload-file common/assets/text/tileset.png --preload-file common/assets/tmp/tetris.png
 
-include 03_opengl_tetris/Makefile_generated
+include Makefile_generated

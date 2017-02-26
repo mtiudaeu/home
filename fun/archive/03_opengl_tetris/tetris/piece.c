@@ -1,6 +1,6 @@
-#include "03_opengl_tetris/piece.h"
+#include "tetris/piece.h"
 
-#include "03_opengl_tetris/piece.private.h"
+#include "tetris/piece.private.h"
 
 #include "common/graphics/primitive/rectangle_2D.h"
 
