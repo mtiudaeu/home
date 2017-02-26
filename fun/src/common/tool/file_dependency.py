@@ -28,9 +28,6 @@ def build_extract_rules(file_path_list):
     include_files = include_files.replace("\n"," ")
     include_files = include_files.split()
     include_files = [file_path_to_target(include_file) for include_file in include_files]
-    #for include_file in include_files:
-      #include_file = file_path_to_target(include_file)
-      #print(include_file)
 
     include_files = " ".join(include_files)
     file_target = file_path_to_target(file_path)
@@ -41,10 +38,12 @@ def build_extract_rules(file_path_list):
 dir_path = sys.argv[1]
 
 output = subprocess.check_output(["find", dir_path, "-name", "*.h"])
+output = output.replace("./","")
 h_files = output.split()
 build_extract_rules(h_files)
 
 output = subprocess.check_output(["find", dir_path, "-name", "*.c"])
+output = output.replace("./","")
 c_files = output.split()
 build_extract_rules(c_files)
 build_object_rules(c_files)
