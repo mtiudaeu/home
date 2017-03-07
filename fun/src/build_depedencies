@@ -1,0 +1,2 @@
+./common/tool/file_dependency.py . > Makefile_generated
+sed -i 's|bin|../bin|g' Makefile_generated

@@ -12,7 +12,7 @@ endif
 EMCC = emcc -O2 -I. $(INCLUDE_TEST) -Werror -s USE_SDL=2 -s USE_SDL_IMAGE=2 --use-preload-plugins
 GCC = gcc -I. -g $(INCLUDE_TEST) -Werror
 
-BUILD_PATH = bin/
+BUILD_PATH = ../bin/
 
 # ---- Target Lists ----
 ifndef TARGETS_ALL
@@ -34,5 +34,3 @@ $(BUILD_PATH)run_test.html : $(RUN_TEST_DEP_EXEC_EMCC)
 # ---- clean ----
 clean : 
 	rm -f $(addprefix $(BUILD_PATH), *.o *.out *.js *.html *.bc *.mem *.data *.c *.h)
-
-include common/Makefile_generated
