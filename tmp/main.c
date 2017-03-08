@@ -27,7 +27,7 @@ static void game_load(struct game *game)
         if (handle) {
             game->handle = handle;
             game->id = attr.st_ino;
-            const struct game_api *api = dlsym(game->handle, "GAME_API");
+            const struct game_api *api = (const struct game_api *)dlsym(game->handle, "GAME_API");
             if (api != NULL) {
                 game->api = *api;
                 if (game->state == NULL)

@@ -42,7 +42,7 @@ static struct game_state *game_init()
     initscr();  // peek at terminal size
     getmaxyx(stdscr, height, width);
     endwin();
-    struct game_state *state = malloc(sizeof(*state) + width * height * 2);
+    struct game_state *state = (struct game_state *)malloc(sizeof(*state) + width * height * 2);
     state->select = 0;
     state->width = width;
     state->height = height;
@@ -100,7 +100,7 @@ static void draw(struct game_state *state)
     move(0, 0);
     for (int y = 0; y < state->height; y++)
         for (int x = 0; x < state->width; x++)
-            addch(get(state, x, y) ? '0' | A_REVERSE : '-');
+            addch(get(state, x, y) ? '+' | A_REVERSE : 'a');
     refresh();
 }
 
@@ -119,9 +119,9 @@ static bool game_step(struct game_state *state)
 }
 
 const struct game_api GAME_API = {
-    .init = game_init,
-    .reload = game_reload,
-    .step = game_step,
-    .unload = game_unload,
-    .finalize = game_finalize
+    game_init,
+    game_finalize,
+    game_reload,
+    game_unload,
+    game_step
 };

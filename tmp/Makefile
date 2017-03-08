@@ -1,13 +1,13 @@
-CFLAGS  = -std=c99 -pedantic -Wall -O2 -fPIC
+CFLAGS  = --std=c++14 -Wall -O2 -fPIC
 LDLIBS  = -ldl -lncurses
 
 all : main libgame.so
 
 main : main.c game.h
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
+	g++ $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
 
 libgame.so : game.c game.h
-	$(CC) $(CFLAGS) -shared $(LDFLAGS) -o $@ $< $(LDLIBS)
+	g++ $(CFLAGS) -shared $(LDFLAGS) -o $@ $< $(LDLIBS)
 
 test : main libgame.so
 	./$<
