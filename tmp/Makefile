@@ -1,5 +1,5 @@
 CFLAGS  = --std=c++14 -Wall -O2 -fPIC
-LDLIBS  = -ldl -lncurses
+LDLIBS  = -ldl
 
 all : main libgame.so
 
