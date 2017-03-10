@@ -1,13 +1,13 @@
 CFLAGS  = --std=c++14 -Wall -O2 -fPIC
-LDLIBS  = -ldl
+LDLIBS  = -ldl -lncurses
 
 all : main libgame.so
 
 main : main.c game.h
-	g++ $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
+	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
 
 libgame.so : game.c game.h
-	g++ $(CFLAGS) -shared $(LDFLAGS) -o $@ $< $(LDLIBS)
+	$(CXX) $(CFLAGS) -shared $(LDFLAGS) -o $@ $< $(LDLIBS)
 
 test : main libgame.so
 	./$<
