@@ -1,24 +1,22 @@
 #include <sys/types.h>
 
-#define MODULE_API "MODULE_API"
+#define API_NAME "MODULE_API"
+
+//MDTMP move inside namespace?
+struct api_handle {
+    void *(*init_state)() = 0x0;
+    void (*uninit_state)(void *state) = 0x0;
+    void (*load_state)(void *state) = 0x0;
+    void (*unload_state)(void *state) = 0x0;
+    bool (*step)(void *state) = 0x0;
+};
 
 namespace module {
 
-struct api_handle {
-    void *(*init_state)();
-    void (*uninit_state)(void *state);
-
-    void (*load)(void *state);
-    void (*unload)(void *state);
-
-    bool (*step)(void *state);
-};
-
 struct library {
-  ino_t st_ino;
-  void* library_handle;
-  void* library_state;
-  struct api_handle* api_handle;
+  void* library_handle = 0x0;
+  void* library_state = 0x0;
+  struct api_handle* api_handle = 0x0;
 };
 
 void load(struct library& library, const char* module_path);
