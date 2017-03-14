@@ -6,10 +6,13 @@ LDLIBS  = -ldl
 
 all : main 
 
+module.o : module.cpp module.h
+	$(CXX) $(CFLAGS) -c $< -o $@
+
 main.o : main.cpp module.h
 	$(CXX) $(CFLAGS) -c $< -o $@
 
-main : main.o
+main : main.o module.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDLIBS)
 
 clean:

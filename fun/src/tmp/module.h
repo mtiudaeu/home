@@ -1,15 +1,27 @@
 #include <sys/types.h>
 
+#define MODULE_API "MODULE_API"
+
 namespace module {
 
-struct module {
-  ino_t st_ino;
-  void* library_handle;
-  void* api_handle;
-  void* library_state;
+struct api_handle {
+    void *(*init_state)();
+    void (*uninit_state)(void *state);
+
+    void (*load)(void *state);
+    void (*unload)(void *state);
+
+    bool (*step)(void *state);
 };
 
-void load(struct module& module, const char* module_path);
-void unload(struct module& module);
+struct library {
+  ino_t st_ino;
+  void* library_handle;
+  void* library_state;
+  struct api_handle* api_handle;
+};
+
+void load(struct library& library, const char* module_path);
+void unload(struct library& library);
 
 }

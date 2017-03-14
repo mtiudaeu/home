@@ -3,61 +3,61 @@
 #include <stdio.h>
 #include <dlfcn.h>
 #include <sys/stat.h>
+#include <assert.h>
 
-void module::load(struct module& module, const char* module_path)
+void module::load(struct library& library, const char* module_path)
 {
   assert(module_path);
   assert(module_path[0]);
 
   struct stat stat;
   if (stat(module_path, &stat) != 0) {
-    // MDTMP error?
+    // FIXME error?
     return;
   }
 
-  if (module.library_handle) {
+  if (library.library_handle) {
     // unload library
-    // MDTMP module.api_handle.unload(module.library_state);
-    dlclose(module.library_handle);
+    library.api_handle->unload(library.library_state);
+    dlclose(library.library_handle);
   }
 
   void* library_handle = dlopen(module_path, RTLD_NOW);
   if (!library_handle) {
     // MDTMP error?
-    module.st_ino = 0;
+    library.st_ino = 0;
     return;
   }
 
-  module.library_handle = library_handle;
-  module.st_ino = stat.st_ino;
-  void* api_handle = dlsym(module.library_handle, "GAME_API");
-  if (!api_handle) {
+  library.library_handle = library_handle;
+  library.st_ino = stat.st_ino;
+  library.api_handle = static_cast<api_handle*>(dlsym(library.library_handle, MODULE_API));
+  if (!library.api_handle) {
     // MDTMP error
-    dlclose(module.library_handle);
-    module.library_handle = NULL;
-    module.st_ino = 0;
+    dlclose(library.library_handle);
+    library.library_handle = NULL;
+    library.st_ino = 0;
     return;
   }
 
-  module.api_handle = api_handle;
-  if (!module.library_state) {
-    // MDTMP module.library_state = module.api_handle.init();
+  if (!library.library_state) {
+    library.library_state = library.api_handle->init_state();
   }
-  // MDTMP module.api_handle.reload(module.library_state);
+  library.api_handle->load(library.library_state);
 }
 
-void module::unload(struct module& module)
+void module::unload(struct library& library)
 {
-  if (!module.library_handle) {
+  if (!library.library_handle) {
     // MDTMP error
     return;
   }
 
-//MDTMP put into a function and reuse for error above?
-  module.api_handle.finalize(module.library_state);
-  module.library_state = NULL;
-  dlclose(module.library_handle);
-  module.library_handle = NULL;
-  module.st_ino = 0;
+  //MDTMP uninitialize in function for reuser for error cases.
+  library.api_handle->uninit_state(library.library_state);
+  library.library_state = NULL;
+  dlclose(library.library_handle);
+  library.library_handle = NULL;
+  library.st_ino = 0;
 }
 
