@@ -1,6 +1,6 @@
 BUILD_PATH = bin/
 
-CFLAGS = --std=c++14 -Wall -g -O2
+CFLAGS = -std=c++14 -Wall -Wextra -O2 -g
 CFLAGS_SHARED_LIBS = -fPIC
 LDLIBS = -ldl
 

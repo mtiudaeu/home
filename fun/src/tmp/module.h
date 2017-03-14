@@ -4,11 +4,24 @@
 
 //MDTMP move inside namespace?
 struct api_handle {
-    void *(*init_state)() = 0x0;
-    void (*uninit_state)(void *state) = 0x0;
-    void (*load_state)(void *state) = 0x0;
-    void (*unload_state)(void *state) = 0x0;
-    bool (*step)(void *state) = 0x0;
+  api_handle(
+  void* (*init_state)(),
+  void (*uninit_state)(void* state),
+  void (*load_state)(void* state),
+  void (*unload_state)(void* state),
+  bool (*step)(void* state)
+)
+      : init_state(init_state),
+        uninit_state(uninit_state),
+        load_state(load_state),
+        unload_state(unload_state),
+        step(step) {}
+
+  void* (*init_state)();
+  void (*uninit_state)(void* state);
+  void (*load_state)(void* state);
+  void (*unload_state)(void* state);
+  bool (*step)(void* state);
 };
 
 namespace module {
