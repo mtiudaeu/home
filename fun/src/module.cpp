@@ -1,5 +1,7 @@
 #include "module.h"
 
+#include "common/log/log.h"
+
 #include <stdio.h>
 #include <dlfcn.h>
 #include <assert.h>
@@ -17,14 +19,14 @@ void module::load(struct library& library, const char* module_path)
 
   void* library_handle = dlopen(module_path, RTLD_NOW);
   if (!library_handle) {
-    // MDTMP error?
+    LOG_ERROR("dlopen : %s", dlerror()); //MDTMP more info?
     return;
   }
 
   library.library_handle = library_handle;
   library.api_handle = static_cast<api_handle*>(dlsym(library.library_handle, API_NAME));
   if (!library.api_handle) {
-    // MDTMP error
+    LOG_ERROR("dlsym : %s", dlerror()); //MDTMP more info?
     dlclose(library.library_handle);
     library.library_handle = NULL;
     return;
@@ -39,7 +41,6 @@ void module::load(struct library& library, const char* module_path)
 void module::unload(struct library& library)
 {
   if (!library.library_handle) {
-    // MDTMP error
     return;
   }
 
