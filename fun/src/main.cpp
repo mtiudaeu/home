@@ -4,7 +4,7 @@
 // program : program_data
 //           Calling state switch
 //   hotkey_mouse_events <----------
-//                                  \
+//                                  |
 //   state_menu : no_data           |
 //      hotkey ---------------------|
 //                                  |
@@ -20,20 +20,36 @@
 
 #include "common/log/log.h"
 
-#include <unistd.h>
 #include <stdio.h>
+#include <unistd.h>
+
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#endif
+
+static module::library library;
+static void test_cb() {
+  library.api_handle->step(library.library_state);
+  sleep(1);
+}
 
 int main() {
-  module::library library;
   module::load(library, "./hello.so");
   if (!library.api_handle) {
     LOG_ERROR("!library.api_handle");
     return 1;
   }
 
+#ifdef EMSCRIPTEN
+  emscripten_set_main_loop(&test_cb,
+                           0,  // fps
+                           1   // simulate infinite loop
+                           );
+#else
   for (;;) {
-    library.api_handle->step(library.library_state);
-    sleep(1);
+    test_cb();
   }
+#endif
+
   return 0;
 }
