@@ -34,6 +34,7 @@ static void test_cb() {
 }
 
 int main() {
+  LOG_INFO("main");
   module::load(library, "./hello.so");
   if (!library.api_handle) {
     LOG_ERROR("!library.api_handle");

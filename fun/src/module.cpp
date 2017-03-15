@@ -8,6 +8,8 @@
 
 void module::load(struct library& library, const char* module_path)
 {
+  LOG_INFO("module::load");
+
   assert(module_path);
   assert(module_path[0]);
 
