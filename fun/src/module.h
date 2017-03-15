@@ -1,6 +1,11 @@
 #include <sys/types.h>
 
-#define API_NAME "MODULE_API"
+#define MODULE_VAR_NAME "MODULE_API"
+#define MODULE_EXPORT_API(init_state, uninit_state, load_state, unload_state, \
+                          step)                                               \
+  extern const struct api_handle MODULE_API(init_state, uninit_state,         \
+                                            load_state, unload_state, step);
+
 
 //MDTMP move inside namespace?
 struct api_handle {

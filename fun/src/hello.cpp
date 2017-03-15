@@ -28,5 +28,4 @@ static bool step(void*  // state
   return true;
 }
 
-extern const struct api_handle MODULE_API(init_state, uninit_state, load_state,
-                                          unload_state, step);
+MODULE_EXPORT_API(init_state, uninit_state, load_state, unload_state, step);

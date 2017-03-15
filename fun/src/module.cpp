@@ -19,14 +19,14 @@ void module::load(struct library& library, const char* module_path)
 
   void* library_handle = dlopen(module_path, RTLD_NOW);
   if (!library_handle) {
-    LOG_ERROR("dlopen : %s", dlerror()); //MDTMP more info?
+    LOG_ERROR("dlopen : %s", dlerror());
     return;
   }
 
   library.library_handle = library_handle;
-  library.api_handle = static_cast<api_handle*>(dlsym(library.library_handle, API_NAME));
+  library.api_handle = static_cast<api_handle*>(dlsym(library.library_handle, MODULE_VAR_NAME));
   if (!library.api_handle) {
-    LOG_ERROR("dlsym : %s", dlerror()); //MDTMP more info?
+    LOG_ERROR("dlsym : %s", dlerror());
     dlclose(library.library_handle);
     library.library_handle = NULL;
     return;

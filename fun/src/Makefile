@@ -1,14 +1,14 @@
 BUILD_PATH = bin/
 
 CFLAGS = -std=c++14 -Wall -Wextra -O2 -g
-CFLAGS_SHARED_LIBS = -fPIC
+CFLAGS_SHARED_LIBS = -fPIC -shared
 LDLIBS = -ldl
 
 
 all : main hello.so
 
 hello.so : hello.cpp module.h
-	$(CXX) $(CFLAGS) $(CFLAGS_SHARED_LIBS) $< -shared -o $@
+	$(CXX) $(CFLAGS) $(CFLAGS_SHARED_LIBS) $< -o $@
 
 module.o : module.cpp module.h
 	$(CXX) $(CFLAGS) -c $< -o $@
