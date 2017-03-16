@@ -17,15 +17,10 @@
 //
 
 #include "module.h"
-
-#include "common/log/log.h"
+#include "log.h"
 
 #include <stdio.h>
 #include <unistd.h>
-
-#ifdef EMSCRIPTEN
-#include <emscripten.h>
-#endif
 
 static module::library library;
 static void test_cb() {
@@ -34,23 +29,15 @@ static void test_cb() {
 }
 
 int main() {
-  LOG_INFO("main");
   module::load(library, "./hello.so");
   if (!library.api_handle) {
     LOG_ERROR("!library.api_handle");
     return 1;
   }
 
-#ifdef EMSCRIPTEN
-  emscripten_set_main_loop(&test_cb,
-                           0,  // fps
-                           1   // simulate infinite loop
-                           );
-#else
   for (;;) {
     test_cb();
   }
-#endif
 
   return 0;
 }
