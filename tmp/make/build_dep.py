@@ -7,17 +7,15 @@ BUILD_PATH="bin/"
 def file_path_to_target(file_path):
   return BUILD_PATH + file_path.replace("/","_")
 
-def build_object_rules(c_file_path_list):
+def build_object_rules(c_file_path_list, make_file_target):
+  global c_files_ext
   for c_file_path in c_file_path_list:
     c_file_target = file_path_to_target(c_file_path)
-    o_file_target = c_file_target.replace(".c", ".o")
-    print(o_file_target + ": " + c_file_path + " " + c_file_target )
-    print("\t$(GCC) -c $< -o $@")
-    bc_file_target = c_file_target.replace(".c", ".bc")
-    print(bc_file_target + ": " + c_file_path + " " + c_file_target )
-    print("\t$(EMCC) -c $< -o $@")
+    o_file_target = c_file_target.replace(c_files_ext, ".o")
+    make_file_target.write(o_file_target + ": " + c_file_path + " " + c_file_target + "\n")
+    make_file_target.write("\t$(CXX) -c $< -o $@\n")
     
-def build_extract_rules(file_path_list):
+def build_extract_rules(file_path_list, make_file_target):
   for file_path in file_path_list:
     p1 = subprocess.Popen(["grep", "#include", file_path], stdout=subprocess.PIPE)
     p2 = subprocess.Popen(["grep", "-v", "<"], stdin=p1.stdout, stdout=subprocess.PIPE)
@@ -32,18 +30,26 @@ def build_extract_rules(file_path_list):
     include_files = " ".join(include_files)
     file_target = file_path_to_target(file_path)
 
-    print(file_target + ": " + file_path + " " + include_files)
-    print("\ttouch " + file_target)
+    make_file_target.write(file_target + ": " + file_path + " " + include_files + "\n")
+    make_file_target.write("\ttouch " + file_target + "\n")
 
-dir_path = sys.argv[1]
+build_dir = sys.argv[1] 
+h_files_ext = sys.argv[2] 
+c_files_ext = sys.argv[3] 
+target_file_path = sys.argv[4] 
 
-output = subprocess.check_output(["find", dir_path, "-name", "*.h"])
+make_file_target = open(target_file_path, 'w')
+
+output = subprocess.check_output(["find", ".", "-name", "*."+h_files_ext])
 output = output.replace("./","")
 h_files = output.split()
-build_extract_rules(h_files)
+build_extract_rules(h_files, make_file_target)
 
-output = subprocess.check_output(["find", dir_path, "-name", "*.c"])
+output = subprocess.check_output(["find", ".", "-name", "*."+c_files_ext])
 output = output.replace("./","")
 c_files = output.split()
-build_extract_rules(c_files)
-build_object_rules(c_files)
+build_extract_rules(c_files, make_file_target)
+build_object_rules(c_files, make_file_target)
+
+make_file_target.close()
+
