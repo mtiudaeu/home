@@ -5,8 +5,6 @@ C_FILES_EXT="cpp"
 
 CFLAGS_ALL = -std=c++14 -Wall -Werror -Wextra -O2 -g -DROOT_PATH=\"$(BUILD_DIR)\" -fPIC
 
-#MDTMP
-#SHARED_LIBS_CFLAGS = -fPIC -shared
 SHARED_LIBS_CFLAGS = -shared
 MAIN_LDLIBS = -ldl
 
@@ -14,15 +12,13 @@ MAIN_LDLIBS = -ldl
 
 DEP_MAKEFILE=$(BUILD_DIR)Makefile_dep
 
-gen_dep:
+dep:
 	mkdir -p $(BUILD_DIR)
 	./make/build_dep.py $(BUILD_DIR) $(H_FILES_EXT) $(C_FILES_EXT) $(DEP_MAKEFILE) ALL_OBJECT_FILES CFLAGS_ALL
 
 -include $(DEP_MAKEFILE)
 
 #---------- MDTMP ----------
-#MDTMP
-#all : $(ALL_OBJECT_FILES)
 all : $(BUILD_DIR)main.out $(BUILD_DIR)hello.so
 
 $(BUILD_DIR)hello.so : $(BUILD_DIR)hello.o
@@ -32,5 +28,5 @@ $(BUILD_DIR)main.out : $(BUILD_DIR)main.o $(BUILD_DIR)module.o
 	$(CXX) $(CFLAGS_ALL) $^ -o $@ $(MAIN_LDLIBS)
 
 clean:
-	rm $(BUILD_DIR)/*
+	rm $(BUILD_DIR)*
 
