@@ -29,7 +29,7 @@ static void test_cb() {
 }
 
 int main() {
-  module::load(library, "./hello.so");
+  module::load(library, ROOT_PATH"hello.so");
   if (!library.api_handle) {
     LOG_ERROR("!library.api_handle");
     return 1;
