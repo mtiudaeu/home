@@ -1,16 +1,6 @@
-CFLAGS  = --std=c++14 -Wall -O2 -fPIC
-LDLIBS  = -ldl -lncurses
+BUILD_DIR = bin
+H_FILES_EXT="*.h"
+C_FILES_EXT="*.c"
+DEP_MAKEFILE=$(BUILD_DIR)/Makefile_dep
 
-all : main libgame.so
-
-main : main.c game.h
-	$(CXX) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
-
-libgame.so : game.c game.h
-	$(CXX) $(CFLAGS) -shared $(LDFLAGS) -o $@ $< $(LDLIBS)
-
-test : main libgame.so
-	./$<
-
-clean :
-	$(RM) *.o *.so main
+include make/Makefile
