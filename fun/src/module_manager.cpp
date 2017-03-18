@@ -1,6 +1,7 @@
 #include "module.h"
 
 #include <stdio.h>
+#include <unistd.h>
 
 static void* init_state() {
   printf("module_manager : init_state\n");
@@ -25,6 +26,7 @@ static void unload_state(void*  // state
 static bool step(void*  // state
                  ) {
   printf("module_manager : step\n");
+  sleep(1); 
   return true;
 }
 

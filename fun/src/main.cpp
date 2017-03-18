@@ -19,25 +19,27 @@
 #include "module.h"
 #include "log.h"
 
-#include <stdio.h>
-#include <unistd.h>
 
-static module::library library;
+static module::library* library;
+/* MDTMP
 static void test_cb() {
   library.api_handle->step(library.library_state);
   sleep(1);
 }
+*/
 
 int main() {
-  module::load(library, ROOT_PATH"module_manager.so");
-  if (!library.api_handle) {
-    LOG_ERROR("!library.api_handle");
+  library = module::init(ROOT_PATH"module_manager.so");
+  if (!library) {
+    LOG_ERROR("!library");
     return 1;
   }
 
   for (;;) {
-    test_cb();
+//MDTMP get result
+    module::step(*library);
   }
+  module::uninit(library);
 
   return 0;
 }
