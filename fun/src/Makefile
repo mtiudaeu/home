@@ -19,13 +19,16 @@ dep:
 -include $(DEP_MAKEFILE)
 
 #---------- TARGETS ----------
-all : $(BUILD_DIR)main.out $(BUILD_DIR)hello.so
-
-$(BUILD_DIR)hello.so : $(BUILD_DIR)hello.o
-	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@
+all : $(BUILD_DIR)main.out $(BUILD_DIR)module_manager.so $(BUILD_DIR)hello.so
 
 $(BUILD_DIR)main.out : $(BUILD_DIR)main.o $(BUILD_DIR)module.o
 	$(CXX) $(CFLAGS_ALL) $^ -o $@ $(MAIN_LDLIBS)
+
+$(BUILD_DIR)module_manager.so : $(BUILD_DIR)module_manager.o
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@
+
+$(BUILD_DIR)hello.so : $(BUILD_DIR)hello.o
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@
 
 clean:
 	rm $(BUILD_DIR)*

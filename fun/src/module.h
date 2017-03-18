@@ -36,8 +36,8 @@ namespace module {
 
 struct library {
   void* library_handle = 0x0;
-  void* library_state = 0x0;
   struct api_handle* api_handle = 0x0;
+  void* library_state = 0x0;
 };
 
 void load(struct library& library, const char* module_path);
