@@ -16,28 +16,19 @@
 //
 //
 
-#include "module.h"
 #include "log.h"
-
+#include "module.h"
 
 static module::library* library;
-/* MDTMP
-static void test_cb() {
-  library.api_handle->step(library.library_state);
-  sleep(1);
-}
-*/
 
 int main() {
-  library = module::init(ROOT_PATH"module_manager.so");
+  library = module::init(ROOT_PATH "module_manager.so");
   if (!library) {
     LOG_ERROR("!library");
     return 1;
   }
 
-  for (;;) {
-//MDTMP get result
-    module::step(*library);
+  while (module::step(*library).stepping_done != true) {
   }
   module::uninit(library);
 
