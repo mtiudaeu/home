@@ -8,7 +8,7 @@ CFLAGS_ALL = -std=c++14 -Wall -Werror -Wextra -O2 -g -DROOT_PATH=\"$(BUILD_DIR)\
 SHARED_LIBS_CFLAGS = -shared
 MAIN_LDLIBS = -ldl
 
-#---------- MDTMP ----------
+#---------- REBUILD DEPENDANCY RULE ----------
 
 DEP_MAKEFILE=$(BUILD_DIR)Makefile_dep
 
@@ -18,7 +18,7 @@ dep:
 
 -include $(DEP_MAKEFILE)
 
-#---------- MDTMP ----------
+#---------- TARGETS ----------
 all : $(BUILD_DIR)main.out $(BUILD_DIR)hello.so
 
 $(BUILD_DIR)hello.so : $(BUILD_DIR)hello.o

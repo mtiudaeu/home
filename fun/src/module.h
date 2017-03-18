@@ -1,3 +1,6 @@
+#ifndef MODULE_H
+#define MODULE_H
+
 #include <sys/types.h>
 
 #define MODULE_VAR_NAME "MODULE_API"
@@ -41,3 +44,5 @@ void load(struct library& library, const char* module_path);
 void unload(struct library& library);
 
 }
+
+#endif
