@@ -81,6 +81,8 @@ module::step_status module::step(module::library& library) {
   module::step_status step_status;
 
   // FIXME this should be able to fail/end
-  library.api_handle->step(library.library_state);
+  if( library.api_handle->step ) {
+    library.api_handle->step(library.library_state);
+  }
   return step_status;
 }
