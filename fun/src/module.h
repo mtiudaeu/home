@@ -35,6 +35,12 @@ struct library;
 library* init(const char* module_path);
 void uninit(library* library);
 
+struct reload_status {
+  bool reload_needed = false;
+  bool reload_succeeded = true;
+};
+reload_status reload_if_needed(library& library);
+
 struct step_status {
   bool stepping_done = false;
 };
