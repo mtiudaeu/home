@@ -202,7 +202,7 @@ static void context_uninit_state(void* state) {
     return;
   }
 
-  context* context = static_cast<struct context*>(state);
+  struct context* context = static_cast<struct context*>(state);
   {  // OpenGL related
 
     if (context->gl_context) {
@@ -230,15 +230,20 @@ static void context_unload_state(void*  // state
   printf("context_: context_unload_state\n");
 }
 
-static bool context_step(void*  // state
-                         ) {
+static bool context_step(void* state) {
   printf("context_: omg\n");
+  if (!state) {
+    LOG_ERROR("!state");
+  }
+  struct context* context = static_cast<struct context*>(state);
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
 
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
+
+  SDL_GL_SwapWindow(context->window);
 
   return true;
 }
