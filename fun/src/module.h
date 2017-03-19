@@ -41,6 +41,7 @@ struct reload_status {
 };
 reload_status reload_if_needed(library& library);
 
+//MDTMP move this up should be the return value of api_handle.step()
 struct step_status {
   bool stepping_done = false;
 };
