@@ -9,7 +9,7 @@
   extern const struct api_handle MODULE_API(init_state, uninit_state,         \
                                             load_state, unload_state, step);
 
-// MDTMP move inside namespace?
+// FIXME move in namespace?
 struct api_handle {
   api_handle(void* (*init_state)(), void (*uninit_state)(void* state),
              void (*load_state)(void* state), void (*unload_state)(void* state),
@@ -20,6 +20,7 @@ struct api_handle {
         unload_state(unload_state),
         step(step) {}
 
+//FIXME could return error.
   void* (*init_state)();
   void (*uninit_state)(void* state);
   void (*load_state)(void* state);
@@ -38,6 +39,7 @@ struct step_status {
   bool stepping_done = false;
 };
 step_status step(library& library);
+
 }
 
 #endif

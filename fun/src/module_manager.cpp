@@ -25,7 +25,7 @@ static void unload_state(void*  // state
 
 static bool step(void*  // state
                  ) {
-  printf("module_manager : step\n");
+  printf("module_manager : lol!!!!!\n");
   sleep(1); 
   return true;
 }
