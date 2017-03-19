@@ -40,6 +40,7 @@ static void module_manager_unload_state(void*  // state
 static bool module_manager_step(void* state) {
   LOG_INFO("module_manager : omg\n");
   if (!state) {
+    LOG_ERROR("!state");
     return false;
   }
   struct module_manager* module_manager =

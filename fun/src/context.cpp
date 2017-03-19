@@ -234,6 +234,7 @@ static bool context_step(void* state) {
   printf("context_: omg\n");
   if (!state) {
     LOG_ERROR("!state");
+    return false;
   }
   struct context* context = static_cast<struct context*>(state);
 
