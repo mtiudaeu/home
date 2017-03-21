@@ -46,7 +46,19 @@ static bool module_manager_step(void* state) {
   struct module_manager* module_manager =
       static_cast<struct module_manager*>(state);
   sleep(1);  // MDTMP remove.
-  return module::step(*module_manager->context).stepping_done == false;
+  if (module::step(*module_manager->context).stepping_done == true) {
+//MDTMP that's weird!!
+    return false;
+  }
+
+//MDTMP hmmm should revisite reloading strategy sleep/delay or whatever?
+  const module::reload_status reload_status = module::reload_if_needed(*module_manager->context);
+  if (reload_status.reload_needed &&
+      reload_status.reload_succeeded == false) {
+    LOG_ERROR("Failed reloading context");
+    return false;
+  }
+  return true;
 }
 
 MODULE_EXPORT_API(module_manager_init_state, module_manager_uninit_state,

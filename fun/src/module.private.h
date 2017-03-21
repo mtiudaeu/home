@@ -17,16 +17,16 @@ static module_reload_status module_reload(module::library& library, const char* 
       module_reload_status.success = false;
       return module_reload_status;
     }
+    library.library_handle = 0x0;
   }
 
-  void* library_handle = dlopen(module_path, RTLD_NOW);
-  if (!library_handle) {
+  library.library_handle = dlopen(module_path, RTLD_NOW);
+  if (!library.library_handle) {
     LOG_ERROR("dlopen : %s", dlerror());
     module_reload_status.success = false;
     return module_reload_status;
   }
 
-  library.library_handle = library_handle;
   library.api_handle = static_cast<api_handle*>(dlsym(library.library_handle, MODULE_VAR_NAME));
   if (!library.api_handle) {
     LOG_ERROR("dlsym : %s", dlerror());
