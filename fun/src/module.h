@@ -20,7 +20,7 @@ struct api_handle {
         unload_state(unload_state),
         step(step) {}
 
-//FIXME could return error.
+//MDTMP All should return errors
   void* (*init_state)();
   void (*uninit_state)(void* state);
   void (*load_state)(void* state);
