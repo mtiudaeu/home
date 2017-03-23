@@ -148,16 +148,25 @@ size_t graphics_context_global_run(void (*main_loop_cb)(float),
 */
 
 static void context_uninit_state(void* state);
+static void context_load_state(void* state);
+static void context_unload_state(void* state);
 
 static void* context_init_state() {
-  context* context = 0x0;
+  context* context = new struct context();
+
+//MDTMP return and delete if problem...
+  context_load_state( context );
+//MDTMP delete context;
+
+//MDTMP
+/*
   {  // OpenGL related
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
       LOG_ERROR("SDL_Init : %s", SDL_GetError());
+      delete context;
       return 0x0;
     }
 
-    context = new struct context();
     context->window = SDL_CreateWindow(
         "Default Parameter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         1024, 768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
@@ -192,16 +201,18 @@ static void* context_init_state() {
       return 0x0;
     }
   }
+*/
 
   return context;
 }
 
 static void context_uninit_state(void* state) {
-  if (!state) {
-    LOG_ERROR("!state");
-    return;
-  }
+  assert(state);
+  context* context = static_cast<struct context*>(state);
 
+  context_unload_state(context);
+//MDTMP
+/*
   struct context* context = static_cast<struct context*>(state);
   {  // OpenGL related
 
@@ -215,19 +226,73 @@ static void context_uninit_state(void* state) {
 
     SDL_Quit();
   }
+*/
 
   delete context;
   context = 0x0;
 }
 
-static void context_load_state(void*  // state
-                               ) {
-  printf("context_: context_load_state\n");
+static void context_load_state(void* state) {
+  assert(state);
+  context* context = static_cast<struct context*>(state);
+
+  {  // OpenGL related
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+      LOG_ERROR("SDL_Init : %s", SDL_GetError());
+      return;
+    }
+
+    context->window = SDL_CreateWindow(
+        "Default Parameter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+        1024, 768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+    if (!context->window) {
+      LOG_ERROR("SDL_CreateWindow %s", SDL_GetError());
+//MDTMP
+      context_unload_state(context);
+      return;
+    }
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    context->gl_context = SDL_GL_CreateContext(context->window);
+    if (context->gl_context == NULL) {
+      LOG_ERROR("SDL_GL_CreateContext %s", SDL_GetError());
+//MDTMP
+      context_unload_state(context);
+      return;
+    }
+
+    // TODO validate if glewInit this need clean-up.
+    GLenum glew_status = glewInit();
+    if (glew_status != GLEW_OK) {
+      LOG_ERROR("glewInit %s", glewGetErrorString(glew_status));
+//MDTMP
+      context_unload_state(context);
+      return;
+    }
+    if (!GLEW_VERSION_2_0) {
+      LOG_ERROR("graphic card does not support OpenGL 2.0");
+//MDTMP
+      context_unload_state(context);
+      return;
+    }
+  }
 }
 
-static void context_unload_state(void*  // state
-                                 ) {
-  printf("context_: context_unload_state\n");
+static void context_unload_state(void* state) {
+  assert(state);
+  context* context = static_cast<struct context*>(state);
+  {  // OpenGL related
+
+    if (context->gl_context) {
+      SDL_GL_DeleteContext(context->gl_context);
+    }
+
+    if (context->window) {
+      SDL_GL_DeleteContext(context->window);
+    }
+
+    SDL_Quit();
+  }
 }
 
 static bool context_step(void* state) {
