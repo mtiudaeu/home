@@ -10,8 +10,9 @@ CFLAGS_ALL = -std=c++14 -Wall -Werror -Wextra -O2 -g -fPIC $(DEFINES)
 SHARED_LIBS_CFLAGS = -shared
 
 #---------- TARGETS ----------
-all : $(BUILD_DIR)main.out $(BUILD_DIR)module_manager.so $(BUILD_DIR)context.so
-test : $(BUILD_DIR)main.out $(BUILD_DIR)module_manager.so.tmp $(BUILD_DIR)context.so.tmp
+all : $(BUILD_DIR)main.out $(BUILD_DIR)module_manager.so.tmp $(BUILD_DIR)context.so.tmp $(BUILD_DIR)catch_event.so.tmp $(BUILD_DIR)render.so.tmp
+deploy : $(BUILD_DIR)main.out $(BUILD_DIR)module_manager.so $(BUILD_DIR)context.so $(BUILD_DIR)catch_event.so $(BUILD_DIR)render.so
+
 
 #---------- DEPENDANCY RULES ----------
 DEP_MAKEFILE=$(BUILD_DIR)Makefile_dep
@@ -27,14 +28,29 @@ $(BUILD_DIR)main.out : $(BUILD_DIR)main.o $(BUILD_DIR)module.o
 
 $(BUILD_DIR)module_manager.so.tmp : $(BUILD_DIR)module_manager.o $(BUILD_DIR)module.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -ldl
-
 $(BUILD_DIR)context.so.tmp : $(BUILD_DIR)context.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW -lSDL2
+$(BUILD_DIR)catch_event.so.tmp : $(BUILD_DIR)catch_event.o
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lSDL2
+$(BUILD_DIR)render.so.tmp : $(BUILD_DIR)render.o
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW
 
 $(BUILD_DIR)module_manager.so : $(BUILD_DIR)module_manager.so.tmp
 	mv $@.tmp $@
+	cp $@ $@.tmp
+	touch $@
 $(BUILD_DIR)context.so : $(BUILD_DIR)context.so.tmp
 	mv $@.tmp $@
+	cp $@ $@.tmp
+	touch $@
+$(BUILD_DIR)catch_event.so : $(BUILD_DIR)catch_event.so.tmp
+	mv $@.tmp $@
+	cp $@ $@.tmp
+	touch $@
+$(BUILD_DIR)render.so : $(BUILD_DIR)render.so.tmp
+	mv $@.tmp $@
+	cp $@ $@.tmp
+	touch $@
 
 #---------- CLEANING ----------
 clean:

@@ -95,32 +95,12 @@ static module_status context_unload_state(void* state) {
 }
 
 static module_status context_step(void* state) {
-  module_status step_status;
-  if (!state) {
-    LOG_ERROR("!state");
-    step_status.error = true;
-    return step_status;
-  }
+  assert(state);
+
   struct context* context = static_cast<struct context*>(state);
-
-  SDL_Event ev;
-  while (SDL_PollEvent(&ev)) {
-    if (ev.type == SDL_QUIT) {
-      LOG_DEBUG("Quit event detected");
-      step_status.info_code = module::STEP_INFO_STOPPING;
-      return step_status;
-    }
-  }
-
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glEnable(GL_BLEND);
-
-  glClearColor(1.0, 1.0, 0.0, 1.0);
-  glClear(GL_COLOR_BUFFER_BIT);
-
   SDL_GL_SwapWindow(context->window);
 
-  return step_status;
+  return module_status();
 }
 
 MODULE_EXPORT_API(context_init_state, context_uninit_state, context_load_state,
