@@ -14,7 +14,7 @@
 namespace module {
 struct library {
   void* library_handle = 0x0;
-  struct api_handle* api_handle = 0x0;
+  struct module_api_handle* module_api_handle = 0x0;
   void* library_state = 0x0;
   ino_t st_ino = 0;
   std::string path;
@@ -76,12 +76,12 @@ module::reload_status module::reload_if_needed(library& library)
 }
 
 module::step_status module::step(module::library& library) {
-  assert(library.api_handle);
+  assert(library.module_api_handle);
 
   module::step_status step_status;
 
-  if( library.api_handle->step ) {
-    if (!library.api_handle->step(library.library_state)) {
+  if( library.module_api_handle->step ) {
+    if (!library.module_api_handle->step(library.library_state)) {
       step_status.stepping_done = true;
     }
   }

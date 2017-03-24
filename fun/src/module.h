@@ -6,12 +6,12 @@
 #define MODULE_VAR_NAME "MODULE_API"
 #define MODULE_EXPORT_API(init_state, uninit_state, load_state, unload_state, \
                           step)                                               \
-  extern const struct api_handle MODULE_API(init_state, uninit_state,         \
+  extern const struct module_api_handle MODULE_API(init_state, uninit_state,         \
                                             load_state, unload_state, step);
 
 // FIXME move in namespace?
-struct api_handle {
-  api_handle(void* (*init_state)(), void (*uninit_state)(void* state),
+struct module_api_handle {
+  module_api_handle(void* (*init_state)(), void (*uninit_state)(void* state),
              void (*load_state)(void* state), void (*unload_state)(void* state),
              bool (*step)(void* state))
       : init_state(init_state),
@@ -41,7 +41,7 @@ struct reload_status {
 };
 reload_status reload_if_needed(library& library);
 
-//MDTMP move this up should be the return value of api_handle.step()
+//MDTMP move this up should be the return value of module_api_handle.step()
 struct step_status {
   bool stepping_done = false;
 };
