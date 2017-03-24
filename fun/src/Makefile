@@ -26,10 +26,12 @@ $(BUILD_DIR)main.out : $(BUILD_DIR)main.o $(BUILD_DIR)module.o
 	$(CXX) $(CFLAGS_ALL) $^ -o $@ -ldl
 
 $(BUILD_DIR)module_manager.so : $(BUILD_DIR)module_manager.o $(BUILD_DIR)module.o
-	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -ldl
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@.tmp -ldl
+	mv $@.tmp $@
 
 $(BUILD_DIR)context.so : $(BUILD_DIR)context.o
-	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW -lSDL2
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@.tmp -lGLEW -lSDL2
+	mv $@.tmp $@
 
 clean:
 	rm $(BUILD_DIR)*

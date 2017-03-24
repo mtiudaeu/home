@@ -51,7 +51,6 @@ static module_status module_manager_step(void* state) {
   LOG_DEBUG("module_manager : step");
   assert(state);
 
-  sleep(1); //MDTMP  
   struct module_manager* module_manager =
       static_cast<struct module_manager*>(state);
   module_status step_status = module::step(*module_manager->context);
@@ -64,7 +63,6 @@ static module_status module_manager_step(void* state) {
   }
 
   // MDTMP revisit loading strategy
-  // Makie sure the file is finished to write before loading it!!
   const module_status reload_status =
       module::reload_if_needed(*module_manager->context);
   if (reload_status.error) {

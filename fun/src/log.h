@@ -10,7 +10,7 @@
 
 #ifdef LOG_DEBUG_ENABLED
 #define LOG_DEBUG(...)                                     \
-  fprintf(stdout, "info : %s:%d : ", __FILE__, __LINE__); \
+  fprintf(stdout, "debug : %s:%d : ", __FILE__, __LINE__); \
   fprintf(stdout, __VA_ARGS__);                            \
   fprintf(stdout, "\n");
 #else

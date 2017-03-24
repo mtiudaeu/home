@@ -68,6 +68,9 @@ module_status module::reload_if_needed(library& library)
     return reload_status;
   }
 
+  // Here we assume that the shared library is fully writted.
+  // If it is being compiled, it is going to be seen as a different file
+  // and loading will fail.
   if (module_reload(library, library.path.c_str()).error) {
     LOG_ERROR("module_reload");
     reload_status.error = true;

@@ -45,7 +45,6 @@ static module_status context_load_state(void* state) {
       768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
   if (!context->window) {
     LOG_ERROR("SDL_CreateWindow %s", SDL_GetError());
-    // MDTMP
     context_unload_state(context);
     load_status.error = true;
     return load_status;
@@ -55,7 +54,6 @@ static module_status context_load_state(void* state) {
   context->gl_context = SDL_GL_CreateContext(context->window);
   if (context->gl_context == NULL) {
     LOG_ERROR("SDL_GL_CreateContext %s", SDL_GetError());
-    // MDTMP
     context_unload_state(context);
     load_status.error = true;
     return load_status;
@@ -65,14 +63,12 @@ static module_status context_load_state(void* state) {
   GLenum glew_status = glewInit();
   if (glew_status != GLEW_OK) {
     LOG_ERROR("glewInit %s", glewGetErrorString(glew_status));
-    // MDTMP
     context_unload_state(context);
     load_status.error = true;
     return load_status;
   }
   if (!GLEW_VERSION_2_0) {
     LOG_ERROR("graphic card does not support OpenGL 2.0");
-    // MDTMP
     context_unload_state(context);
     load_status.error = true;
     return load_status;
@@ -119,7 +115,7 @@ static module_status context_step(void* state) {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
 
-  glClearColor(1.0, 0.0, 0.0, 1.0);
+  glClearColor(1.0, 1.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
   SDL_GL_SwapWindow(context->window);
