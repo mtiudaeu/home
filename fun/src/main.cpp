@@ -35,10 +35,16 @@ int main() {
     }
   }
 
-  size_t iteration_nb = 0; //MDTMP revisite reloading strategy
-  module_status step_status;
+  //MDTMP revisite reloading strategy
   module_status reload_status;
+  module_status step_status;
   for (;;) {
+    reload_status = module::reload_if_needed(*library);
+    if (reload_status.error) {
+      LOG_ERROR("module::reload_if_needed");
+      break;
+    }
+
     step_status = module::step(*library);
     if (step_status.error) {
       LOG_ERROR("step_status.error");
@@ -47,15 +53,6 @@ int main() {
     if (step_status.info_code == module::STEP_INFO_STOPPING) {
       LOG_DEBUG("step_status.info_code == module::STEP_INFO_STOPPING");
       break;
-    }
-
-    ++iteration_nb;
-    if (iteration_nb % 2 == 0) {
-      reload_status = module::reload_if_needed(*library);
-      if (reload_status.error) {
-        LOG_ERROR("module::reload_if_needed");
-        break;
-      }
     }
   }
 

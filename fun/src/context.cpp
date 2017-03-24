@@ -15,7 +15,7 @@ struct context {
 
 static module_status context_unload_state(void* state);
 
-static void* context_init_state(module_status&) {
+static void* context_init_state(module_status&, void*, size_t) {
   return new struct context();
 }
 

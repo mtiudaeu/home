@@ -1,4 +1,7 @@
-static module_status module_reload(module::library& library, const char* module_path)
+static module_status module_reload(module::library& library,
+                                   const char* module_path,
+                                   void* dependancies_state_array = 0x0,
+                                   size_t dependancies_length = 0)
 {
   assert(module_path);
   assert(module_path[0]);
@@ -41,8 +44,8 @@ static module_status module_reload(module::library& library, const char* module_
 
   if (!library.library_state && library.module_api_handle->init_state) {
     module_status init_state_status;
-    library.library_state =
-        library.module_api_handle->init_state(init_state_status);
+    library.library_state = library.module_api_handle->init_state(
+        init_state_status, dependancies_state_array, dependancies_length);
     if (init_state_status.error) {
       reload_status.error = true;
       return reload_status;

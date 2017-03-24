@@ -12,7 +12,7 @@ struct module_manager {
   std::vector<module::library*> libraries;
 };
 
-static void* module_manager_init_state(module_status& module_status) {
+static void* module_manager_init_state(module_status& module_status,void*,size_t) {
   LOG_DEBUG("module_manager : module_manager_init_state");
   std::unique_ptr<module_manager> module_manager_guard_ptr = std::make_unique<module_manager>();
 
@@ -68,21 +68,22 @@ static module_status module_manager_step(void* state) {
   for (module::library* library : module_manager->libraries) {
     assert(library);
 
-    module_status step_status = module::step(*library);
-    if (step_status.error) {
-      LOG_ERROR("step_status.error");
-      return step_status;
-    }
-    if (step_status.info_code == module::STEP_INFO_STOPPING) {
-      return step_status;
-    }
-
     // MDTMP revisit loading strategy
+    module_status step_status;
     const module_status reload_status =
         module::reload_if_needed(*library);
     if (reload_status.error) {
       LOG_ERROR("reload_if_needed");
       step_status.error = true;
+      return step_status;
+    }
+
+    step_status = module::step(*library);
+    if (step_status.error) {
+      LOG_ERROR("step_status.error");
+      return step_status;
+    }
+    if (step_status.info_code == module::STEP_INFO_STOPPING) {
       return step_status;
     }
   }

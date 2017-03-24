@@ -23,7 +23,10 @@ struct library {
 
 #include "module.private.h"
 
-module::library* module::init(const char* module_path, module_status& module_status) {
+module::library* module::init(const char* module_path,
+                              module_status& module_status,
+                              void* dependancies_state_array,
+                              size_t dependancies_length) {
   assert(module_path);
   assert(module_path[0]);
 
@@ -35,7 +38,8 @@ module::library* module::init(const char* module_path, module_status& module_sta
   }
 
   module::library* library = new module::library();
-  if (module_reload(*library, module_path).error) {
+  if (module_reload(*library, module_path, dependancies_state_array,
+                    dependancies_length).error) {
     LOG_ERROR("module_reload")
     delete library;
     module_status.error = true;
