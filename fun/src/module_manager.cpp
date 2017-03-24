@@ -10,7 +10,7 @@ struct module_manager {
 };
 
 static void* module_manager_init_state(module_status& module_status) {
-  LOG_INFO("module_manager : module_manager_init_state");
+  LOG_DEBUG("module_manager : module_manager_init_state");
 
   module::library* context = module::init(ROOT_PATH "context.so", module_status);
   if (!context) {
@@ -31,24 +31,24 @@ static void* module_manager_init_state(module_status& module_status) {
 
 static module_status module_manager_uninit_state(void*  // state
                                         ) {
-  LOG_INFO("module_manager : module_manager_uninit_state");
+  LOG_DEBUG("module_manager : module_manager_uninit_state");
   return module_status();
 }
 
 static module_status module_manager_load_state(void*  // state
                                       ) {
-  LOG_INFO("module_manager : module_manager_load_state");
+  LOG_DEBUG("module_manager : module_manager_load_state");
   return module_status();
 }
 
 static module_status module_manager_unload_state(void*  // state
                                         ) {
-  LOG_INFO("module_manager : module_manager_unload_state");
+  LOG_DEBUG("module_manager : module_manager_unload_state");
   return module_status();
 }
 
 static module_status module_manager_step(void* state) {
-  LOG_INFO("module_manager : step");
+  LOG_DEBUG("module_manager : step");
   assert(state);
 
   sleep(1); //MDTMP  

@@ -45,7 +45,7 @@ int main() {
       break;
     }
     if (step_status.info_code == module::STEP_INFO_STOPPING) {
-      LOG_INFO("step_status.info_code == module::STEP_INFO_STOPPING");
+      LOG_DEBUG("step_status.info_code == module::STEP_INFO_STOPPING");
       break;
     }
 

@@ -110,7 +110,7 @@ static module_status context_step(void* state) {
   SDL_Event ev;
   while (SDL_PollEvent(&ev)) {
     if (ev.type == SDL_QUIT) {
-      LOG_INFO("Quit event detected");
+      LOG_DEBUG("Quit event detected");
       step_status.info_code = module::STEP_INFO_STOPPING;
       return step_status;
     }
