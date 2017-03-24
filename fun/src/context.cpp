@@ -11,11 +11,6 @@
 struct context {
   SDL_Window* window = 0x0;
   SDL_GLContext gl_context = 0x0;
-  void (*main_loop_cb)(float) = 0x0;           // MDTMP stil needed?
-  void (*handle_hotkey_cb)(SDL_Event*) = 0x0;  // MDTMP stil needed?
-  size_t leave_main_loop = 0;                  // MDTMP change to bool?
-  int time_current = 0;
-  int time_last = 0;
 };
 
 static module_status context_unload_state(void* state);

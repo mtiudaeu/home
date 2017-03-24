@@ -3,7 +3,9 @@ BUILD_DIR = ../bin/
 H_FILES_EXT="h"
 C_FILES_EXT="cpp"
 
-CFLAGS_ALL = -std=c++14 -Wall -Werror -Wextra -O2 -g -DROOT_PATH=\"$(BUILD_DIR)\" -fPIC
+#DEFINES = -DROOT_PATH=\"$(BUILD_DIR)\"
+DEFINES = -DROOT_PATH=\"$(BUILD_DIR)\" -DLOG_DEBUG_ENABLED
+CFLAGS_ALL = -std=c++14 -Wall -Werror -Wextra -O2 -g -fPIC $(DEFINES)
 
 SHARED_LIBS_CFLAGS = -shared
 
@@ -18,7 +20,7 @@ dep:
 -include $(DEP_MAKEFILE)
 
 #---------- TARGETS ----------
-all : $(BUILD_DIR)main.out $(BUILD_DIR)module_manager.so $(BUILD_DIR)hello.so $(BUILD_DIR)context.so
+all : $(BUILD_DIR)main.out $(BUILD_DIR)module_manager.so $(BUILD_DIR)context.so
 
 $(BUILD_DIR)main.out : $(BUILD_DIR)main.o $(BUILD_DIR)module.o
 	$(CXX) $(CFLAGS_ALL) $^ -o $@ -ldl
@@ -26,13 +28,8 @@ $(BUILD_DIR)main.out : $(BUILD_DIR)main.o $(BUILD_DIR)module.o
 $(BUILD_DIR)module_manager.so : $(BUILD_DIR)module_manager.o $(BUILD_DIR)module.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -ldl
 
-#MDTMP remove hello
-$(BUILD_DIR)hello.so : $(BUILD_DIR)hello.o
-	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@
-
 $(BUILD_DIR)context.so : $(BUILD_DIR)context.o
-	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGL -lGLEW -lSDL2 -lSDL2_image
-#MDTMP validate library link above.
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW -lSDL2
 
 clean:
 	rm $(BUILD_DIR)*

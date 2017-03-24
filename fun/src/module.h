@@ -25,7 +25,6 @@ struct module_api_handle {
         unload_state(unload_state),
         step(step) {}
 
-  // MDTMP All should return errors
   void* (*init_state)(module_status& module_status);
   module_status (*uninit_state)(void* state);
   module_status (*load_state)(void* state);

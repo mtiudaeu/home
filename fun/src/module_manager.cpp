@@ -6,7 +6,7 @@
 #include <assert.h>
 
 struct module_manager {
-  module::library* context = 0x0;  // MDTMP should be an array or map of modules
+  module::library* context = 0x0;  // FIXME switch to container and manage depandancies
 };
 
 static void* module_manager_init_state(module_status& module_status) {
