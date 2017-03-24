@@ -3,16 +3,23 @@
 #include "log.h"
 
 #include <unistd.h>
+#include <assert.h>
 
 struct module_manager {
   module::library* context = 0x0;  // MDTMP should be an array or map of modules
 };
 
-static void* module_manager_init_state() {
-  LOG_INFO("module_manager : module_manager_init_state\n");
+static void* module_manager_init_state(module_status& module_status) {
+  LOG_INFO("module_manager : module_manager_init_state");
 
-  module::library* context = module::init(ROOT_PATH "context.so");
+  module::library* context = module::init(ROOT_PATH "context.so", module_status);
   if (!context) {
+    LOG_ERROR("module::init");
+    module_status.error = true;
+    return 0x0;
+  }
+  if (module_status.error) {
+    LOG_ERROR("module::init");
     return 0x0;
   }
 
@@ -22,43 +29,50 @@ static void* module_manager_init_state() {
   return module_manager;
 }
 
-static void module_manager_uninit_state(void*  // state
+static module_status module_manager_uninit_state(void*  // state
                                         ) {
-  LOG_INFO("module_manager : module_manager_uninit_state\n");
+  LOG_INFO("module_manager : module_manager_uninit_state");
+  return module_status();
 }
 
-static void module_manager_load_state(void*  // state
+static module_status module_manager_load_state(void*  // state
                                       ) {
-  LOG_INFO("module_manager : module_manager_load_state\n");
+  LOG_INFO("module_manager : module_manager_load_state");
+  return module_status();
 }
 
-static void module_manager_unload_state(void*  // state
+static module_status module_manager_unload_state(void*  // state
                                         ) {
-  LOG_INFO("module_manager : module_manager_unload_state\n");
+  LOG_INFO("module_manager : module_manager_unload_state");
+  return module_status();
 }
 
-static bool module_manager_step(void* state) {
-  LOG_INFO("module_manager : omg\n");
-  if (!state) {
-    LOG_ERROR("!state");
-    return false;
-  }
+static module_status module_manager_step(void* state) {
+  LOG_INFO("module_manager : step");
+  assert(state);
+
+  sleep(1); //MDTMP  
   struct module_manager* module_manager =
       static_cast<struct module_manager*>(state);
-  sleep(1);  // MDTMP remove.
-  if (module::step(*module_manager->context).stepping_done == true) {
-//MDTMP that's weird!!
-    return false;
+  module_status step_status = module::step(*module_manager->context);
+  if (step_status.error) {
+    LOG_ERROR("step_status.error");
+    return step_status;
+  }
+  if (step_status.info_code == module::STEP_INFO_STOPPING) {
+    return step_status;
   }
 
-//MDTMP hmmm should revisite reloading strategy sleep/delay or whatever?
-  const module::reload_status reload_status = module::reload_if_needed(*module_manager->context);
-  if (reload_status.reload_needed &&
-      reload_status.reload_succeeded == false) {
-    LOG_ERROR("Failed reloading context");
-    return false;
+  // MDTMP revisit loading strategy
+  // Makie sure the file is finished to write before loading it!!
+  const module_status reload_status =
+      module::reload_if_needed(*module_manager->context);
+  if (reload_status.error) {
+    LOG_ERROR("reload_if_needed");
+    step_status.error = true;
+    return step_status;
   }
-  return true;
+  return step_status;
 }
 
 MODULE_EXPORT_API(module_manager_init_state, module_manager_uninit_state,

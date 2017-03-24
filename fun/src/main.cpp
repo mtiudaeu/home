@@ -22,26 +22,47 @@
 static module::library* library;
 
 int main() {
-  library = module::init(ROOT_PATH "module_manager.so");
-  if (!library) {
-    LOG_ERROR("!library");
-    return 1;
+  {
+    module_status module_status;
+    library = module::init(ROOT_PATH "module_manager.so", module_status);
+    if (!library) {
+      LOG_ERROR("!library");
+      return 1;
+    }
+    if (module_status.error) {
+      LOG_ERROR("module_status.error");
+      return 1;
+    }
   }
 
-//MDTMP hmmm should revisite reloading strategy
-  size_t iteration_nb = 0;
-  while (module::step(*library).stepping_done != true) {
+  size_t iteration_nb = 0; //MDTMP revisite reloading strategy
+  module_status step_status;
+  module_status reload_status;
+  for (;;) {
+    step_status = module::step(*library);
+    if (step_status.error) {
+      LOG_ERROR("step_status.error");
+      break;
+    }
+    if (step_status.info_code == module::STEP_INFO_STOPPING) {
+      LOG_INFO("step_status.info_code == module::STEP_INFO_STOPPING");
+      break;
+    }
+
     ++iteration_nb;
     if (iteration_nb % 2 == 0) {
-      const module::reload_status reload_status = module::reload_if_needed(*library);
-      if (reload_status.reload_needed &&
-          reload_status.reload_succeeded == false) {
-        LOG_ERROR("Failed reloading module_manager");
+      reload_status = module::reload_if_needed(*library);
+      if (reload_status.error) {
+        LOG_ERROR("module::reload_if_needed");
         break;
       }
     }
   }
-  module::uninit(library);
 
-  return 0;
+  if (module::uninit(library).error) {
+    LOG_ERROR("module::uninit");
+    return 1;
+  }
+
+  return step_status.error || reload_status.error;
 }

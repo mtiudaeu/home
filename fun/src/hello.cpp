@@ -1,3 +1,5 @@
+//MDTMP
+/*
 #include "module.h"
 
 #include <stdio.h>
@@ -29,3 +31,4 @@ static bool step(void*  // state
 }
 
 MODULE_EXPORT_API(init_state, uninit_state, load_state, unload_state, step);
+*/

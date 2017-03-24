@@ -18,67 +18,74 @@ struct context {
   int time_last = 0;
 };
 
-static void context_unload_state(void* state);
+static module_status context_unload_state(void* state);
 
-static void* context_init_state() {
+static void* context_init_state(module_status&) {
   return new struct context();
 }
 
-static void context_uninit_state(void* state) {
+static module_status context_uninit_state(void* state) {
   assert(state);
   context* context = static_cast<struct context*>(state);
 
   delete context;
   context = 0x0;
+
+  return module_status();
 }
 
-static void context_load_state(void* state) {
+static module_status context_load_state(void* state) {
   assert(state);
+
+  module_status load_status;
   context* context = static_cast<struct context*>(state);
-
-  {  // OpenGL related
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
-      LOG_ERROR("SDL_Init : %s", SDL_GetError());
-      return;
-    }
-
-    context->window = SDL_CreateWindow(
-        "Default Parameter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        1024, 768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
-    if (!context->window) {
-      LOG_ERROR("SDL_CreateWindow %s", SDL_GetError());
-//MDTMP
-      context_unload_state(context);
-      return;
-    }
-
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-    context->gl_context = SDL_GL_CreateContext(context->window);
-    if (context->gl_context == NULL) {
-      LOG_ERROR("SDL_GL_CreateContext %s", SDL_GetError());
-//MDTMP
-      context_unload_state(context);
-      return;
-    }
-
-    // TODO validate if glewInit this need clean-up.
-    GLenum glew_status = glewInit();
-    if (glew_status != GLEW_OK) {
-      LOG_ERROR("glewInit %s", glewGetErrorString(glew_status));
-//MDTMP
-      context_unload_state(context);
-      return;
-    }
-    if (!GLEW_VERSION_2_0) {
-      LOG_ERROR("graphic card does not support OpenGL 2.0");
-//MDTMP
-      context_unload_state(context);
-      return;
-    }
+  if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+    LOG_ERROR("SDL_Init : %s", SDL_GetError());
+    load_status.error = true;
+    return load_status;
   }
+
+  context->window = SDL_CreateWindow(
+      "Default Parameter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024,
+      768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+  if (!context->window) {
+    LOG_ERROR("SDL_CreateWindow %s", SDL_GetError());
+    // MDTMP
+    context_unload_state(context);
+    load_status.error = true;
+    return load_status;
+  }
+
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+  context->gl_context = SDL_GL_CreateContext(context->window);
+  if (context->gl_context == NULL) {
+    LOG_ERROR("SDL_GL_CreateContext %s", SDL_GetError());
+    // MDTMP
+    context_unload_state(context);
+    load_status.error = true;
+    return load_status;
+  }
+
+  // TODO validate if glewInit this need clean-up.
+  GLenum glew_status = glewInit();
+  if (glew_status != GLEW_OK) {
+    LOG_ERROR("glewInit %s", glewGetErrorString(glew_status));
+    // MDTMP
+    context_unload_state(context);
+    load_status.error = true;
+    return load_status;
+  }
+  if (!GLEW_VERSION_2_0) {
+    LOG_ERROR("graphic card does not support OpenGL 2.0");
+    // MDTMP
+    context_unload_state(context);
+    load_status.error = true;
+    return load_status;
+  }
+  return load_status;
 }
 
-static void context_unload_state(void* state) {
+static module_status context_unload_state(void* state) {
   assert(state);
   context* context = static_cast<struct context*>(state);
   {  // OpenGL related
@@ -93,13 +100,15 @@ static void context_unload_state(void* state) {
 
     SDL_Quit();
   }
+  return module_status();
 }
 
-static bool context_step(void* state) {
-  LOG_INFO("context_step");
+static module_status context_step(void* state) {
+  module_status step_status;
   if (!state) {
     LOG_ERROR("!state");
-    return false;
+    step_status.error = true;
+    return step_status;
   }
   struct context* context = static_cast<struct context*>(state);
 
@@ -107,19 +116,20 @@ static bool context_step(void* state) {
   while (SDL_PollEvent(&ev)) {
     if (ev.type == SDL_QUIT) {
       LOG_INFO("Quit event detected");
-      return false;
+      step_status.info_code = module::STEP_INFO_STOPPING;
+      return step_status;
     }
   }
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
 
-  glClearColor(0.0, 0.0, 0.0, 1.0);
+  glClearColor(1.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
   SDL_GL_SwapWindow(context->window);
 
-  return true;
+  return step_status;
 }
 
 MODULE_EXPORT_API(context_init_state, context_uninit_state, context_load_state,
