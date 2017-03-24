@@ -5,7 +5,7 @@ static module_status module_reload(module::library& library, const char* module_
 
   module_status reload_status;
   if (library.library_handle) {
-    if (library.module_api_handle) {
+    if (library.module_api_handle && library.module_api_handle->unload_state) {
       if (library.module_api_handle->unload_state(library.library_state)
               .error) {
         LOG_ERROR("unload_state");
@@ -39,7 +39,7 @@ static module_status module_reload(module::library& library, const char* module_
     return reload_status;
   }
 
-  if (!library.library_state) {
+  if (!library.library_state && library.module_api_handle->init_state) {
     module_status init_state_status;
     library.library_state =
         library.module_api_handle->init_state(init_state_status);
@@ -48,9 +48,11 @@ static module_status module_reload(module::library& library, const char* module_
       return reload_status;
     }
   }
-  if (library.module_api_handle->load_state(library.library_state).error) {
-    reload_status.error = true;
-    return reload_status;
+  if (library.library_state && library.module_api_handle->load_state) {
+    if (library.module_api_handle->load_state(library.library_state).error) {
+      reload_status.error = true;
+      return reload_status;
+    }
   }
 
   return reload_status;

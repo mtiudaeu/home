@@ -29,24 +29,6 @@ static void* module_manager_init_state(module_status& module_status) {
   return module_manager;
 }
 
-static module_status module_manager_uninit_state(void*  // state
-                                        ) {
-  LOG_DEBUG("module_manager : module_manager_uninit_state");
-  return module_status();
-}
-
-static module_status module_manager_load_state(void*  // state
-                                      ) {
-  LOG_DEBUG("module_manager : module_manager_load_state");
-  return module_status();
-}
-
-static module_status module_manager_unload_state(void*  // state
-                                        ) {
-  LOG_DEBUG("module_manager : module_manager_unload_state");
-  return module_status();
-}
-
 static module_status module_manager_step(void* state) {
   LOG_DEBUG("module_manager : step");
   assert(state);
@@ -73,6 +55,6 @@ static module_status module_manager_step(void* state) {
   return step_status;
 }
 
-MODULE_EXPORT_API(module_manager_init_state, module_manager_uninit_state,
-                  module_manager_load_state, module_manager_unload_state,
+MODULE_EXPORT_API(module_manager_init_state, 0x0,
+                  0x0, 0x0,
                   module_manager_step);
