@@ -12,7 +12,7 @@ struct module_manager {
   std::vector<module::library*> libraries;
 };
 
-static void* module_manager_init_state(module_status& module_status,void*,size_t) {
+static void* module_manager_init_state(module_status& module_status,void**,size_t) {
   LOG_DEBUG("module_manager : module_manager_init_state");
   std::unique_ptr<module_manager> module_manager_guard_ptr = std::make_unique<module_manager>();
 

@@ -4,7 +4,7 @@
 
 #include <assert.h>
 
-void* global_data_init_state(module_status&, void*, size_t) {
+void* global_data_init_state(module_status&, void**, size_t) {
   return new struct global_data();
 }
 

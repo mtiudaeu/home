@@ -15,7 +15,7 @@ struct module_status{
 };
 struct module_api_handle {
   module_api_handle(void* (*init_state)(module_status&,
-                      void* dependancies_state_array,
+                      void** dependancies_state_array,
                       size_t dependancies_length),
                     module_status (*uninit_state)(void* state),
                     module_status (*load_state)(void* state),
@@ -28,7 +28,7 @@ struct module_api_handle {
         step(step) {}
 
   void* (*init_state)(module_status& module_status,
-                      void* dependancies_state_array,
+                      void** dependancies_state_array,
                       size_t dependancies_length);
   module_status (*uninit_state)(void* state);
   module_status (*load_state)(void* state);
