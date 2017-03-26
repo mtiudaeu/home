@@ -39,7 +39,8 @@ struct module_api_handle {
 namespace module {
 struct library;
 library* init(const char* module_path, module_status& module_status,
-              void* dependancies_state_array = 0x0, size_t dependancies_length = 0);
+              module::library** dependancies_library_array = 0x0,
+              size_t dependancies_length = 0);
 module_status uninit(library* library);
 
 module_status reload_if_needed(library& library);

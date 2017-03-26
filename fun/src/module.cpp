@@ -25,7 +25,7 @@ struct library {
 
 module::library* module::init(const char* module_path,
                               module_status& module_status,
-                              void* dependancies_state_array,
+                              module::library** dependancies_library_array,
                               size_t dependancies_length) {
   assert(module_path);
   assert(module_path[0]);
@@ -38,7 +38,7 @@ module::library* module::init(const char* module_path,
   }
 
   module::library* library = new module::library();
-  if (module_reload(*library, module_path, dependancies_state_array,
+  if (module_reload(*library, module_path, dependancies_library_array,
                     dependancies_length).error) {
     LOG_ERROR("module_reload")
     delete library;

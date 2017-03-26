@@ -1,6 +1,6 @@
 static module_status module_reload(module::library& library,
                                    const char* module_path,
-                                   void* dependancies_state_array = 0x0,
+                                   module::library** dependancies_library_array = 0x0,
                                    size_t dependancies_length = 0)
 {
   assert(module_path);
@@ -44,8 +44,16 @@ static module_status module_reload(module::library& library,
 
   if (!library.library_state && library.module_api_handle->init_state) {
     module_status init_state_status;
+    void* library_states_array[dependancies_length];
+    void** library_states_array_ptr = 0x0; //Stays null if array is of 0 elements.
+    for (size_t i = 0; i < dependancies_length; ++i) {
+      if (module::library* library_dep = dependancies_library_array[i]) {
+        library_states_array[i] = library_dep->library_state;
+      }
+      library_states_array_ptr = library_states_array;
+    }
     library.library_state = library.module_api_handle->init_state(
-        init_state_status, dependancies_state_array, dependancies_length);
+        init_state_status, library_states_array_ptr, dependancies_length);
     if (init_state_status.error) {
       reload_status.error = true;
       return reload_status;

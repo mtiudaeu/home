@@ -33,9 +33,9 @@ $(BUILD_DIR)context.so.tmp : $(BUILD_DIR)context.o
 $(BUILD_DIR)catch_event.so.tmp : $(BUILD_DIR)catch_event.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lSDL2
 $(BUILD_DIR)render.so.tmp : $(BUILD_DIR)render.o
-	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW -lGL
 $(BUILD_DIR)global_data.so.tmp : $(BUILD_DIR)global_data.o
-	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@
 
 $(BUILD_DIR)module_manager.so : $(BUILD_DIR)module_manager.so.tmp
 	mv $@.tmp $@
