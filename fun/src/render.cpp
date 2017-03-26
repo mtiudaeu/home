@@ -11,7 +11,7 @@ struct render_state {
   struct global_data* global_data = 0x0;
 };
 
-void* render_init_state(module_status&, void** dependancies_state_array,
+static void* render_init_state(module_status&, void** dependancies_state_array,
                         size_t dependancies_length) {
   assert(dependancies_state_array);
   assert(dependancies_length == 1);
@@ -24,7 +24,7 @@ void* render_init_state(module_status&, void** dependancies_state_array,
   return render_state;
 }
 
-module_status render_uninit(void* state)
+static module_status render_uninit(void* state)
 {
   assert(state);
   render_state* render_state = static_cast<struct render_state*>(state);
@@ -40,6 +40,7 @@ static module_status render_step(void* state) {
   assert(render_state->global_data);
 
   LOG_DEBUG("time_current %d", render_state->global_data->time_current);
+  LOG_DEBUG("time_delta %d", render_state->global_data->time_delta);
 
   LOG_DEBUG("render_step");
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

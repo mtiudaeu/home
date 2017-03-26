@@ -43,6 +43,21 @@ static void* module_manager_init_state(module_status& module_status,void**,size_
     }
     module_manager_guard_ptr->libraries.push_back(library);
   }
+  { //update
+    module::library* libraries_dependencies[1] = {global_data_library};
+    module::library* library = module::init(ROOT_PATH "update.so", module_status,
+                                            libraries_dependencies, 1);
+    if (!library) {
+      LOG_ERROR("module::init");
+      module_status.error = true;
+      return 0x0;
+    }
+    if (module_status.error) {
+      LOG_ERROR("module::init");
+      return 0x0;
+    }
+    module_manager_guard_ptr->libraries.push_back(library);
+  }
   { //render
     module::library* libraries_dependencies[1] = {global_data_library};
     module::library* library = module::init(ROOT_PATH "render.so", module_status,

@@ -4,11 +4,11 @@
 
 #include <assert.h>
 
-void* global_data_init_state(module_status&, void**, size_t) {
+static void* global_data_init_state(module_status&, void**, size_t) {
   return new struct global_data();
 }
 
-module_status global_data_uninit(void* state)
+static module_status global_data_uninit(void* state)
 {
   assert(state);
   global_data* global_data = static_cast<struct global_data*>(state);
