@@ -17,6 +17,7 @@ static void* module_manager_init_state(module_status& module_status,void**,size_
   std::unique_ptr<module_manager> module_manager_guard_ptr = std::make_unique<module_manager>();
 
   module::library* global_data_library = 0x0;
+  module::library* catch_event_library = 0x0;
   { //global_data
     global_data_library = module::init(ROOT_PATH "global_data.so", module_status);
     if (!global_data_library) {
@@ -31,8 +32,8 @@ static void* module_manager_init_state(module_status& module_status,void**,size_
     module_manager_guard_ptr->libraries.push_back(global_data_library);
   }
   { //catch_event
-    module::library* library = module::init(ROOT_PATH "catch_event.so", module_status);
-    if (!library) {
+    catch_event_library = module::init(ROOT_PATH "catch_event.so", module_status);
+    if (!catch_event_library) {
       LOG_ERROR("module::init");
       module_status.error = true;
       return 0x0;
@@ -41,12 +42,13 @@ static void* module_manager_init_state(module_status& module_status,void**,size_
       LOG_ERROR("module::init");
       return 0x0;
     }
-    module_manager_guard_ptr->libraries.push_back(library);
+    module_manager_guard_ptr->libraries.push_back(catch_event_library);
   }
   { //update
-    module::library* libraries_dependencies[1] = {global_data_library};
+    module::library* libraries_dependencies[2] = {catch_event_library,
+                                              global_data_library};
     module::library* library = module::init(ROOT_PATH "update.so", module_status,
-                                            libraries_dependencies, 1);
+                                            libraries_dependencies, 2);
     if (!library) {
       LOG_ERROR("module::init");
       module_status.error = true;

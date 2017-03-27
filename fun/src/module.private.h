@@ -49,6 +49,9 @@ static module_status module_reload(module::library& library,
     for (size_t i = 0; i < dependancies_length; ++i) {
       if (module::library* library_dep = dependancies_library_array[i]) {
         library_states_array[i] = library_dep->library_state;
+      } else {
+        LOG_ERROR("!library_dep");
+        library_states_array[i] = 0x0;
       }
       library_states_array_ptr = library_states_array;
     }

@@ -41,6 +41,8 @@ static module_status render_step(void* state) {
 
   LOG_DEBUG("time_current %d", render_state->global_data->time_current);
   LOG_DEBUG("time_delta %d", render_state->global_data->time_delta);
+  LOG_DEBUG("posx %d", render_state->global_data->posx);
+  LOG_DEBUG("posy %d", render_state->global_data->posy);
 
   LOG_DEBUG("render_step");
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
