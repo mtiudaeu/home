@@ -3,7 +3,7 @@
 <body>
     <script type="text/javascript">
         var sock = null;
-        var wsuri = "ws://127.0.0.1:1234";
+        var wsuri = "ws://127.0.0.1:1234/ws";
 
         window.onload = function() {
 
@@ -28,13 +28,22 @@
             var msg = document.getElementById('message').value;
             sock.send(msg);
         };
+        function room_create() {
+          //MDTMP
+        };
+        function room_join() {
+          //MDTMP
+        };
     </script>
-    <h1>WebSocket Echo Test</h1>
+    <h1>Enter a game</h1>
     <form>
         <p>
-            Message: <input id="message" type="text" value="Hello, world!">
+            <button onclick="room_create();">Create Room</button>
+        </p>
+        <p>
+            Room id: <input id="message" type="text">
+            <button onclick="room_join();">Join Room</button>
         </p>
     </form>
-    <button onclick="send();">Send Message</button>
 </body>
 </html>

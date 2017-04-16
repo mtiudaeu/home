@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func Echo(ws *websocket.Conn) {
+func websocketHandler(ws *websocket.Conn) {
 	var err error
 
 	for {
@@ -31,7 +31,8 @@ func Echo(ws *websocket.Conn) {
 func main() {
 	log.SetFlags(log.Lshortfile)
 
-	http.Handle("/", websocket.Handler(Echo))
+ http.Handle("/", http.FileServer(http.Dir("public")))
+	http.Handle("/ws", websocket.Handler(websocketHandler))
 
 	if err := http.ListenAndServe(":1234", nil); err != nil {
 		log.Fatal("ListenAndServe:", err)

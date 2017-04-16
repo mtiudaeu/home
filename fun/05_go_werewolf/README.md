@@ -1,5 +1,3 @@
--Send index.html through server http handle
-
 -Rooms Creation (one html)
  -Main page is choosing room menu
   -New room
