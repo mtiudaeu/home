@@ -1,11 +1,13 @@
 -Rooms Creation (one html)
  -Main page is choosing room menu
-  -New room
+  -New room (rooting /1234)
   -Join room
 
 -Room (one html)
  -Enter your name
  -Display all name
+
+-Communication protocol between client and server
 
 -Game phase
  -Players
