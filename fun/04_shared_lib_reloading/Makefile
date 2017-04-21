@@ -30,15 +30,15 @@ $(BUILD_DIR)main.out : $(BUILD_DIR)main.o $(BUILD_DIR)core_module.o
 
 $(BUILD_DIR)main_lib.so.build : $(BUILD_DIR)main_lib.o $(BUILD_DIR)core_module.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -ldl
-$(BUILD_DIR)context.so.build : $(BUILD_DIR)context.o
+$(BUILD_DIR)context.so.build : $(BUILD_DIR)game_context.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW -lSDL2
-$(BUILD_DIR)catch_event.so.build : $(BUILD_DIR)catch_event.o
+$(BUILD_DIR)catch_event.so.build : $(BUILD_DIR)game_catch_event.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lSDL2
-$(BUILD_DIR)render.so.build : $(BUILD_DIR)render.o
+$(BUILD_DIR)render.so.build : $(BUILD_DIR)game_render.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW -lGL
-$(BUILD_DIR)global_data.so.build : $(BUILD_DIR)global_data.o
+$(BUILD_DIR)global_data.so.build : $(BUILD_DIR)game_global_data.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@
-$(BUILD_DIR)update.so.build : $(BUILD_DIR)update.o
+$(BUILD_DIR)update.so.build : $(BUILD_DIR)game_update.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lSDL2
 
 #---------- MOVE TO FINAL TARGET ----------

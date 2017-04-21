@@ -1,7 +1,7 @@
 #include "core/log.h"
 #include "core/module.h"
 
-#include "global_data.h"
+#include "game/global_data.h"
 
 #include <GL/glew.h>
 
