@@ -11,7 +11,7 @@
 
 struct module_status{
   bool error = false;
-  size_t info_code = 0; //opaque info code
+  size_t info_code = 0;
 };
 struct module_api_handle {
   module_api_handle(void* (*init_state)(module_status&,
