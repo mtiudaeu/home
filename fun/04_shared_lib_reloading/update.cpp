@@ -1,4 +1,4 @@
-#include "module.h"
+#include "core/module.h"
 
 #include "catch_event.h"
 #include "global_data.h"

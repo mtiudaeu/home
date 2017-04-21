@@ -1,6 +1,5 @@
-#include "module.h"
-
-#include "log.h"
+#include "core/log.h"
+#include "core/module.h"
 
 #include <string>
 
@@ -21,7 +20,7 @@ struct library {
 };
 }
 
-#include "module.private.h"
+#include "core/module.private.h"
 
 module::library* module::init(const char* module_path,
                               module_status& module_status,

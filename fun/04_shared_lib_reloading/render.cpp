@@ -1,5 +1,5 @@
-#include "module.h"
-#include "log.h"
+#include "core/log.h"
+#include "core/module.h"
 
 #include "global_data.h"
 

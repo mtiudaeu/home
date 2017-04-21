@@ -16,15 +16,15 @@
 //
 //
 
-#include "log.h"
-#include "module.h"
+#include "core/log.h"
+#include "core/module.h"
 
 static module::library* library;
 
 int main() {
   {
     module_status module_status;
-    library = module::init(ROOT_PATH "module_manager.so", module_status);
+    library = module::init(ROOT_PATH "main_lib.so", module_status);
     if (!library) {
       LOG_ERROR("!library");
       return 1;

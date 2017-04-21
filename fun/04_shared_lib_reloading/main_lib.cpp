@@ -1,6 +1,5 @@
-#include "module.h"
-
-#include "log.h"
+#include "core/log.h"
+#include "core/module.h"
 
 #include <vector>
 #include <memory>
@@ -8,13 +7,13 @@
 #include <unistd.h>
 #include <assert.h>
 
-struct module_manager {
+struct main_lib {
   std::vector<module::library*> libraries;
 };
 
-static void* module_manager_init_state(module_status& module_status,void**,size_t) {
-  LOG_DEBUG("module_manager : module_manager_init_state");
-  std::unique_ptr<module_manager> module_manager_guard_ptr = std::make_unique<module_manager>();
+static void* main_lib_init_state(module_status& module_status,void**,size_t) {
+  LOG_DEBUG("main_lib : main_lib_init_state");
+  std::unique_ptr<main_lib> main_lib_guard_ptr = std::make_unique<main_lib>();
 
   module::library* global_data_library = 0x0;
   module::library* catch_event_library = 0x0;
@@ -29,7 +28,7 @@ static void* module_manager_init_state(module_status& module_status,void**,size_
       LOG_ERROR("module::init");
       return 0x0;
     }
-    module_manager_guard_ptr->libraries.push_back(global_data_library);
+    main_lib_guard_ptr->libraries.push_back(global_data_library);
   }
   { //catch_event
     catch_event_library = module::init(ROOT_PATH "catch_event.so", module_status);
@@ -42,7 +41,7 @@ static void* module_manager_init_state(module_status& module_status,void**,size_
       LOG_ERROR("module::init");
       return 0x0;
     }
-    module_manager_guard_ptr->libraries.push_back(catch_event_library);
+    main_lib_guard_ptr->libraries.push_back(catch_event_library);
   }
   { //update
     module::library* libraries_dependencies[2] = {catch_event_library,
@@ -58,7 +57,7 @@ static void* module_manager_init_state(module_status& module_status,void**,size_
       LOG_ERROR("module::init");
       return 0x0;
     }
-    module_manager_guard_ptr->libraries.push_back(library);
+    main_lib_guard_ptr->libraries.push_back(library);
   }
   { //render
     module::library* libraries_dependencies[1] = {global_data_library};
@@ -73,7 +72,7 @@ static void* module_manager_init_state(module_status& module_status,void**,size_
       LOG_ERROR("module::init");
       return 0x0;
     }
-    module_manager_guard_ptr->libraries.push_back(library);
+    main_lib_guard_ptr->libraries.push_back(library);
   }
   { //context
     module::library* library = module::init(ROOT_PATH "context.so", module_status);
@@ -86,19 +85,19 @@ static void* module_manager_init_state(module_status& module_status,void**,size_
       LOG_ERROR("module::init");
       return 0x0;
     }
-    module_manager_guard_ptr->libraries.push_back(library);
+    main_lib_guard_ptr->libraries.push_back(library);
   }
 
-  return module_manager_guard_ptr.release();
+  return main_lib_guard_ptr.release();
 }
 
-static module_status module_manager_step(void* state) {
-  LOG_DEBUG("module_manager : step");
+static module_status main_lib_step(void* state) {
+  LOG_DEBUG("main_lib : step");
   assert(state);
-  struct module_manager* module_manager =
-      static_cast<struct module_manager*>(state);
+  struct main_lib* main_lib =
+      static_cast<struct main_lib*>(state);
 
-  for (module::library* library : module_manager->libraries) {
+  for (module::library* library : main_lib->libraries) {
     assert(library);
 
     // MDTMP revisit loading strategy
@@ -123,6 +122,6 @@ static module_status module_manager_step(void* state) {
   return module_status();
 }
 
-MODULE_EXPORT_API(module_manager_init_state, 0x0,
+MODULE_EXPORT_API(main_lib_init_state, 0x0,
                   0x0, 0x0,
-                  module_manager_step);
+                  main_lib_step);
