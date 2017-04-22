@@ -2,8 +2,8 @@
 #
 # Usage
 # python setup.py -p <install_path>
-# example : python setup.py -p "/home/mathieu/.md_env"
-# example : python setup.py -p "/magma/people/drapeaum/.md_env"
+# example : python setup.py -p "/home/mathieu/.md_env" --vim_git_path="/home/mathieu/git/vim"
+# example : python setup.py -p "/magma/people/drapeaum/.md_env" --vim_git_path="/mnt/git/vim"
 
 import tempfile, os, sys, getopt, subprocess, datetime
 
@@ -47,6 +47,33 @@ def on_success(install_path):
   print("fi")
 
 #---------------------------------------------------------------------
+def vim_build(install_path, vim_git_path=""):
+  
+  if vim_git_path is "" :
+    tmp_dir = tempfile.mkdtemp()
+    print( "INFO : cloning vim repository under " + tmp_dir )
+    os.chdir( tmp_dir )
+    process_call(["git", "clone", "https://github.com/vim/vim.git" ])
+    vim_git_path = tmp_dir + "/vim"
+
+
+  os.chdir( vim_git_path + "/src" )
+  # dependancy -> apt-get install ncurses-dev build-essential gettext
+  process_call( [
+    "./configure",
+    "--with-features=normal",
+    "--enable-gui",
+    "--with-x" ] )
+  process_call( ["make", "-j4"] )
+
+  process_call( ["mkdir", "-p", install_path.bin ] )
+  process_call( ["cp", "vim", install_path.bin ] )
+
+  os.chdir( ".." )
+  process_call( ["mkdir", "-p", install_path.share + "/vim" ] )
+  process_call( ["cp", "-r", "runtime", install_path.share + "/vim" ] )
+
+#---------------------------------------------------------------------
 def env_build(install_path):
   copy_env_folder(install_path)
 
@@ -57,14 +84,15 @@ def args_exit_error():
 
 #---------------------------------------------------------------------
 def args_exit_usage():
-  print("python setup.py.py -p <path>")
+  print("python setup.py.py -p <path> (--vim_git_path=<vim git repo path>)")
   sys.exit()
 
 #---------------------------------------------------------------------
 def args_parse(argv):
   path=""
+  vim_git_path=""
   try:
-    opts, args = getopt.getopt(argv,"hp:",["path="])
+    opts, args = getopt.getopt(argv,"hp:",["path=", "vim_git_path="])
   except getopt.GetoptError:
     args_exit_error()
 
@@ -73,18 +101,21 @@ def args_parse(argv):
       args_exit_usage()
     elif opt in ("-p", "--path"):
       path = arg
+    elif opt in ("--vim_git_path"):
+      vim_git_path = arg
 
   if path is "":
     args_exit_error()
 
-  return path
+  return (path, vim_git_path)
 
 #---------------------------------------------------------------------
 def main(argv):
-  path = args_parse(argv)
+  (path, vim_git_path) = args_parse(argv)
   install_path = EnvPath(path)
 
   env_build(install_path)
+  vim_build(install_path, vim_git_path)
   on_success(install_path)
 
 #---------------------------------------------------------------------

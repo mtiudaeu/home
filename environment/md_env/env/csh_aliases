@@ -1,5 +1,3 @@
 alias vim '$MD_ENV_PATH/bin/vim'
 alias vi 'vim'
-alias vim-server-start 'python $MD_ENV_PATH/env/vim-server.py &'
-alias git-commit-fast 'git add .; git commit -m "Update"'
 

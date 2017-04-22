@@ -1,0 +1,6 @@
+if( -r ${MD_ENV_PATH}/env/csh_env ) then
+   source ${MD_ENV_PATH}/env/csh_env
+endif
+if( -r ${MD_ENV_PATH}/env/csh_aliases ) then
+   source ${MD_ENV_PATH}/env/csh_aliases
+endif

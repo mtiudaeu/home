@@ -13,7 +13,7 @@ set expandtab
 set incsearch
 set hlsearch
 set clipboard+=unnamed
-"syntax on
+syntax on
 
 " Filename as status line.
 set statusline=%F
@@ -24,15 +24,19 @@ set laststatus=2
 " Switch between header and source file.
 map <F4> :e %:p:s,.h$,.X123X,:s,.c$,.h,:s,.X123X$,.c,<CR>
 
+map <F7> :let handle = ch_open('localhost:8765')<CR>
 map <F8> O//MDTMP
 map <F12> :qa<CR>
-map <C-e> :tabe 
+map <C-e> :tabe
 
 " ---------- CLANG-FORMAT ----------
-" map <C-K> :!/usr/bin/clang-format-3.8 -style=Google -assume-filename=@%<cr>
+map <C-K> :!/usr/bin/clang-format-3.8 -style=Google -assume-filename=@%<cr>
+
 
 " Switch between header and source file.
 "map <F4> :e %:p:s,.h$,.X123X,:s,.C$,.h,:s,.X123X$,.C,<CR>
+" Perforce edit file.
+"map <F5> :!swe % <CR><CR>
 "map <F9> :tabe /tmp/gdb.out <CR>
 
 " ??????????????????
