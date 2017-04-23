@@ -1,7 +1,7 @@
 static module_status module_reload(module::library& library,
                                    const char* module_path,
-                                   module::library** dependancies_library_array = 0x0,
-                                   size_t dependancies_length = 0)
+                                   module::library** dependencies_library_array = 0x0,
+                                   size_t dependencies_length = 0)
 {
   assert(module_path);
   assert(module_path[0]);
@@ -49,10 +49,10 @@ static module_status module_reload(module::library& library,
   { // create library data (only once)
     if (!library.library_state && library.module_api_handle->init_state) {
       module_status init_state_status;
-      void* library_states_array[dependancies_length];
+      void* library_states_array[dependencies_length];
       void** library_states_array_ptr = 0x0; //Stays null if array is of 0 elements.
-      for (size_t i = 0; i < dependancies_length; ++i) {
-        if (module::library* library_dep = dependancies_library_array[i]) {
+      for (size_t i = 0; i < dependencies_length; ++i) {
+        if (module::library* library_dep = dependencies_library_array[i]) {
           library_states_array[i] = library_dep->library_state;
         } else {
           LOG_ERROR("!library_dep");
@@ -61,7 +61,7 @@ static module_status module_reload(module::library& library,
         library_states_array_ptr = library_states_array;
       }
       library.library_state = library.module_api_handle->init_state(
-          init_state_status, library_states_array_ptr, dependancies_length);
+          init_state_status, library_states_array_ptr, dependencies_length);
       if (init_state_status.error) {
         reload_status.error = true;
         return reload_status;
@@ -81,20 +81,25 @@ static module_status module_reload(module::library& library,
   return reload_status;
 }
 
+//MDTMP move to module.cpp
 module_status module_unload(module::library& library)
 {
   assert(library.library_handle);
   assert(library.module_api_handle);
 
   module_status module_status;
-  if (library.module_api_handle->uninit_state) {
-    if (library.module_api_handle->uninit_state(library.library_state).error) {
-      module_status.error = true;
+  { // uninit state
+    if (library.module_api_handle->uninit_state) {
+      module_status = library.module_api_handle->uninit_state(library.library_state);
     }
+    library.library_state = NULL;
   }
-  library.library_state = NULL;
-  dlclose(library.library_handle);
-  library.library_handle = NULL;
+
+  { // uninit library handle
+    dlclose(library.library_handle);
+    library.library_handle = NULL;
+  }
+
   return module_status;
 }
 

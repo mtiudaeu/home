@@ -24,29 +24,33 @@ struct library {
 
 module::library* module::init(const char* module_path,
                               module_status& module_status,
-                              module::library** dependancies_library_array,
-                              size_t dependancies_length) {
+                              module::library** dependencies_library_array,
+                              size_t dependencies_length) {
   assert(module_path);
   assert(module_path[0]);
 
   struct stat attr;
-  if (stat(module_path, &attr) != 0) {
-    LOG_ERROR("%s : %s", strerror(errno), module_path);
-    module_status.error = true;
-    return 0x0;
+  { // check file exist
+    if (stat(module_path, &attr) != 0) {
+      LOG_ERROR("%s : %s", strerror(errno), module_path);
+      module_status.error = true;
+      return 0x0;
+    }
   }
 
   module::library* library = new module::library();
-  if (module_reload(*library, module_path, dependancies_library_array,
-                    dependancies_length).error) {
-    LOG_ERROR("module_reload")
-    delete library;
-    module_status.error = true;
-    return 0x0;
+  { // create library
+    if (module_reload(*library, module_path, dependencies_library_array,
+                      dependencies_length).error) {
+      LOG_ERROR("module_reload");
+      delete library;
+      module_status.error = true;
+      return 0x0;
+    }
+    
+    library->st_ino = attr.st_ino;
+    library->path = module_path;
   }
-  
-  library->st_ino = attr.st_ino;
-  library->path = module_path;
   return library;
 }
 
@@ -61,9 +65,11 @@ module_status module::reload_if_needed(library& library)
 {
   module_status reload_status;
   struct stat attr;
-  if (stat(library.path.c_str(), &attr) != 0) {
-    LOG_ERROR("%s : %s", strerror(errno), library.path.c_str());
-    return reload_status;
+  { // get file info
+    if (stat(library.path.c_str(), &attr) != 0) {
+      LOG_ERROR("%s : %s", strerror(errno), library.path.c_str());
+      return reload_status;
+    }
   }
 
   if (attr.st_ino == library.st_ino) {
@@ -87,10 +93,8 @@ module_status module::reload_if_needed(library& library)
 module_status module::step(module::library& library) {
   assert(library.module_api_handle);
 
-  module_status module_status;
-
   if( library.module_api_handle->step ) {
-    module_status = library.module_api_handle->step(library.library_state);
+    return library.module_api_handle->step(library.library_state);
   }
-  return module_status;
+  return module_status();
 }

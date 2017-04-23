@@ -1,32 +1,14 @@
-// TODO
-// Dependencies
-//
-// program : program_data
-//           Calling state switch
-//   hotkey_mouse_events <----------
-//                                  |
-//   state_menu : no_data           |
-//      hotkey ---------------------|
-//                                  |
-//   state_game_loop : game_data    |
-//      ai                          |
-//      network                     |
-//      hotkey ----------------------
-//
-//
-//
-
 #include "core/log.h"
 #include "core/module.h"
 
-static module::library* library;
+static module::library* main_library;
 
 int main() {
-  {
+  { // init main lib
     module_status module_status;
-    library = module::init(ROOT_PATH "main_lib.so", module_status);
-    if (!library) {
-      LOG_ERROR("!library");
+    main_library = module::init(ROOT_PATH "main_lib.so", module_status);
+    if (!main_library) {
+      LOG_ERROR("!main_library");
       return 1;
     }
     if (module_status.error) {
@@ -38,14 +20,14 @@ int main() {
   //MDTMP revisite reloading strategy
   module_status reload_status;
   module_status step_status;
-  for (;;) {
-    reload_status = module::reload_if_needed(*library);
+  for (;;) { // main loop
+    reload_status = module::reload_if_needed(*main_library);
     if (reload_status.error) {
       LOG_ERROR("module::reload_if_needed");
       break;
     }
 
-    step_status = module::step(*library);
+    step_status = module::step(*main_library);
     if (step_status.error) {
       LOG_ERROR("step_status.error");
       break;
@@ -56,7 +38,7 @@ int main() {
     }
   }
 
-  if (module::uninit(library).error) {
+  if (module::uninit(main_library).error) {
     LOG_ERROR("module::uninit");
     return 1;
   }
