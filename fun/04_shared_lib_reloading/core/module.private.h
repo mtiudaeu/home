@@ -81,25 +81,3 @@ static module_status module_reload(module::library& library,
   return reload_status;
 }
 
-//MDTMP move to module.cpp
-module_status module_unload(module::library& library)
-{
-  assert(library.library_handle);
-  assert(library.module_api_handle);
-
-  module_status module_status;
-  { // uninit state
-    if (library.module_api_handle->uninit_state) {
-      module_status = library.module_api_handle->uninit_state(library.library_state);
-    }
-    library.library_state = NULL;
-  }
-
-  { // uninit library handle
-    dlclose(library.library_handle);
-    library.library_handle = NULL;
-  }
-
-  return module_status;
-}
-

@@ -56,8 +56,24 @@ module::library* module::init(const char* module_path,
 
 module_status module::uninit(module::library* library) {
   assert(library);
-  module_status module_status = module_unload(*library);
-  delete library;
+  assert(library->library_handle);
+  assert(library->module_api_handle);
+
+  module_status module_status;
+  { // uninit state
+    if (library->module_api_handle->uninit_state) {
+      module_status = library->module_api_handle->uninit_state(library->library_state);
+    }
+    library->library_state = NULL;
+  }
+
+  { // uninit library handle
+    dlclose(library->library_handle);
+    library->library_handle = NULL;
+    delete library;
+    library = 0x0;
+  }
+
   return module_status;
 }
 
