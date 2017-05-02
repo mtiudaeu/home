@@ -1,5 +1,3 @@
--Remove main.cpp layer
- -Don't make main_lib reloadale for now.
 
 -Add dependencies as a tree data in main_lib.private.h
  -(More a a library array which are gonna be launch/run in order)
