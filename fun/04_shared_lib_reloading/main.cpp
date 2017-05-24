@@ -88,7 +88,7 @@ static std::unique_ptr<main_lib> main_lib_init_state(module_status& module_statu
     main_lib_ptr->libraries.push_back(library);
   }
 
-  return main_lib_guard_ptr;
+  return main_lib_ptr;
 }
 
 static module_status main_lib_step(struct main_lib& main_lib) {
