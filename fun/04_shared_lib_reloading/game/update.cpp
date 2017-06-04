@@ -1,7 +1,7 @@
-#include "module.h"
+#include "core/module.h"
 
-#include "catch_event.h"
-#include "global_data.h"
+#include "game/catch_event.h"
+#include "game/global_data.h"
 
 #include <assert.h>
 
@@ -10,17 +10,17 @@ struct update_state {
   struct global_data* global_data = 0x0;
 };
 
-static void* update_init_state(module_status&, void** dependancies_state_array,
-                               size_t dependancies_length) {
-  assert(dependancies_state_array);
-  assert(dependancies_length == 2);
+static void* update_init_state(module_status&, void** dependencies_state_array,
+                               size_t dependencies_length) {
+  assert(dependencies_state_array);
+  assert(dependencies_length == 2);
 
   update_state* update_state = new struct update_state();
   update_state->catch_event =
-      static_cast<struct catch_event*>(dependancies_state_array[0]);
+      static_cast<struct catch_event*>(dependencies_state_array[0]);
   assert(update_state->catch_event);
   update_state->global_data =
-      static_cast<struct global_data*>(dependancies_state_array[1]);
+      static_cast<struct global_data*>(dependencies_state_array[1]);
   assert(update_state->global_data);
 
   return update_state;

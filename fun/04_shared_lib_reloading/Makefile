@@ -5,12 +5,12 @@ C_FILES_EXT="cpp"
 
 #DEFINES = -DROOT_PATH=\"$(BUILD_DIR)\"
 DEFINES = -DROOT_PATH=\"$(BUILD_DIR)\" -DLOG_DEBUG_ENABLED
-CFLAGS_ALL = -std=c++14 -Wall -Werror -Wextra -O2 -g -fPIC $(DEFINES)
+CFLAGS_ALL = -I. -std=c++14 -Wall -Werror -Wextra -O2 -g -fPIC $(DEFINES)
 
 SHARED_LIBS_CFLAGS = -shared
 
 #---------- TARGETS ----------
-ALL_OBJECTS = main.out module_manager.so context.so catch_event.so render.so global_data.so update.so
+ALL_OBJECTS = main.out context.so catch_event.so render.so global_data.so update.so
 ALL_OBJECTS_PATH = $(addprefix $(BUILD_DIR), $(ALL_OBJECTS))
 
 build : $(ALL_OBJECTS_PATH:.so=.so.build)
@@ -25,20 +25,18 @@ dep:
 	./build_dep.py $(BUILD_DIR) $(H_FILES_EXT) $(C_FILES_EXT) $(DEP_MAKEFILE) ALL_OBJECT_FILES CFLAGS_ALL
 
 #---------- LIBRARIES BUILD & LINK ----------
-$(BUILD_DIR)main.out : $(BUILD_DIR)main.o $(BUILD_DIR)module.o
+$(BUILD_DIR)main.out : $(BUILD_DIR)main.o $(BUILD_DIR)core_module.o
 	$(CXX) $(CFLAGS_ALL) $^ -o $@ -ldl
 
-$(BUILD_DIR)module_manager.so.build : $(BUILD_DIR)module_manager.o $(BUILD_DIR)module.o
-	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -ldl
-$(BUILD_DIR)context.so.build : $(BUILD_DIR)context.o
+$(BUILD_DIR)context.so.build : $(BUILD_DIR)game_context.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW -lSDL2
-$(BUILD_DIR)catch_event.so.build : $(BUILD_DIR)catch_event.o
+$(BUILD_DIR)catch_event.so.build : $(BUILD_DIR)game_catch_event.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lSDL2
-$(BUILD_DIR)render.so.build : $(BUILD_DIR)render.o
+$(BUILD_DIR)render.so.build : $(BUILD_DIR)game_render.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW -lGL
-$(BUILD_DIR)global_data.so.build : $(BUILD_DIR)global_data.o
+$(BUILD_DIR)global_data.so.build : $(BUILD_DIR)game_global_data.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@
-$(BUILD_DIR)update.so.build : $(BUILD_DIR)update.o
+$(BUILD_DIR)update.so.build : $(BUILD_DIR)game_update.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lSDL2
 
 #---------- MOVE TO FINAL TARGET ----------

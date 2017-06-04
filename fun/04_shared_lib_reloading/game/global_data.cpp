@@ -1,6 +1,6 @@
-#include "global_data.h"
+#include "game/global_data.h"
 
-#include "module.h"
+#include "core/module.h"
 
 #include <assert.h>
 

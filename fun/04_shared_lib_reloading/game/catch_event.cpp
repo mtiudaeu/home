@@ -1,7 +1,7 @@
-#include "catch_event.h"
+#include "game/catch_event.h"
 
-#include "module.h"
-#include "log.h"
+#include "core/log.h"
+#include "core/module.h"
 
 #include <assert.h>
 
