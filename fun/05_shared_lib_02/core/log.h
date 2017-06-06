@@ -17,4 +17,4 @@
 #define LOG_DEBUG(...)
 #endif
 
-#endif // LOG_H
+#endif  // LOG_H
