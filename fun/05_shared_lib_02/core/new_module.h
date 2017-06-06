@@ -1,7 +1,7 @@
 #ifndef NEW_MODULE_H
 #define NEW_MODULE_H
 
-#include "core/status.hpp"
+#include "core/status.h"
 
 typedef status (*module_init_cb)(data_manager* data_manager);
 typedef status (*module_update_cb)();

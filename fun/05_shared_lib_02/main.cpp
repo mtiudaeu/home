@@ -1,4 +1,4 @@
-#include "new_module_init.h"
+#include "core/new_module_init.h"
 
 int main() {
   status status;
