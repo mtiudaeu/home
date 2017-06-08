@@ -1,12 +1,7 @@
-#ifndef NEW_MODULE_H
-#define NEW_MODULE_H
+#ifndef CORE_MODULE_H
+#define CORE_MODULE_H
 
-#include "core/status.h"
-
-struct data_manager_s;
-
-typedef status_s (*module_init_cb_t)(data_manager_s* data_manager);
-typedef status_s (*module_update_cb_t)();
+#include "core/module_create.h"
 
 struct module_s {
   module_init_cb_t init_cb = 0x0;

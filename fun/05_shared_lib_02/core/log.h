@@ -1,5 +1,5 @@
-#ifndef LOG_H
-#define LOG_H
+#ifndef CORE_LOG_H
+#define CORE_LOG_H
 
 #include <stdio.h>
 
@@ -17,4 +17,4 @@
 #define LOG_DEBUG(...)
 #endif
 
-#endif  // LOG_H
+#endif

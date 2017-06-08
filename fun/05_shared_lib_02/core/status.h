@@ -1,5 +1,5 @@
-#ifndef STATUS_H
-#define STATUS_H
+#ifndef CORE_STATUS_H
+#define CORE_STATUS_H
 
 #include <sys/types.h>
 

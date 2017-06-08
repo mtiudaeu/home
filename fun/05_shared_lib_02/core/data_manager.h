@@ -1,7 +1,7 @@
-#ifndef DATA_MANAGER_H
-#define DATA_MANAGER_H
+#ifndef CORE_DATA_MANAGER_H
+#define CORE_DATA_MANAGER_H
 
-#include "core/new_module.h"
+#include "core/module.h"
 
 #include <vector>
 

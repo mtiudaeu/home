@@ -1,5 +1,5 @@
 #include "core/log.h"
-#include "core/new_module_init.h"
+#include "core/module_init.h"
 #include "core/data_manager.h"
 
 #include <assert.h>

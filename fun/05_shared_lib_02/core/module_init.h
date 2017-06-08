@@ -1,7 +1,7 @@
-#ifndef NEW_MODULE_INIT_H
-#define NEW_MODULE_INIT_H
+#ifndef CORE_MODULE_INIT_H
+#define CORE_MODULE_INIT_H
 
-#include "core/new_module.h"
+#include "core/module.h"
 
 #include "core/status.h"
 #include "core/data_manager.h"
@@ -55,32 +55,19 @@ status_s init_module(module_s& module, data_manager_s& data_manager) {
   }
   module.st_ino = attr.st_ino;
 
-  module.init_cb =
-      static_cast<module_init_cb_t>(dlsym(module.lib_handle, "init"));
-  if (!module.init_cb) {
+  
+  module_callbacks_s* module_callbacks = static_cast<module_callbacks_s*>(
+      dlsym(module.lib_handle, MODULE_VAR_NAME));
+  if(!module_callbacks) {
     LOG_ERROR("dlsym : %s", dlerror());
     clean_up_module();
     status.error = true;
     return status;
   }
 
-  module.uninit_cb =
-      static_cast<module_init_cb_t>(dlsym(module.lib_handle, "uninit"));
-  if (!module.uninit_cb) {
-    LOG_ERROR("dlsym : %s", dlerror());
-    clean_up_module();
-    status.error = true;
-    return status;
-  }
-
-  module.step_cb =
-      static_cast<module_init_cb_t>(dlsym(module.lib_handle, "step"));
-  if (!module.step_cb) {
-    LOG_ERROR("dlsym : %s", dlerror());
-    clean_up_module();
-    status.error = true;
-    return status;
-  }
+  module.init_cb = module_callbacks->init_cb;
+  module.uninit_cb = module_callbacks->uninit_cb;
+  module.step_cb = module_callbacks->step_cb;
 
   status = module.init_cb(&data_manager);
   if (status.error) {
