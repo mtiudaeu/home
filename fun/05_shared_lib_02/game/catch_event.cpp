@@ -1,40 +1,47 @@
-#include "game/catch_event.h"
-
 #include "core/log.h"
-#include "core/module.h"
+#include "core/module_create.h"
+#include "core/data_manager.h"
+
+#include <SDL2/SDL.h>
 
 #include <assert.h>
 
-static void* catch_event_init_state(module_status&, void**, size_t) {
-  return new struct catch_event();
-}
+static data_manager_s* data_manager = 0x0;
 
-static module_status catch_event_uninit(void* state)
-{
-  assert(state);
-  catch_event* catch_event = static_cast<struct catch_event*>(state);
-  delete catch_event;
+MODULE_DEFAULT_INIT_CB;
 
-  return module_status();
-}
+MODULE_DEFAULT_UNINIT_CB;
 
-static module_status catch_event_step(void* state) {
-  assert(state);
-  catch_event* catch_event = static_cast<struct catch_event*>(state);
+static status_s catch_event_step_cb() {
+  assert(data_manager);
 
-  module_status step_status;
+  status_s step_status;
   SDL_Event ev;
   while (SDL_PollEvent(&ev)) {
     if (ev.type == SDL_QUIT) {
       LOG_DEBUG("Quit event detected");
-      step_status.info_code = module::STEP_INFO_STOPPING;
+      step_status.info_code = STEP_INFO_STOPPING;
       return step_status;
     }
-    catch_event->event_queue.push_back(ev);
+    if (ev.type == SDL_KEYDOWN) {
+      switch (ev.key.keysym.sym) {
+        case SDLK_LEFT:
+          data_manager->MDTMP_data["posx"] -= 1;
+          break;
+        case SDLK_RIGHT:
+          data_manager->MDTMP_data["posx"] += 1;
+          break;
+        case SDLK_UP:
+          data_manager->MDTMP_data["posy"] += 1;
+          break;
+        case SDLK_DOWN:
+          data_manager->MDTMP_data["posy"] -= 1;
+          break;
+      }
+    }
   }
 
-  return step_status;
+  return status_s();
 }
 
-MODULE_EXPORT_API(catch_event_init_state, catch_event_uninit, 0x0,
-                  0x0, catch_event_step);
+MODULE_EXPORT(module_default_init_cb, module_default_uninit_cb, catch_event_step_cb);

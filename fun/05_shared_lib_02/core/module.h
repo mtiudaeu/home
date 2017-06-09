@@ -12,9 +12,4 @@ struct module_s {
   ino_t st_ino = 0;
 };
 
-enum step_info {
-  STEP_INFO_RUNNING = 0,
-  STEP_INFO_STOPPING
-};
-
 #endif

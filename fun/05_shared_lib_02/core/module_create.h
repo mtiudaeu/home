@@ -22,4 +22,22 @@ struct module_callbacks_s {
   module_update_cb_t step_cb;
 };
 
+#define MODULE_DEFAULT_INIT_CB                                   \
+  static status_s module_default_init_cb(data_manager_s* data) { \
+    data_manager = data;                                         \
+    assert(data_manager);                                        \
+    return status_s();                                           \
+  }
+#define MODULE_DEFAULT_UNINIT_CB               \
+  static status_s module_default_uninit_cb() { \
+    assert(data_manager);                      \
+    data_manager = 0x0;                        \
+    return status_s();                         \
+  }
+
+enum step_info {
+  STEP_INFO_RUNNING = 0,
+  STEP_INFO_STOPPING
+};
+
 #endif
