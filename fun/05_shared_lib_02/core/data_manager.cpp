@@ -3,8 +3,7 @@
 #include <assert.h>
 
 // TODO This should be in a global data initilization layout
-const char* lib_array[] = {ROOT_PATH "update.so", ROOT_PATH "render.so",
-            ROOT_PATH "context.so"};
+const char* lib_array[] = {ROOT_PATH "game_context.so"};
 
 data_manager_s::data_manager_s() {
   const size_t lib_array_size = sizeof(lib_array) / sizeof(lib_array[0]);

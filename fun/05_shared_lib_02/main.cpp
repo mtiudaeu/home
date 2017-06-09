@@ -10,8 +10,9 @@ int main() {
   data_manager_s* data_manager = new struct data_manager_s();
 
   const size_t loop_reload_max = 10;
-  size_t loop_reload_count = 0;
+  size_t loop_reload_count = loop_reload_max;
   for (;;) {
+    ++loop_reload_count;
     // FIXME Doing all reloading at the same time could hit performance.
     if (loop_reload_count >= loop_reload_max) {
       loop_reload_count = 0;

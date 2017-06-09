@@ -11,7 +11,7 @@ SHARED_LIBS_CFLAGS = -shared
 
 #---------- TARGETS ----------
 #MDTMP ALL_OBJECTS = main.out context.so catch_event.so render.so global_data.so update.so
-ALL_OBJECTS = main.out
+ALL_OBJECTS = main.out game_context.so
 ALL_OBJECTS_PATH = $(addprefix $(BUILD_DIR), $(ALL_OBJECTS))
 
 build : $(ALL_OBJECTS_PATH:.so=.so.build)
@@ -29,8 +29,8 @@ dep:
 $(BUILD_DIR)main.out : $(BUILD_DIR)main.o $(BUILD_DIR)core_data_manager.o
 	$(CXX) $(CFLAGS_ALL) $^ -o $@ -ldl
 
-#$(BUILD_DIR)context.so.build : $(BUILD_DIR)game_context.o
-#	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW -lSDL2
+$(BUILD_DIR)game_context.so.build : $(BUILD_DIR)game_context.o
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW -lSDL2
 #$(BUILD_DIR)catch_event.so.build : $(BUILD_DIR)game_catch_event.o
 #	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lSDL2
 #$(BUILD_DIR)render.so.build : $(BUILD_DIR)game_render.o
