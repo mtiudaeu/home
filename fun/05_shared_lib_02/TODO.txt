@@ -1,0 +1,4 @@
+-core/module.h shouldn't be include by data_manager.cpp
+  modules should be controlled by module_manager.cpp
+-brainstorm data_manager API
+
