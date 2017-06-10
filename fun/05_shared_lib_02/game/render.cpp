@@ -1,9 +1,11 @@
 #include "core/log.h"
-#include "core/module.h"
+#include "core/module_create.h"
 #include "core/data_manager.h"
 
 #include <GL/glew.h>
 
+#include <map>
+#include <string>
 #include <assert.h>
 
 MODULE_DEFAULT_INITIALIZE;
@@ -11,10 +13,15 @@ MODULE_DEFAULT_INITIALIZE;
 static status_s render_step_cb() {
   assert(data_manager);
 
-  LOG_DEBUG("time_current %d", data_manager->MDTMP_data["time_current"]);
-  LOG_DEBUG("time_delta %d", data_manager->MDTMP_data["time_delta"]);
-  LOG_DEBUG("posx %d", data_manager->MDTMP_data["posx"]);
-  LOG_DEBUG("posy %d", data_manager->MDTMP_data["posy"]);
+  std::map<std::string, int>* data_ptr = static_cast<std::map<std::string, int>*>(
+    data_manager->get_data(data_manager_s::ID_DATA));
+  assert(data_ptr);
+  std::map<std::string, int>& data = *data_ptr;
+
+  LOG_DEBUG("time_current %d", data["time_current"]);
+  LOG_DEBUG("time_delta %d", data["time_delta"]);
+  LOG_DEBUG("posx %d", data["posx"]);
+  LOG_DEBUG("posy %d", data["posy"]);
 
   LOG_DEBUG("render_step_cb");
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

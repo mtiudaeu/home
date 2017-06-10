@@ -24,7 +24,10 @@ static status_s module_manager_step_cb() {
       return status;
     }
 
-    for (auto module : data_manager->modules) {
+
+    std::vector<module_s*>* modules = static_cast<std::vector<module_s*>*>(
+      data_manager->get_data(data_manager_s::ID_MODULES));
+    for (auto module : *modules) {
       assert(module);
       if (!module->step_cb) {
         continue;

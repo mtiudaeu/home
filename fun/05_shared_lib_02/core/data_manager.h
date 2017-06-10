@@ -1,21 +1,23 @@
 #ifndef CORE_DATA_MANAGER_H
 #define CORE_DATA_MANAGER_H
 
-#include "core/module.h"
+#include <memory>
 
-#include <vector>
-#include <map>
-#include <string>
+// TODO Design a proper data acces API. Most be flexible, control access + type safe ish
+struct imp_s;
+class data_manager_s {
+  std::unique_ptr<imp_s> imp_;
 
-// MDTMP should be a class? Define access interface
-struct data_manager_s {
+  public:
   data_manager_s();
   ~data_manager_s();
-  // MDTMP should not have vector in header
-  std::vector<module_s*> modules;
-  // MDTMP should not have map in header
-  // MDTMP should not have string in header
-  std::map<std::string, int> MDTMP_data;
+  void* get_data(size_t id);
+
+  // FIXME Hack
+  enum {
+    ID_MODULES = 0,
+    ID_DATA
+  };
 };
 
 #endif

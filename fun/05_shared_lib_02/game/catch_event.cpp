@@ -4,6 +4,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <map>
+#include <string>
 #include <assert.h>
 
 MODULE_DEFAULT_INITIALIZE;
@@ -20,18 +22,22 @@ static status_s catch_event_step_cb() {
       return step_status;
     }
     if (ev.type == SDL_KEYDOWN) {
+      std::map<std::string, int>* data_ptr = static_cast<std::map<std::string, int>*>(
+        data_manager->get_data(data_manager_s::ID_DATA));
+      assert(data_ptr);
+      std::map<std::string, int>& data = *data_ptr;
       switch (ev.key.keysym.sym) {
         case SDLK_LEFT:
-          data_manager->MDTMP_data["posx"] -= 1;
+          data["posx"] -= 1;
           break;
         case SDLK_RIGHT:
-          data_manager->MDTMP_data["posx"] += 1;
+          data["posx"] += 1;
           break;
         case SDLK_UP:
-          data_manager->MDTMP_data["posy"] += 1;
+          data["posy"] += 1;
           break;
         case SDLK_DOWN:
-          data_manager->MDTMP_data["posy"] -= 1;
+          data["posy"] -= 1;
           break;
       }
     }

@@ -12,6 +12,7 @@
 #include <errno.h>
 #include <string.h>
 #include <assert.h>
+#include <vector>
 
 status_s init_module(module_s& module, data_manager_s& data_manager) {
   auto clean_up_module = [&module] {
@@ -82,7 +83,10 @@ status_s init_module(module_s& module, data_manager_s& data_manager) {
 
 status_s init_all_module(data_manager_s& data_manager) {
   status_s status;
-  for (auto module : data_manager.modules) {
+
+  std::vector<module_s*>* modules = static_cast<std::vector<module_s*>*>(
+    data_manager.get_data(data_manager_s::ID_MODULES));
+  for (auto module : *modules) {
     assert(module);
     status_s local_status = init_module(*module, data_manager);
     if (local_status.error) {
