@@ -5,6 +5,7 @@
 // TODO This should be in a global data initilization layout
 const char* lib_array[] = {ROOT_PATH "game_context.so",
                            ROOT_PATH "game_catch_event.so",
+                           ROOT_PATH "game_update.so",
                            ROOT_PATH "game_render.so"};
 
 data_manager_s::data_manager_s() {

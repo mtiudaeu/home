@@ -5,23 +5,19 @@
 #include <memory>
 #include <assert.h>
 
-int module_manager_start()
+int module_manager_run()
 {
   status_s status;
 
   std::unique_ptr<data_manager_s> data_manager = std::make_unique<data_manager_s>();
   std::unique_ptr<module_s> module_manager = std::make_unique<module_s>();
-  module_manager->lib_path = ROOT_PATH "game_context.so";
+  module_manager->lib_path = ROOT_PATH "core_module_manager.so";
 
-  bool data_manager_reload = true; // true for first initialization
   for (;;) {
-    if(data_manager_reload) {
-      data_manager_reload = false;
-      status = init_module(*module_manager, *data_manager);
-      if (status.error) {
-        LOG_ERROR("init_module");
-        return 1;
-      }
+    status = init_module(*module_manager, *data_manager);
+    if (status.error) {
+      LOG_ERROR("init_module");
+      return 1;
     }
     status = module_manager->step_cb();
     if (status.error) {
@@ -32,10 +28,6 @@ int module_manager_start()
       LOG_DEBUG("status.info_code == STEP_INFO_STOPPING");
       return 0;
     }
-    else if (status.info_code == STEP_INFO_NEED_RELOADING) {
-      LOG_DEBUG("status.info_code == STEP_INFO_NEED_RELOADING");
-      data_manager_reload = true;
-    }
   }
 
   LOG_ERROR("Should not reach here");
@@ -43,5 +35,5 @@ int module_manager_start()
 }
 
 int main() {
-  return module_manager_start();
+  return module_manager_run();
 }

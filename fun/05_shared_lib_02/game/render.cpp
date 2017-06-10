@@ -6,25 +6,13 @@
 
 #include <assert.h>
 
-static data_manager_s* data_manager = 0x0;
-
-static status_s render_init_cb(data_manager_s* data) {
-  data_manager = data;
-  assert(data_manager);
-  return status_s();
-}
-
-static status_s render_uninit_cb() {
-  assert(data_manager);
-  data_manager = 0x0;
-  return status_s();
-}
+MODULE_DEFAULT_INITIALIZE;
 
 static status_s render_step_cb() {
   assert(data_manager);
 
-//MDTMP LOG_DEBUG("time_current %d", data_manager->MDTMP_data["time_current"]);
-//MDTMP LOG_DEBUG("time_delta %d", data_manager->MDTMP_data["time_delta"]);
+  LOG_DEBUG("time_current %d", data_manager->MDTMP_data["time_current"]);
+  LOG_DEBUG("time_delta %d", data_manager->MDTMP_data["time_delta"]);
   LOG_DEBUG("posx %d", data_manager->MDTMP_data["posx"]);
   LOG_DEBUG("posy %d", data_manager->MDTMP_data["posy"]);
 
@@ -38,4 +26,4 @@ static status_s render_step_cb() {
   return status_s();
 }
 
-MODULE_EXPORT (render_init_cb, render_uninit_cb, render_step_cb);
+MODULE_EXPORT_STEP_CB(render_step_cb);

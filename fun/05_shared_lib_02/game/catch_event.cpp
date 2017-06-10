@@ -6,9 +6,7 @@
 
 #include <assert.h>
 
-static data_manager_s* data_manager = 0x0;
-MODULE_DEFAULT_INIT_CB;
-MODULE_DEFAULT_UNINIT_CB;
+MODULE_DEFAULT_INITIALIZE;
 
 static status_s catch_event_step_cb() {
   assert(data_manager);
@@ -42,4 +40,4 @@ static status_s catch_event_step_cb() {
   return status_s();
 }
 
-MODULE_EXPORT(module_default_init_cb, module_default_uninit_cb, catch_event_step_cb);
+MODULE_EXPORT_STEP_CB(catch_event_step_cb);

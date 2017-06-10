@@ -5,11 +5,9 @@
 #include "core/module_init.h"
 #include "core/data_manager.h"
 
-static data_manager_s* data_manager = 0x0;
-MODULE_DEFAULT_INIT_CB;
-MODULE_DEFAULT_UNINIT_CB;
+MODULE_DEFAULT_INITIALIZE;
 
-static status_s module_manager__step_cb() {
+static status_s module_manager_step_cb() {
   // FIXME Doing all reloading at the same time could hit performance.
   status_s status = init_all_module(*data_manager);
   if (status.error) {
@@ -23,8 +21,6 @@ static status_s module_manager__step_cb() {
     ++loop_reload_count;
     // FIXME Doing all reloading at the same time could hit performance.
     if (loop_reload_count >= loop_reload_max) {
-      status.error = false;
-      status.info_code = STEP_INFO_NEED_RELOADING; // reload self
       return status;
     }
 
@@ -47,4 +43,4 @@ static status_s module_manager__step_cb() {
   return status;
 }
 
-MODULE_EXPORT(module_default_init_cb, module_default_uninit_cb, module_manager__step_cb);
+MODULE_EXPORT_STEP_CB(module_manager_step_cb);

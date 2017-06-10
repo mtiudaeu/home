@@ -10,8 +10,8 @@ CFLAGS_ALL = -I. -std=c++14 -Wall -Werror -Wextra -O2 -g -fPIC $(DEFINES)
 SHARED_LIBS_CFLAGS = -shared
 
 #---------- TARGETS ----------
-#MDTMP ALL_OBJECTS = main.out context.so game_catch_event.so game_render.so global_data.so update.so
-ALL_OBJECTS = main.out core_module_manager.so game_context.so game_render.so game_catch_event.so
+#MDTMP ALL_OBJECTS = main.out context.so game_catch_event.so game_render.so game_update.so
+ALL_OBJECTS = main.out core_module_manager.so game_context.so game_render.so game_catch_event.so game_update.so
 ALL_OBJECTS_PATH = $(addprefix $(BUILD_DIR), $(ALL_OBJECTS))
 
 build : $(ALL_OBJECTS_PATH:.so=.so.build)
@@ -37,10 +37,8 @@ $(BUILD_DIR)game_catch_event.so.build : $(BUILD_DIR)game_catch_event.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lSDL2
 $(BUILD_DIR)game_render.so.build : $(BUILD_DIR)game_render.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW -lGL
-#$(BUILD_DIR)global_data.so.build : $(BUILD_DIR)game_global_data.o
-#	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@
-#$(BUILD_DIR)update.so.build : $(BUILD_DIR)game_update.o
-#	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lSDL2
+$(BUILD_DIR)game_update.so.build : $(BUILD_DIR)game_update.o
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lSDL2
 
 #---------- MOVE TO FINAL TARGET ----------
 %.so : %.so.build
