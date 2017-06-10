@@ -1,12 +1,10 @@
 #ifndef CORE_DATA_MANAGER_H
 #define CORE_DATA_MANAGER_H
 
-#include <memory>
-
 // TODO Design a proper data acces API. Most be flexible, control access + type safe ish
 struct imp_s;
 class data_manager_s {
-  std::unique_ptr<imp_s> imp_;
+  imp_s* imp_;
 
   public:
   data_manager_s();

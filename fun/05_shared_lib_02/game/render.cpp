@@ -1,12 +1,10 @@
 #include "core/log.h"
 #include "core/module_create.h"
-#include "core/data_manager.h"
 
 #include <GL/glew.h>
 
 #include <map>
 #include <string>
-#include <assert.h>
 
 MODULE_DEFAULT_INITIALIZE;
 

@@ -3,16 +3,13 @@
 
 #include "core/module.h"
 
-#include "core/status.h"
-#include "core/data_manager.h"
+#include <vector>
 
 #include <dlfcn.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <errno.h>
 #include <string.h>
-#include <assert.h>
-#include <vector>
 
 status_s init_module(module_s& module, data_manager_s& data_manager) {
   auto clean_up_module = [&module] {

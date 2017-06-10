@@ -2,6 +2,7 @@
 #define CORE_MODULE_CREATE_H
 
 #include "core/status.h"
+#include "core/data_manager.h"
 
 #include <assert.h>
 
@@ -11,7 +12,6 @@
 #define MODULE_EXPORT_STEP_CB(step_cb)                                         \
   extern const struct module_callbacks_s MODULE_CALLBACKS(module_default_init_cb, module_default_uninit_cb, step_cb)
 
-struct data_manager_s;
 typedef status_s (*module_init_cb_t)(data_manager_s* data_manager);
 typedef status_s (*module_update_cb_t)();
 

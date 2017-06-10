@@ -1,9 +1,7 @@
 #include "core/log.h"
 #include "core/module_init.h"
-#include "core/data_manager.h"
 
 #include <memory>
-#include <assert.h>
 
 int module_manager_run()
 {

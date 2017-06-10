@@ -1,9 +1,5 @@
-#include "core/status.h"
 #include "core/log.h"
-
-#include "core/module_create.h"
 #include "core/module_init.h"
-#include "core/data_manager.h"
 
 MODULE_DEFAULT_INITIALIZE;
 

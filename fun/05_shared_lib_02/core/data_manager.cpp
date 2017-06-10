@@ -1,6 +1,5 @@
-#include "core/data_manager.h"
-#include "core/module.h"
 #include "core/log.h"
+#include "core/module.h"
 
 #include <vector>
 #include <map>
@@ -19,7 +18,7 @@ const char* lib_array[] = {ROOT_PATH "game_context.so",
                            ROOT_PATH "game_render.so"};
 
 data_manager_s::data_manager_s()
- : imp_(std::make_unique<imp_s>())
+ : imp_(new struct imp_s())
 {
   //MDTMP should be initialize by module_manager
   const size_t lib_array_size = sizeof(lib_array) / sizeof(lib_array[0]);
@@ -38,6 +37,8 @@ data_manager_s::~data_manager_s() {
     module = 0x0;
   }
   imp_->modules.clear();
+  delete imp_;
+  imp_ = 0x0;
 }
 
 void* data_manager_s::get_data(size_t id) {

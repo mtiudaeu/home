@@ -1,7 +1,6 @@
 #include "core/log.h"
 #include "core/module_create.h"
 
-#include <assert.h>
 #include <stdlib.h>
 
 #include <GL/glew.h>
