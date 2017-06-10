@@ -7,9 +7,7 @@
 #include <assert.h>
 
 static data_manager_s* data_manager = 0x0;
-
 MODULE_DEFAULT_INIT_CB;
-
 MODULE_DEFAULT_UNINIT_CB;
 
 static status_s catch_event_step_cb() {

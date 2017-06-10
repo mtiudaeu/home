@@ -2,41 +2,46 @@
 #include "core/module_init.h"
 #include "core/data_manager.h"
 
+#include <memory>
 #include <assert.h>
 
-int main() {
+int module_manager_start()
+{
   status_s status;
 
-  data_manager_s* data_manager = new struct data_manager_s();
+  std::unique_ptr<data_manager_s> data_manager = std::make_unique<data_manager_s>();
+  std::unique_ptr<module_s> module_manager = std::make_unique<module_s>();
+  module_manager->lib_path = ROOT_PATH "game_context.so";
 
-  const size_t loop_reload_max = 10;
-  size_t loop_reload_count = loop_reload_max;
+  bool data_manager_reload = true; // true for first initialization
   for (;;) {
-    ++loop_reload_count;
-    // FIXME Doing all reloading at the same time could hit performance.
-    if (loop_reload_count >= loop_reload_max) {
-      loop_reload_count = 0;
-      status = init_all_module(*data_manager);
+    if(data_manager_reload) {
+      data_manager_reload = false;
+      status = init_module(*module_manager, *data_manager);
       if (status.error) {
-        LOG_ERROR("init_all_module");
+        LOG_ERROR("init_module");
         return 1;
       }
     }
-
-    for (auto module : data_manager->modules) {
-      assert(module);
-      if (!module->step_cb) {
-        continue;
-      }
-      status = module->step_cb();
-      if (status.error) {
-        LOG_ERROR("status.error");
-        return 1;
-      }
-      if (status.info_code == STEP_INFO_STOPPING) {
-        LOG_DEBUG("status.info_code == STEP_INFO_STOPPING");
-        return 0;
-      }
+    status = module_manager->step_cb();
+    if (status.error) {
+      LOG_ERROR("module_manager->step_cb");
+      return 1;
+    }
+    else if (status.info_code == STEP_INFO_STOPPING) {
+      LOG_DEBUG("status.info_code == STEP_INFO_STOPPING");
+      return 0;
+    }
+    else if (status.info_code == STEP_INFO_NEED_RELOADING) {
+      LOG_DEBUG("status.info_code == STEP_INFO_NEED_RELOADING");
+      data_manager_reload = true;
     }
   }
+
+  LOG_ERROR("Should not reach here");
+  return 1;
+}
+
+int main() {
+  return module_manager_start();
 }
