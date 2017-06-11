@@ -3,8 +3,6 @@
 #include "core/data/module_data.h"
 #include "core/data/game_data.h"
 
-#include "core/log.h"
-
 #include <assert.h>
 
 struct imp_s {

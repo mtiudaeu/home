@@ -1,4 +1,3 @@
-#include "core/log.h"
 #include "core/module_init.h"
 
 #include <memory>

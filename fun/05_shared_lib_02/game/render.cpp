@@ -1,6 +1,5 @@
 #include "core/data/game_data.h"
 
-#include "core/log.h"
 #include "core/module_create.h"
 
 #include <GL/glew.h>
