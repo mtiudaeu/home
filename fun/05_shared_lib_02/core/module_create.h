@@ -2,7 +2,7 @@
 #define CORE_MODULE_CREATE_H
 
 #include "core/status.h"
-#include "core/data_manager.h"
+#include "core/data/data_manager.h"
 
 #include <assert.h>
 

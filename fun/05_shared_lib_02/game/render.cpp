@@ -1,3 +1,5 @@
+#include "core/data/game_data.h"
+
 #include "core/log.h"
 #include "core/module_create.h"
 
@@ -11,10 +13,10 @@ MODULE_DEFAULT_INITIALIZE;
 static status_s render_step_cb() {
   assert(data_manager);
 
-  std::map<std::string, int>* data_ptr = static_cast<std::map<std::string, int>*>(
-    data_manager->get_data(data_manager_s::ID_DATA));
-  assert(data_ptr);
-  std::map<std::string, int>& data = *data_ptr;
+  game_data_s* game_data = static_cast<game_data_s*>(
+    data_manager->get_data(DSI_DATA));
+  assert(game_data);
+  std::map<std::string, int>& data = game_data->data;
 
   LOG_DEBUG("time_current %d", data["time_current"]);
   LOG_DEBUG("time_delta %d", data["time_delta"]);

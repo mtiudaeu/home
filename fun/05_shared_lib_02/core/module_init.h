@@ -1,6 +1,8 @@
 #ifndef CORE_MODULE_INIT_H
 #define CORE_MODULE_INIT_H
 
+#include "core/data/module_data.h"
+
 #include "core/module.h"
 
 #include <vector>
@@ -81,9 +83,10 @@ status_s init_module(module_s& module, data_manager_s& data_manager) {
 status_s init_all_module(data_manager_s& data_manager) {
   status_s status;
 
-  std::vector<module_s*>* modules = static_cast<std::vector<module_s*>*>(
-    data_manager.get_data(data_manager_s::ID_MODULES));
-  for (auto module : *modules) {
+  module_data_s* module_data = static_cast<module_data_s*>(
+    data_manager.get_data(DSI_MODULES));
+  assert(module_data);
+  for (const auto& module : module_data->modules) {
     assert(module);
     status_s local_status = init_module(*module, data_manager);
     if (local_status.error) {

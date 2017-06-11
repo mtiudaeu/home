@@ -1,2 +1,2 @@
-make deploy -Bnd | /tmp/makefile2graph/make2graph > output.dot
+make deploy -Bnd | /usr/local/bin/make2graph > output.dot
 xdot output.dot

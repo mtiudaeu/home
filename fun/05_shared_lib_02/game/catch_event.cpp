@@ -1,3 +1,5 @@
+#include "core/data/game_data.h"
+
 #include "core/log.h"
 #include "core/module_create.h"
 
@@ -20,10 +22,10 @@ static status_s catch_event_step_cb() {
       return step_status;
     }
     if (ev.type == SDL_KEYDOWN) {
-      std::map<std::string, int>* data_ptr = static_cast<std::map<std::string, int>*>(
-        data_manager->get_data(data_manager_s::ID_DATA));
-      assert(data_ptr);
-      std::map<std::string, int>& data = *data_ptr;
+      game_data_s* game_data = static_cast<game_data_s*>(
+        data_manager->get_data(DSI_DATA));
+      assert(game_data);
+      std::map<std::string, int>& data = game_data->data;
       switch (ev.key.keysym.sym) {
         case SDLK_LEFT:
           data["posx"] -= 1;

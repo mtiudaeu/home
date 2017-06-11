@@ -10,7 +10,6 @@ CFLAGS_ALL = -I. -std=c++14 -Wall -Werror -Wextra -O2 -g -fPIC $(DEFINES)
 SHARED_LIBS_CFLAGS = -shared
 
 #---------- TARGETS ----------
-#MDTMP ALL_OBJECTS = main.out context.so game_catch_event.so game_render.so game_update.so
 ALL_OBJECTS = main.out core_module_manager.so game_context.so game_render.so game_catch_event.so game_update.so
 ALL_OBJECTS_PATH = $(addprefix $(BUILD_DIR), $(ALL_OBJECTS))
 
@@ -26,21 +25,21 @@ dep:
 	./build_dep.py $(BUILD_DIR) $(H_FILES_EXT) $(C_FILES_EXT) $(DEP_MAKEFILE) ALL_OBJECT_FILES CFLAGS_ALL
 
 #---------- LIBRARIES BUILD & LINK ----------
-$(BUILD_DIR)main.out : $(BUILD_DIR)main.o $(BUILD_DIR)core_data_manager.o
+$(BUILD_DIR)main.out : $(BUILD_DIR)main.o $(BUILD_DIR)core_data_data_manager.o
 	$(CXX) $(CFLAGS_ALL) $^ -o $@ -ldl
 
-$(BUILD_DIR)core_module_manager.so.build : $(BUILD_DIR)core_module_manager.o $(BUILD_DIR)core_data_manager.o
+$(BUILD_DIR)core_module_manager.so.build : $(BUILD_DIR)core_module_manager.o $(BUILD_DIR)core_data_data_manager.o
 
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lGLEW -lGL
 $(BUILD_DIR)game_context.so.build : $(BUILD_DIR)game_context.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $< -o $@ -lGLEW -lSDL2
-$(BUILD_DIR)game_catch_event.so.build : $(BUILD_DIR)game_catch_event.o $(BUILD_DIR)core_data_manager.o
+$(BUILD_DIR)game_catch_event.so.build : $(BUILD_DIR)game_catch_event.o $(BUILD_DIR)core_data_data_manager.o
 
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lSDL2
-$(BUILD_DIR)game_render.so.build : $(BUILD_DIR)game_render.o $(BUILD_DIR)core_data_manager.o
+$(BUILD_DIR)game_render.so.build : $(BUILD_DIR)game_render.o $(BUILD_DIR)core_data_data_manager.o
 
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lGLEW -lGL
-$(BUILD_DIR)game_update.so.build : $(BUILD_DIR)game_update.o $(BUILD_DIR)core_data_manager.o
+$(BUILD_DIR)game_update.so.build : $(BUILD_DIR)game_update.o $(BUILD_DIR)core_data_data_manager.o
 
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lSDL2
 
