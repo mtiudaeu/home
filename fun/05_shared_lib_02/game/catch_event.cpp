@@ -1,11 +1,8 @@
-#include "core/data/game_data.h"
+#include "core/data/hotkeys_data.h"
 
 #include "core/module_create.h"
 
 #include <SDL2/SDL.h>
-
-#include <map>
-#include <string>
 
 MODULE_DEFAULT_INITIALIZE;
 
@@ -21,24 +18,11 @@ static status_s catch_event_step_cb() {
       return step_status;
     }
     if (ev.type == SDL_KEYDOWN) {
-      game_data_s* game_data = static_cast<game_data_s*>(
-        data_manager->get_data(DSI_DATA));
-      assert(game_data);
-      std::map<std::string, int>& data = game_data->data;
-      switch (ev.key.keysym.sym) {
-        case SDLK_LEFT:
-          data["posx"] -= 1;
-          break;
-        case SDLK_RIGHT:
-          data["posx"] += 1;
-          break;
-        case SDLK_UP:
-          data["posy"] += 1;
-          break;
-        case SDLK_DOWN:
-          data["posy"] -= 1;
-          break;
-      }
+      hotkeys_data_s* hotkeys_data = static_cast<hotkeys_data_s*>(
+        data_manager->get_data(DSI_HOTKEYS));
+      assert(hotkeys_data);
+      auto& events = hotkeys_data->events;
+      events.push_back(ev);
     }
   }
 

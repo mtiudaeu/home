@@ -1,26 +1,23 @@
-#include "core/data/game_data.h"
+#include "core/data/runtime_data.h"
 
 #include "core/module_create.h"
 
 #include <GL/glew.h>
-
-#include <map>
-#include <string>
 
 MODULE_DEFAULT_INITIALIZE;
 
 static status_s render_step_cb() {
   assert(data_manager);
 
-  game_data_s* game_data = static_cast<game_data_s*>(
-    data_manager->get_data(DSI_DATA));
-  assert(game_data);
-  std::map<std::string, int>& data = game_data->data;
+  runtime_data_s* runtime_data = static_cast<runtime_data_s*>(
+    data_manager->get_data(DSI_RUNTIME));
+  assert(runtime_data);
+  auto& data = runtime_data->data;
 
-  LOG_DEBUG("time_current %d", data["time_current"]);
-  LOG_DEBUG("time_delta %d", data["time_delta"]);
-  LOG_DEBUG("posx %d", data["posx"]);
-  LOG_DEBUG("posy %d", data["posy"]);
+  LOG_DEBUG("time_current %s", data["time_current"].c_str());
+  LOG_DEBUG("time_delta %s", data["time_delta"].c_str());
+  LOG_DEBUG("posx %s", data["posx"].c_str());
+  LOG_DEBUG("posy %s", data["posy"].c_str());
 
   LOG_DEBUG("render_step_cb");
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

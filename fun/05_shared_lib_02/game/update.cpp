@@ -1,30 +1,34 @@
-#include "core/data/game_data.h"
+#include "core/data/runtime_data.h"
 
 #include "core/module_create.h"
 
 #include <SDL2/SDL.h>
 
-#include <map>
-#include <string>
+#include <cstdio>
 
 MODULE_DEFAULT_INITIALIZE;
 
 static status_s update_step_cb() {
   assert(data_manager);
 
-  game_data_s* game_data = static_cast<game_data_s*>(
-    data_manager->get_data(DSI_DATA));
-  assert(game_data);
-  std::map<std::string, int>& data = game_data->data;
+  runtime_data_s* runtime_data = static_cast<runtime_data_s*>(
+    data_manager->get_data(DSI_RUNTIME));
+  assert(runtime_data);
+  auto& data = runtime_data->data;
 
-  if(data["time_current"] == 0) {
-    data["time_current"] = SDL_GetTicks();
+  char buffer [33];
+  if(data["time_current"].empty()) {
+    sprintf(buffer, "%d", SDL_GetTicks());
+    data["time_current"] = buffer;
   }
 
+  int time_current = atoi(data["time_current"].c_str());
   const int time_new = SDL_GetTicks();
-  data["time_delta"] =
-      time_new - data["time_current"];
-  data["time_current"] = time_new;
+  const int time_delta = time_new - time_current;
+  sprintf(buffer, "%d", time_new);
+  data["time_current"] = buffer;
+  sprintf(buffer, "%d", time_delta);
+  data["time_delta"] = buffer;
 
   return status_s();
 }

@@ -3,7 +3,9 @@
 
 enum data_struct_ids {
   DSI_MODULES = 0,
-  DSI_DATA
+  DSI_RUNTIME,
+  DSI_STATIC,
+  DSI_HOTKEYS
 };
 
 #endif
