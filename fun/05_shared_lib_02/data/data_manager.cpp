@@ -1,7 +1,7 @@
-#include "core/data/data_manager.h"
+#include "data/data_manager.h"
 
-#include "core/data/module_data.h"
-#include "core/data/game_data.h"
+#include "data/module_data.h"
+#include "data/game_data.h"
 
 #include <assert.h>
 

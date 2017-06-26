@@ -1,4 +1,4 @@
-#include "core/data/game_data.h"
+#include "data/game_data.h"
 
 #include "core/module_create.h"
 

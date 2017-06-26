@@ -4,7 +4,7 @@
 #include "core/status.h"
 #include "core/log.h"
 
-#include "core/data/data_manager.h"
+#include "data/data_manager.h"
 
 #include <assert.h>
 

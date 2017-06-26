@@ -1,7 +1,7 @@
 #ifndef CORE_MODULE_INIT_H
 #define CORE_MODULE_INIT_H
 
-#include "core/data/module_data.h"
+#include "data/module_data.h"
 
 #include "core/module.h"
 
