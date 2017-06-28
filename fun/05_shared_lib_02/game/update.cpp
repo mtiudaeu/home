@@ -13,7 +13,7 @@ static status_s update_step_cb() {
   assert(data_manager);
 
   game_data_s* game_data = static_cast<game_data_s*>(
-    data_manager->get_data(DSI_DATA));
+    data_manager->get_data("game", DT_GAME));
   assert(game_data);
   std::map<std::string, int>& data = game_data->data;
 

@@ -12,7 +12,7 @@ const char* dso_array[] = {ROOT_PATH "game_context.so",
 
 static status_s module_manager_step_cb() {
   module_data_s* module_data = static_cast<module_data_s*>(
-    data_manager->get_data(DSI_MODULES));
+    data_manager->get_data("modules", DT_MODULES));
   assert(module_data);
   if(module_data->modules.empty()) { // add modules in data_manager
     const size_t lib_array_size = sizeof(dso_array) / sizeof(dso_array[0]);

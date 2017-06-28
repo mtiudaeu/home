@@ -22,7 +22,7 @@ static status_s catch_event_step_cb() {
     }
     if (ev.type == SDL_KEYDOWN) {
       game_data_s* game_data = static_cast<game_data_s*>(
-        data_manager->get_data(DSI_DATA));
+        data_manager->get_data("game", DT_GAME));
       assert(game_data);
       std::map<std::string, int>& data = game_data->data;
       switch (ev.key.keysym.sym) {
