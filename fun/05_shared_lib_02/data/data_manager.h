@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 #define DM_GET_DATA(data_manager, type, path) \
-  static_cast<type*>((data_manager).get_data(path, type::m_data_type));
+  static_cast<type*>((data_manager).get_data(path, DT_GET_TYPE(type)));
 
 struct imp_s;
 class data_manager_s {

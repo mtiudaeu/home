@@ -29,7 +29,13 @@ data_manager_s::data_manager_s()
 {}
 
 data_manager_s::~data_manager_s() {
-  assert(imp_);
+  auto delete_data = [](void* /*item*/){
+    //MDTMP
+  };
+  for ( auto it : imp_->data ) {
+    delete_data(it.second);
+  }
+
   delete imp_;
   imp_ = 0x0;
 }
