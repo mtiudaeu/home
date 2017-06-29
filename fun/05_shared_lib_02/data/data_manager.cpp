@@ -29,8 +29,16 @@ data_manager_s::data_manager_s()
 {}
 
 data_manager_s::~data_manager_s() {
-  auto delete_data = [](void* /*item*/){
-    //MDTMP
+  auto delete_data = [](void* item){
+    const data_type_e type_id = *static_cast<data_type_e*>(item);
+    switch (type_id) {
+      case DT_MODULES:
+        delete static_cast<module_data_s*>(item);
+        break;
+      case DT_GAME:
+        delete static_cast<game_data_s*>(item);
+        break;
+    }
   };
   for ( auto it : imp_->data ) {
     delete_data(it.second);
