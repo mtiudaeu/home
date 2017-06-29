@@ -83,8 +83,7 @@ status_s init_module(module_s& module, data_manager_s& data_manager) {
 status_s init_all_module(data_manager_s& data_manager) {
   status_s status;
 
-  module_data_s* module_data = static_cast<module_data_s*>(
-    data_manager.get_data("modules", DT_MODULES));
+  module_data_s* module_data = DM_GET_DATA(data_manager, module_data_s, "modules");
   assert(module_data);
   for (const auto& module : module_data->modules) {
     assert(module);

@@ -12,8 +12,7 @@ MODULE_DEFAULT_INITIALIZE;
 static status_s update_step_cb() {
   assert(data_manager);
 
-  game_data_s* game_data = static_cast<game_data_s*>(
-    data_manager->get_data("game", DT_GAME));
+  game_data_s* game_data = DM_GET_DATA(*data_manager, game_data_s, "game");
   assert(game_data);
   std::map<std::string, int>& data = game_data->data;
 
