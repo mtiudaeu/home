@@ -9,7 +9,7 @@ struct rectangle_2d {
 
 //--------------------------------------------------------------------------------
 void graphics_primitive_triangle_vertices_from_rectangle_2D(
-    struct triangle_vertices_2d triangle_vertices[2], const struct rectangle_2d rectangle_2D) {
+    struct triangle_vertex_2d_s triangle_vertices[2], const struct rectangle_2d rectangle_2D) {
   const GLfloat x_left = rectangle_2D.x;
   const GLfloat x_right = rectangle_2D.x + rectangle_2D.width;
   const GLfloat y_bottom = rectangle_2D.y;
@@ -38,11 +38,11 @@ void graphics_primitive_rectangle_2D_draw(
 
   const size_t length_triangles = square_length * 2;
   const size_t vertices_sizeof =
-      sizeof(struct triangle_vertices_2d) * length_triangles;
+      sizeof(struct triangle_vertex_2d_s) * length_triangles;
 
   // position
-  struct triangle_vertices_2d* const array_triangle_vertices =
-      (struct triangle_vertices_2d*)malloc(vertices_sizeof);
+  struct triangle_vertex_2d_s* const array_triangle_vertices =
+      (struct triangle_vertex_2d_s*)malloc(vertices_sizeof);
   {
     size_t i = 0;
     for (; i < length_triangles; i += 2) {
@@ -52,8 +52,8 @@ void graphics_primitive_rectangle_2D_draw(
   }
 
   // texture
-  struct triangle_vertices_2d* const array_texture_coord =
-      (struct triangle_vertices_2d*)malloc(vertices_sizeof);
+  struct triangle_vertex_2d_s* const array_texture_coord =
+      (struct triangle_vertex_2d_s*)malloc(vertices_sizeof);
   {
     size_t i = 0;
     for (; i < length_triangles; i += 2) {
@@ -62,8 +62,10 @@ void graphics_primitive_rectangle_2D_draw(
     }
   }
 
-  draw_textures_vertices(bo_texture, array_triangle_vertices, array_texture_coord,
-                         vertices_sizeof, length_triangles);
+  drawing_data_2d_s data_2d{bo_texture, array_triangle_vertices,
+                            array_texture_coord, length_triangles};
+  draw_textures_vertices(data_2d);
+
   // free
   free(array_triangle_vertices);
   free(array_texture_coord);
