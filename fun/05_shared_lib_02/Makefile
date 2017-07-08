@@ -44,7 +44,7 @@ $(BUILD_DIR)game_render.so.build : $(BUILD_DIR)game_render.o $(BUILD_DIR)data_da
 $(BUILD_DIR)game_update.so.build : $(BUILD_DIR)game_update.o $(BUILD_DIR)data_data_manager.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lSDL2
 
-$(BUILD_DIR)game_update.so.build : $(BUILD_DIR)gl_text.o $(BUILD_DIR)gl_shader.o $(BUILD_DIR)data_data_manager.o
+$(BUILD_DIR)gl_text.so.build : $(BUILD_DIR)gl_text.o $(BUILD_DIR)gl_shader.o $(BUILD_DIR)data_data_manager.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lSDL2
 
 #---------- MOVE TO FINAL TARGET ----------

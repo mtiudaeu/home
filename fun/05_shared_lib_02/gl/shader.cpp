@@ -22,15 +22,20 @@ static void shader_gl_log_error(GLuint object) {
     LOG_ERROR("Cannot find gl object information");
     return;
   }
+  if (log_length <= 0) {
+    LOG_ERROR("log_length <= 0");
+    return;
+  }
 
-  char* log = (char*)malloc(log_length);
+  char log[log_length+1];
+  log[0] = 0;
+
   if (glIsShader(object))
     glGetShaderInfoLog(object, log_length, NULL, log);
   else if (glIsProgram(object))
     glGetProgramInfoLog(object, log_length, NULL, log);
 
   LOG_ERROR("%s : %s", "shader_gl_log_error", log);
-  free(log);
 }
 
 //--------------------------------------------------------------------------------
@@ -54,8 +59,11 @@ static char* shader_file_read_malloc(const char* filename) {
     return 0x0;
   }
 
-  char* file_value = malloc(fsize + 1);
-  fread(file_value, fsize, 1, f);
+  char* file_value = static_cast<char*>(malloc(fsize + 1));
+  size_t ret = fread(file_value, fsize, 1, f);
+  if (ret != fsize) {
+    LOG_ERROR("ret != fsize");
+  }
   file_value[fsize] = 0;
 
   err = fclose(f);
