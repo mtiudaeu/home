@@ -1,3 +1,5 @@
+#include <vector>
+
 void graphics_primitive_rectangle_2D_uninit();
 
 struct triangle_vertex_2d_s {  // (-1.0,-1.0) is bottom left;
@@ -6,11 +8,15 @@ struct triangle_vertex_2d_s {  // (-1.0,-1.0) is bottom left;
   GLfloat coord_3[2];
 };
 
-struct drawing_data_2d_s {
+struct texture_vertices_2d_s {
   GLuint bo_texture = 0;
   triangle_vertex_2d_s* pos_triangles_vertices = 0;
   triangle_vertex_2d_s* texture_triangles_vertices = 0;
   size_t length_triangles = 0;
+};
+
+struct drawing_data_2d_s {
+  std::vector<texture_vertices_2d_s> texture_vertices_2d;
 };
 
 static GLuint graphics_primitive_rectangle_2D_program_id = 0;
@@ -131,33 +137,33 @@ void set_vertices_data(GLuint vbo_vertices,
       );
 }
 
-void draw_textures_vertices(drawing_data_2d_s drawing_data_2d) {
+void draw_textures_vertices(const drawing_data_2d_s& drawing_data_2d) {
   assert(graphics_primitive_rectangle_2D_program_id);
   glUseProgram(graphics_primitive_rectangle_2D_program_id);
 
-  glActiveTexture(GL_TEXTURE0);
+  for (const auto& it : drawing_data_2d.texture_vertices_2d) {
+    glActiveTexture(GL_TEXTURE0);
+    glUniform1i(graphics_primitive_rectangle_2D_uniform_texture_tileset,
+                0  // GL_TEXTURE
+                );
+    glBindTexture(GL_TEXTURE_2D, it.bo_texture);
 
-  glUniform1i(graphics_primitive_rectangle_2D_uniform_texture_tileset,
-              0  // GL_TEXTURE
-              );
-  glBindTexture(GL_TEXTURE_2D, drawing_data_2d.bo_texture);
+    const size_t vertices_sizeof =
+        sizeof(struct triangle_vertex_2d_s) * it.length_triangles;
+    set_vertices_data(graphics_primitive_rectangle_2D_vbo_vertices_coord,
+                      graphics_primitive_rectangle_2D_attribute_vertices_coord,
+                      it.pos_triangles_vertices, vertices_sizeof);
+    set_vertices_data(graphics_primitive_rectangle_2D_vbo_texture_coord,
+                      graphics_primitive_rectangle_2D_attribute_texture_coord,
+                      it.texture_triangles_vertices, vertices_sizeof);
 
-  const size_t vertices_sizeof =
-      sizeof(struct triangle_vertex_2d_s) * drawing_data_2d.length_triangles;
-  set_vertices_data(graphics_primitive_rectangle_2D_vbo_vertices_coord,
-                graphics_primitive_rectangle_2D_attribute_vertices_coord,
-                drawing_data_2d.pos_triangles_vertices, vertices_sizeof);
-  set_vertices_data(graphics_primitive_rectangle_2D_vbo_texture_coord,
-                graphics_primitive_rectangle_2D_attribute_texture_coord,
-                drawing_data_2d.texture_triangles_vertices, vertices_sizeof);
+    glDrawArrays(GL_TRIANGLES, 0, 3 * it.length_triangles);
 
-  glDrawArrays(GL_TRIANGLES, 0, 3 * drawing_data_2d.length_triangles);
-
-  glDisableVertexAttribArray(
-      graphics_primitive_rectangle_2D_attribute_vertices_coord);
-  glDisableVertexAttribArray(
-      graphics_primitive_rectangle_2D_attribute_texture_coord);
-
+    glDisableVertexAttribArray(
+        graphics_primitive_rectangle_2D_attribute_vertices_coord);
+    glDisableVertexAttribArray(
+        graphics_primitive_rectangle_2D_attribute_texture_coord);
+  }
 }
 
 static void func1() {

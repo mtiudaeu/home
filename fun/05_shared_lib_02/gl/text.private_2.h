@@ -62,9 +62,11 @@ void graphics_primitive_rectangle_2D_draw(
     }
   }
 
-  drawing_data_2d_s data_2d{bo_texture, array_triangle_vertices,
+  texture_vertices_2d_s vertices{bo_texture, array_triangle_vertices,
                             array_texture_coord, length_triangles};
-  draw_textures_vertices(data_2d);
+  drawing_data_2d_s drawing_data_2d;
+  drawing_data_2d.texture_vertices_2d.push_back(vertices);
+  draw_textures_vertices(drawing_data_2d);
 
   // free
   free(array_triangle_vertices);
