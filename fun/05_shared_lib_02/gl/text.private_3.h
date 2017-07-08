@@ -1,5 +1,7 @@
 #include <string.h>
 
+static GLuint texture_tileset = 0;
+
 struct graphics_coord_2d {
   float x;
   float y;
@@ -87,7 +89,19 @@ void graphics_text_draw(float scale,
   free(array_texture_position);
 }
 
+
 static void func3() {
+  if (texture_tileset == 0) {
+    // init texture
+    const char* tileset_filename = "assets/tileset.png";
+    texture_tileset = shader_texture_buffer_create(tileset_filename);
+    // MDTMP glDeleteTextures(1, &texture_tileset);
+    if (!texture_tileset) {
+      LOG_ERROR("!texture_tileset");
+      return;
+    }
+  }
+
   const float scale = 1.0f;
   const struct graphics_coord_2d position = {0.1, 0.5};
   graphics_text_draw(scale, position, "test");
