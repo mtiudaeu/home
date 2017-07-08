@@ -10,7 +10,8 @@ CFLAGS_ALL = -I. -std=c++14 -Wall -Werror -Wextra -O2 -g -fPIC $(DEFINES)
 SHARED_LIBS_CFLAGS = -shared
 
 #---------- TARGETS ----------
-ALL_OBJECTS = main.out core_module_manager.so game_context.so game_render.so game_catch_event.so game_update.so
+ALL_OBJECTS = core_module_manager.so game_context.so game_render.so game_catch_event.so game_update.so gl_text.so
+ALL_OBJECTS += main.out
 ALL_OBJECTS_PATH = $(addprefix $(BUILD_DIR), $(ALL_OBJECTS))
 
 build : $(ALL_OBJECTS_PATH:.so=.so.build)
@@ -41,6 +42,9 @@ $(BUILD_DIR)game_render.so.build : $(BUILD_DIR)game_render.o $(BUILD_DIR)data_da
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lGLEW -lGL
 
 $(BUILD_DIR)game_update.so.build : $(BUILD_DIR)game_update.o $(BUILD_DIR)data_data_manager.o
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lSDL2
+
+$(BUILD_DIR)game_update.so.build : $(BUILD_DIR)gl_text.o $(BUILD_DIR)gl_shader.o $(BUILD_DIR)data_data_manager.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lSDL2
 
 #---------- MOVE TO FINAL TARGET ----------
