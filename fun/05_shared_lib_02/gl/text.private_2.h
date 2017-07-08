@@ -144,6 +144,40 @@ void graphics_primitive_rectangle_2D_uninit() {
   graphics_primitive_rectangle_2D_vbo_texture_coord = 0;
 }
 
+
+
+void draw_vertices(GLuint vbo_vertices,
+                   GLint attribute_vertices,
+                   const struct triangle_verticles_2d* const triangles_vertices,
+                   const size_t vertices_sizeof) {
+  glBindBuffer(GL_ARRAY_BUFFER,
+               vbo_vertices);
+  glBufferData(GL_ARRAY_BUFFER, vertices_sizeof, triangles_vertices,
+               GL_STATIC_DRAW);
+
+  glEnableVertexAttribArray(
+      attribute_vertices);
+  glVertexAttribPointer(
+      attribute_vertices,  // attribute
+      2,         // number of elements per vertex,
+      GL_FLOAT,  // the type of each element
+      GL_FALSE,  // take our values as-is
+      0,         // no extra size
+      0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
+      );
+}
+
+//MDTMP
+/*
+void draw_textures_vertices(
+    GLuint bo_texture,
+    const struct triangle_verticles_2d* const pos_triangles_vertices,
+    const struct triangle_verticles_2d* const texture_triangles_vertices,
+    const size_t length) {
+  // MDTMP
+}
+*/
+
 //--------------------------------------------------------------------------------
 void graphics_primitive_rectangle_2D_draw(
     GLuint bo_texture, const struct rectangle_2d* array_context_position,
@@ -172,22 +206,9 @@ void graphics_primitive_rectangle_2D_draw(
           array_triangle_vertices + i, array_context_position[i / 2]);
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER,
-                 graphics_primitive_rectangle_2D_vbo_vertices_coord);
-    glBufferData(GL_ARRAY_BUFFER, vertices_sizeof, array_triangle_vertices,
-                 GL_STATIC_DRAW);
-    free(array_triangle_vertices);
-
-    glEnableVertexAttribArray(
-        graphics_primitive_rectangle_2D_attribute_vertices_coord);
-    glVertexAttribPointer(
-        graphics_primitive_rectangle_2D_attribute_vertices_coord,  // attribute
-        2,         // number of elements per vertex,
-        GL_FLOAT,  // the type of each element
-        GL_FALSE,  // take our values as-is
-        0,         // no extra size
-        0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
-        );
+    draw_vertices(graphics_primitive_rectangle_2D_vbo_vertices_coord,
+                  graphics_primitive_rectangle_2D_attribute_vertices_coord,
+                  array_triangle_vertices, vertices_sizeof);
   }
 
   {  // Set texture vertices
@@ -201,22 +222,9 @@ void graphics_primitive_rectangle_2D_draw(
           array_texture_coord + i, array_texture_position[i / 2]);
     }
 
-    glBindBuffer(GL_ARRAY_BUFFER,
-                 graphics_primitive_rectangle_2D_vbo_texture_coord);
-    glBufferData(GL_ARRAY_BUFFER, vertices_sizeof, array_texture_coord,
-                 GL_STATIC_DRAW);
-    free(array_texture_coord);
-
-    glEnableVertexAttribArray(
-        graphics_primitive_rectangle_2D_attribute_texture_coord);
-    glVertexAttribPointer(
-        graphics_primitive_rectangle_2D_attribute_texture_coord,  // attribute
-        2,         // number of elements per vertex,
-        GL_FLOAT,  // the type of each element
-        GL_FALSE,  // take our values as-is
-        0,         // no extra size
-        0  // offset (GLvoid*)offsetof(struct <struct_name>, <member_name>)
-        );
+    draw_vertices(graphics_primitive_rectangle_2D_vbo_texture_coord,
+                  graphics_primitive_rectangle_2D_attribute_texture_coord,
+                  array_texture_coord, vertices_sizeof);
   }
 
   glDrawArrays(GL_TRIANGLES, 0, 3 * length_triangles);
