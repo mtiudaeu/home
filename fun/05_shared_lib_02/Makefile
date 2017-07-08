@@ -45,7 +45,7 @@ $(BUILD_DIR)game_update.so.build : $(BUILD_DIR)game_update.o $(BUILD_DIR)data_da
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lSDL2
 
 $(BUILD_DIR)gl_text.so.build : $(BUILD_DIR)gl_text.o $(BUILD_DIR)gl_shader.o $(BUILD_DIR)data_data_manager.o
-	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lSDL2
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lGLEW -lSDL2 -lSDL2_image
 
 #---------- MOVE TO FINAL TARGET ----------
 %.so : %.so.build

@@ -7,20 +7,18 @@
 #include <map>
 #include <string>
 
+#include "gl/text.private_1.h"
+#include "gl/text.private_2.h"
+#include "gl/text.private_3.h"
+
 MODULE_DEFAULT_INITIALIZE;
 
 static status_s render_step_cb() {
   assert(data_manager);
 
-  const char* tileset_filename = "assets/text/tileset.png";
-  static GLuint texture_tileset = shader_texture_buffer_create(tileset_filename);
-  //MDTMP glDeleteTextures(1, &texture_tileset);
-  if (!texture_tileset) {
-    LOG_ERROR("!texture_tileset");
-    //MDTMP
-    return status_s();
-  }
-
+  func1();
+  func2();
+  func3();
 
   return status_s();
 }
