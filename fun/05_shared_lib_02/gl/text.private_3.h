@@ -100,9 +100,11 @@ static void func3() {
       LOG_ERROR("!texture_tileset");
       return;
     }
+
+    //MDTMP this is more of an init
+    const float scale = 1.0f;
+    const struct graphics_coord_2d position = {0.1, 0.5};
+    graphics_text_draw(scale, position, "test");
   }
 
-  const float scale = 1.0f;
-  const struct graphics_coord_2d position = {0.1, 0.5};
-  graphics_text_draw(scale, position, "test");
 }

@@ -1,3 +1,4 @@
+#include "data/drawing_data_2d.h"
 
 struct rectangle_2d {
   float x; // Bottom left corner
@@ -64,13 +65,15 @@ void graphics_primitive_rectangle_2D_draw(
 
   texture_vertices_2d_s vertices{bo_texture, array_triangle_vertices,
                             array_texture_coord, length_triangles};
-  drawing_data_2d_s drawing_data_2d;
-  drawing_data_2d.texture_vertices_2d.push_back(vertices);
-  draw_textures_vertices(drawing_data_2d);
+  drawing_data_2d_s* drawing_data_2d = DM_GET_DATA(*data_manager, drawing_data_2d_s, "drawing_data_2d"); 
+  drawing_data_2d->texture_vertices_2d.push_back(vertices);
 
   // free
+//MDTMP
+/*
   free(array_triangle_vertices);
   free(array_texture_coord);
+*/
 
 }
 

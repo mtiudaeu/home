@@ -5,12 +5,13 @@ C_FILES_EXT="cpp"
 
 #DEFINES = -DROOT_PATH=\"$(BUILD_DIR)\"
 DEFINES = -DROOT_PATH=\"$(BUILD_DIR)\" -DLOG_DEBUG_ENABLED
-CFLAGS_ALL = -I. -std=c++14 -Wall -Werror -Wextra -O2 -g -fPIC $(DEFINES)
+#CFLAGS_ALL = -I. -std=c++14 -Wall -Werror -Wextra -O2 -g -fPIC $(DEFINES)
+CFLAGS_ALL = -I. -std=c++14 -Wall -Werror -Wextra -g -fPIC $(DEFINES)
 
 SHARED_LIBS_CFLAGS = -shared
 
 #---------- TARGETS ----------
-ALL_OBJECTS = core_module_manager.so game_context.so game_render.so game_catch_event.so game_update.so gl_text.so
+ALL_OBJECTS = core_module_manager.so game_context.so game_render.so game_catch_event.so game_update.so gl_text.so gl_render_2d_texture.so
 ALL_OBJECTS += main.out
 ALL_OBJECTS_PATH = $(addprefix $(BUILD_DIR), $(ALL_OBJECTS))
 
@@ -45,6 +46,9 @@ $(BUILD_DIR)game_update.so.build : $(BUILD_DIR)game_update.o $(BUILD_DIR)data_da
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lSDL2
 
 $(BUILD_DIR)gl_text.so.build : $(BUILD_DIR)gl_text.o $(BUILD_DIR)gl_shader.o $(BUILD_DIR)data_data_manager.o
+	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lGLEW -lSDL2 -lSDL2_image
+
+$(BUILD_DIR)gl_render_2d_texture.so.build : $(BUILD_DIR)gl_render_2d_texture.o $(BUILD_DIR)gl_shader.o $(BUILD_DIR)data_data_manager.o
 	$(CXX) $(CFLAGS_ALL) $(SHARED_LIBS_CFLAGS) $^ -o $@ -lGLEW -lSDL2 -lSDL2_image
 
 #---------- MOVE TO FINAL TARGET ----------

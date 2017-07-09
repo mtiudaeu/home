@@ -7,16 +7,14 @@
 #include <map>
 #include <string>
 
-#include "gl/text.private_1.h"
+MODULE_DEFAULT_INITIALIZE;
+
 #include "gl/text.private_2.h"
 #include "gl/text.private_3.h"
-
-MODULE_DEFAULT_INITIALIZE;
 
 static status_s render_step_cb() {
   assert(data_manager);
 
-  func1();
   func2();
   func3();
 

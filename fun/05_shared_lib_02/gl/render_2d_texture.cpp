@@ -1,23 +1,12 @@
+#include "gl/shader.h"
+
+#include "data/drawing_data_2d.h"
+
+#include "core/module_create.h"
+
 #include <vector>
 
-void graphics_primitive_rectangle_2D_uninit();
-
-struct triangle_vertex_2d_s {  // (-1.0,-1.0) is bottom left;
-  GLfloat coord_1[2];
-  GLfloat coord_2[2];
-  GLfloat coord_3[2];
-};
-
-struct texture_vertices_2d_s {
-  GLuint bo_texture = 0;
-  triangle_vertex_2d_s* pos_triangles_vertices = 0;
-  triangle_vertex_2d_s* texture_triangles_vertices = 0;
-  size_t length_triangles = 0;
-};
-
-struct drawing_data_2d_s {
-  std::vector<texture_vertices_2d_s> texture_vertices_2d;
-};
+static data_manager_s* data_manager = 0x0;
 
 static GLuint graphics_primitive_rectangle_2D_program_id = 0;
 
@@ -51,18 +40,36 @@ void main(void) {\
   return shader_program_create_str(vertex_source, fragment_source);
 }
 
-size_t graphics_primitive_rectangle_2D_init() {
+static status_s render_2d_texture_uninit_cb() {
+  glDeleteProgram(graphics_primitive_rectangle_2D_program_id);
+  graphics_primitive_rectangle_2D_program_id = 0;
+
+  glDeleteBuffers(1, &graphics_primitive_rectangle_2D_vbo_vertices_coord);
+  graphics_primitive_rectangle_2D_vbo_vertices_coord = 0;
+
+  glDeleteBuffers(1, &graphics_primitive_rectangle_2D_vbo_texture_coord);
+  graphics_primitive_rectangle_2D_vbo_texture_coord = 0;
+
+  return status_s();
+}
+
+static status_s render_2d_texture_init_cb(data_manager_s* data) {
+  data_manager = data;
+
+  status_s status;
   if (graphics_primitive_rectangle_2D_program_id) {
     LOG_ERROR(
         "graphics_primitive_rectangle_2Dprogram_init : already initialized");
-    return 1;
+    status.error = true;
+    return status;
   }
 
   graphics_primitive_rectangle_2D_program_id =
       graphics_primitive_rectangle_2D_program_create();
   if (!graphics_primitive_rectangle_2D_program_id) {
     LOG_ERROR("!graphics_primitive_rectangle_2Dprogram_init");
-    return 1;
+    status.error = true;
+    return status;
   }
 
   const char* uniform_name = "texture_tileset";
@@ -70,8 +77,9 @@ size_t graphics_primitive_rectangle_2D_init() {
       graphics_primitive_rectangle_2D_program_id, uniform_name);
   if (graphics_primitive_rectangle_2D_uniform_texture_tileset == -1) {
     LOG_ERROR("glGetUniformLocation %s", uniform_name);
-    graphics_primitive_rectangle_2D_uninit();
-    return 1;
+    render_2d_texture_uninit_cb();
+    status.error = true;
+    return status;
   }
 
   {  // Create vertices objects
@@ -83,8 +91,9 @@ size_t graphics_primitive_rectangle_2D_init() {
                             attribute_name);
     if (graphics_primitive_rectangle_2D_attribute_vertices_coord == -1) {
       LOG_ERROR("glGetAttribLocation %s", attribute_name);
-      graphics_primitive_rectangle_2D_uninit();
-      return 1;
+      render_2d_texture_uninit_cb();
+      status.error = true;
+      return status;
     }
   }
 
@@ -97,24 +106,15 @@ size_t graphics_primitive_rectangle_2D_init() {
                             attribute_name);
     if (graphics_primitive_rectangle_2D_attribute_texture_coord == -1) {
       LOG_ERROR("glGetAttribLocation %s", attribute_name);
-      graphics_primitive_rectangle_2D_uninit();
-      return 1;
+      render_2d_texture_uninit_cb();
+      status.error = true;
+      return status;
     }
   }
 
-  return 0;
+  return status;
 }
 
-void graphics_primitive_rectangle_2D_uninit() {
-  glDeleteProgram(graphics_primitive_rectangle_2D_program_id);
-  graphics_primitive_rectangle_2D_program_id = 0;
-
-  glDeleteBuffers(1, &graphics_primitive_rectangle_2D_vbo_vertices_coord);
-  graphics_primitive_rectangle_2D_vbo_vertices_coord = 0;
-
-  glDeleteBuffers(1, &graphics_primitive_rectangle_2D_vbo_texture_coord);
-  graphics_primitive_rectangle_2D_vbo_texture_coord = 0;
-}
 
 void set_vertices_data(GLuint vbo_vertices,
                    GLint attribute_vertices,
@@ -166,13 +166,14 @@ void draw_textures_vertices(const drawing_data_2d_s& drawing_data_2d) {
   }
 }
 
-static void func1() {
-  static bool init = false;
-  if (!init) {
-    if (graphics_primitive_rectangle_2D_init() != 0) {
-      // MDTMP log error?
-      return;
-    }
-    init = true;
-  }
+static status_s render_2d_texture_step_cb()
+{
+  LOG_DEBUG("render_2d_texture_step_cb");
+
+  drawing_data_2d_s* drawing_data_2d = DM_GET_DATA(*data_manager, drawing_data_2d_s, "drawing_data_2d"); 
+  draw_textures_vertices(*drawing_data_2d);
+
+  return status_s();
 }
+
+MODULE_EXPORT(render_2d_texture_init_cb, render_2d_texture_uninit_cb, render_2d_texture_step_cb);

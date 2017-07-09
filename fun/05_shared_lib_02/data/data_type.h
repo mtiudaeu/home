@@ -10,7 +10,8 @@
 
 enum data_type_e {
   DT_MODULES = 0,
-  DT_GAME
+  DT_GAME,
+  DT_DRAWING_DATA_2D
 };
 
 #endif
