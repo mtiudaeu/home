@@ -1,9 +1,9 @@
 // TODO
-// 
+//
 // (per line)
 // - Detect include line
 // - Extract dependency
-// 
+//
 // (per file)
 // - Populate dependency tree
 //
@@ -21,31 +21,46 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-"strings"
+	//"fmt"
+	"strings"
 )
 
-func extractDependencies(line string) error {
-  if(strings.Contains(line, "#include")) {
-    log.Println(line)
-  }
-  return nil
+var static_output_map = make(map[string][]string)
+
+func lineDetectDependencie(line string) bool {
+
+	if strings.Contains(line, "#include") &&
+		!strings.Contains(line, "<") {
+		return true
+	}
+	return false
 }
 
+func lineExtractDependencie(line string) string {
+	// Assumed line format : (#include "file/path.h")
+	split_str := strings.Split(line, " ")
+	if len(split_str) != 2 {
+		//MDTMP error
+		return ""
+	}
+	return split_str[1]
+}
+
+//MDTMP make(map[string][]string)
 func visitFunc(path string, f os.FileInfo, err error) error {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		log.Println(err)
+		// log.Panic(err)
 		return nil
 	}
 
 	scanner := bufio.NewScanner(bytes.NewReader(data))
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
-		extractDependencies(scanner.Text())
-  if err != nil {
-   log.Panic(err)
-   return nil
-  }
+		if lineDetectDependencie(scanner.Text()) {
+			ret := lineExtractDependencie(scanner.Text())
+			static_output_map[path] = append(static_output_map[path], ret)
+		}
 	}
 
 	return nil
@@ -63,5 +78,11 @@ func main() {
 	err = filepath.Walk(*root_dir, visitFunc)
 	if err != nil {
 		log.Panic("filepath.Walk() returned ", err)
+	}
+
+	for key, value := range static_output_map {
+		for _, element := range value {
+   log.Println(key, element)
+		}
 	}
 }
