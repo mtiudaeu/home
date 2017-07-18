@@ -1,16 +1,3 @@
-// TODO
-//
-// (per line)
-// - Detect include line
-// - Extract dependency
-//
-// (per file)
-// - Populate dependency tree
-//
-// (export to file)
-// - Export to specefic tree format file (graphwiz)
-//
-
 package main
 
 import (
@@ -21,11 +8,53 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	//"fmt"
+	"strconv"
 	"strings"
 )
 
 var static_output_map = make(map[string][]string)
+var static_node_count = 0
+var static_node_map = make(map[string]int)
+
+func writeGraphToFile(graph_str string) {
+	filename := "dep_output.dot"
+	err := ioutil.WriteFile(filename, []byte(graph_str), 0644)
+	if err != nil {
+		log.Panic(err)
+		return
+	}
+
+}
+
+func getNodeIdGraph(node_name string, graph_str *string) int {
+	if node_id, ok := static_node_map[node_name]; ok {
+		// nothing to add
+		return node_id
+	}
+	static_node_count++
+	static_node_map[node_name] = static_node_count
+	*graph_str += "n" + strconv.Itoa(static_node_count) + "[label=\"" + node_name + "\", color=\"green\"];\n"
+
+	return static_node_count
+}
+
+func generateDependencieGraph() string {
+	var graph_str string
+	// start graph
+	graph_str += "digraph G {\n"
+
+	for key, value := range static_output_map {
+		key_node_id := getNodeIdGraph(key, &graph_str)
+		for _, element := range value {
+			element_node_id := getNodeIdGraph(element, &graph_str)
+
+			graph_str += "n" + strconv.Itoa(element_node_id) + " -> n" + strconv.Itoa(key_node_id) + ";\n"
+		}
+	}
+	// close graph
+	graph_str += "}"
+	return graph_str
+}
 
 func lineDetectDependencie(line string) bool {
 
@@ -43,7 +72,7 @@ func lineExtractDependencie(line string) string {
 		//MDTMP error
 		return ""
 	}
-	return split_str[1]
+	return strings.Replace(split_str[1], "\"", "", -1)
 }
 
 //MDTMP make(map[string][]string)
@@ -80,9 +109,8 @@ func main() {
 		log.Panic("filepath.Walk() returned ", err)
 	}
 
-	for key, value := range static_output_map {
-		for _, element := range value {
-   log.Println(key, element)
-		}
-	}
+	graph_str := generateDependencieGraph()
+
+	writeGraphToFile(graph_str)
+	//MDTMP log.Printf(graph_str)
 }
