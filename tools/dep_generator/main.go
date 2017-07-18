@@ -58,8 +58,7 @@ func generateDependencieGraph() string {
 
 func lineDetectDependencie(line string) bool {
 
-	if strings.Contains(line, "#include") &&
-		!strings.Contains(line, "<") {
+	if strings.Contains(line, "#include") {
 		return true
 	}
 	return false
@@ -72,7 +71,10 @@ func lineExtractDependencie(line string) string {
 		//MDTMP error
 		return ""
 	}
-	return strings.Replace(split_str[1], "\"", "", -1)
+	tmp := strings.Replace(split_str[1], "\"", "", -1)
+	tmp = strings.Replace(tmp, "<", "", -1)
+	tmp = strings.Replace(tmp, ">", "", -1)
+	return tmp
 }
 
 func acceptFilenameFilter(path string) bool {
@@ -86,9 +88,9 @@ func acceptFilenameFilter(path string) bool {
 
 func visitFunc(path string, f os.FileInfo, err error) error {
 	//MDTMP check if file
- if !acceptFilenameFilter(path) {
-  return nil
- }
+	if !acceptFilenameFilter(path) {
+		return nil
+	}
 	//MDTMP check if name filter
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
