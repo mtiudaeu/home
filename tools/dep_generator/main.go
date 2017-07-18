@@ -15,6 +15,7 @@ import (
 var static_output_map = make(map[string][]string)
 var static_node_count = 0
 var static_node_map = make(map[string]int)
+var static_root_dir string
 
 func writeGraphToFile(graph_str string) {
 	filename := "dep_output.dot"
@@ -47,7 +48,6 @@ func generateDependencieGraph() string {
 		key_node_id := getNodeIdGraph(key, &graph_str)
 		for _, element := range value {
 			element_node_id := getNodeIdGraph(element, &graph_str)
-
 			graph_str += "n" + strconv.Itoa(element_node_id) + " -> n" + strconv.Itoa(key_node_id) + ";\n"
 		}
 	}
@@ -75,20 +75,35 @@ func lineExtractDependencie(line string) string {
 	return strings.Replace(split_str[1], "\"", "", -1)
 }
 
-//MDTMP make(map[string][]string)
+func acceptFilenameFilter(path string) bool {
+	ext := filepath.Ext(path)
+	return ext == ".cpp" ||
+		ext == ".c" ||
+		ext == ".C" ||
+		ext == ".h" ||
+		ext == ".hpp"
+}
+
 func visitFunc(path string, f os.FileInfo, err error) error {
+	//MDTMP check if file
+ if !acceptFilenameFilter(path) {
+  return nil
+ }
+	//MDTMP check if name filter
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		// log.Panic(err)
 		return nil
 	}
 
+	//FIXME + "/" HHHACK!!
+	relative_path := strings.TrimPrefix(path, static_root_dir+"/")
 	scanner := bufio.NewScanner(bytes.NewReader(data))
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
 		if lineDetectDependencie(scanner.Text()) {
 			ret := lineExtractDependencie(scanner.Text())
-			static_output_map[path] = append(static_output_map[path], ret)
+			static_output_map[relative_path] = append(static_output_map[relative_path], ret)
 		}
 	}
 
@@ -104,7 +119,8 @@ func main() {
 	root_dir := flag.String("p", working_dir, "")
 	flag.Parse()
 
-	err = filepath.Walk(*root_dir, visitFunc)
+	static_root_dir = *root_dir
+	err = filepath.Walk(static_root_dir, visitFunc)
 	if err != nil {
 		log.Panic("filepath.Walk() returned ", err)
 	}
