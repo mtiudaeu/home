@@ -39,6 +39,48 @@ func getNodeIdGraph(node_name string, graph_str *string) int {
 	return static_node_count
 }
 
+func skipNode(node_name string) bool{
+  if (node_name == "cstdint" ||
+      node_name == "" ||
+      node_name == "stdexcept" ||
+      node_name == "unordered_set" ||
+      node_name == "bitset" ||
+      node_name == "cstddef" ||
+      node_name == "cstdlib" ||
+      node_name == "cstdio" ||
+      node_name == "memory" ||
+      node_name == "algorithm" ||
+      node_name == "iterator" ||
+      node_name == "functional" ||
+      node_name == "cstring" ||
+      node_name == "cstdio" ||
+      node_name == "vector" ||
+      node_name == "string" ||
+      node_name == "map" ||
+      node_name == "set" ||
+      node_name == "sstream" ||
+      node_name == "atomic" ||
+      node_name == "unordered_map" ||
+      node_name == "type_traits" ||
+      node_name == "utility" ||
+      node_name == "chrono" ||
+      node_name == "fstream" ||
+      node_name == "thread" ||
+      node_name == "cassert" ||
+      node_name == "iostream" ||
+      node_name == "strings.h" ||
+      node_name == "stdlib.h" ||
+      node_name == "windows.h" ||
+      node_name == "assert.h" ||
+      strings.Contains(node_name, "rapidjson") ||
+      strings.Contains(node_name, "curl") ||
+      strings.Contains(node_name, "Qt") ||
+      strings.Contains(node_name, "GL") ) {
+    return true
+  }
+  return false
+}
+
 func generateDependencieGraph() string {
 	var graph_str string
 	// start graph
@@ -47,6 +89,9 @@ func generateDependencieGraph() string {
 	for key, value := range static_output_map {
 		key_node_id := getNodeIdGraph(key, &graph_str)
 		for _, element := range value {
+  if (skipNode(element)) {
+    continue
+  }
 			element_node_id := getNodeIdGraph(element, &graph_str)
 			graph_str += "n" + strconv.Itoa(element_node_id) + " -> n" + strconv.Itoa(key_node_id) + ";\n"
 		}
