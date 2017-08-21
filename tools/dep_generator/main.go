@@ -16,6 +16,7 @@ var static_output_map = make(map[string][]string)
 var static_node_count = 0
 var static_node_map = make(map[string]int)
 var static_root_dir string
+var static_all_files = make([]string,1)
 
 func writeGraphToFile(graph_str string) {
 	filename := "dep_output.dot"
@@ -40,45 +41,12 @@ func getNodeIdGraph(node_name string, graph_str *string) int {
 }
 
 func skipNode(node_name string) bool{
-  if (node_name == "cstdint" ||
-      node_name == "" ||
-      node_name == "stdexcept" ||
-      node_name == "unordered_set" ||
-      node_name == "bitset" ||
-      node_name == "cstddef" ||
-      node_name == "cstdlib" ||
-      node_name == "cstdio" ||
-      node_name == "memory" ||
-      node_name == "algorithm" ||
-      node_name == "iterator" ||
-      node_name == "functional" ||
-      node_name == "cstring" ||
-      node_name == "cstdio" ||
-      node_name == "vector" ||
-      node_name == "string" ||
-      node_name == "map" ||
-      node_name == "set" ||
-      node_name == "sstream" ||
-      node_name == "atomic" ||
-      node_name == "unordered_map" ||
-      node_name == "type_traits" ||
-      node_name == "utility" ||
-      node_name == "chrono" ||
-      node_name == "fstream" ||
-      node_name == "thread" ||
-      node_name == "cassert" ||
-      node_name == "iostream" ||
-      node_name == "strings.h" ||
-      node_name == "stdlib.h" ||
-      node_name == "windows.h" ||
-      node_name == "assert.h" ||
-      strings.Contains(node_name, "rapidjson") ||
-      strings.Contains(node_name, "curl") ||
-      strings.Contains(node_name, "Qt") ||
-      strings.Contains(node_name, "GL") ) {
-    return true
+  for _, file := range static_all_files {
+    if file == node_name {
+      return false
+    }
   }
-  return false
+  return true
 }
 
 func generateDependencieGraph() string {
@@ -132,11 +100,9 @@ func acceptFilenameFilter(path string) bool {
 }
 
 func visitFunc(path string, f os.FileInfo, err error) error {
-	//MDTMP check if file
 	if !acceptFilenameFilter(path) {
 		return nil
 	}
-	//MDTMP check if name filter
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		// log.Panic(err)
@@ -157,6 +123,18 @@ func visitFunc(path string, f os.FileInfo, err error) error {
 	return nil
 }
 
+func saveAllFilesFunc(path string, f os.FileInfo, err error) error {
+	if !acceptFilenameFilter(path) {
+		return nil
+	}
+
+	//FIXME + "/" HHHACK!!
+	relative_path := strings.TrimPrefix(path, static_root_dir+"/")
+ static_all_files = append(static_all_files, relative_path)
+
+	return nil
+}
+
 func main() {
 	working_dir, err := os.Getwd()
 	if err != nil {
@@ -167,6 +145,11 @@ func main() {
 	flag.Parse()
 
 	static_root_dir = *root_dir
+	err = filepath.Walk(static_root_dir, saveAllFilesFunc)
+	if err != nil {
+		log.Panic("filepath.Walk() returned ", err)
+	}
+
 	err = filepath.Walk(static_root_dir, visitFunc)
 	if err != nil {
 		log.Panic("filepath.Walk() returned ", err)
@@ -175,5 +158,5 @@ func main() {
 	graph_str := generateDependencieGraph()
 
 	writeGraphToFile(graph_str)
-	//MDTMP log.Printf(graph_str)
+
 }
