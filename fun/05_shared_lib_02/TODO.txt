@@ -1,0 +1,13 @@
+- Add shader utils object target.
+- Add new shared library which create a the text texture statically(fornow) and render it
+ -initialize texture
+ -initialize shaders
+ -create program
+ -link attributes
+ -set atttributes
+ -draw
+
+- Add logic to generate and draw specific letter
+- Add new data type (list of object triangle to draw with texture id, texture position and drawing position)
+- Separate logic to generate objects and drawing objects.
+

@@ -2,6 +2,7 @@
 
 #include "data/module_data.h"
 #include "data/game_data.h"
+#include "data/drawing_data_2d.h"
 
 #include <map>
 
@@ -14,6 +15,9 @@ void* create_data_type(data_type_e type_id) {
       return new struct module_data_s();
     case DT_GAME:
       return new struct game_data_s();
+    case DT_DRAWING_DATA_2D:
+      return new struct drawing_data_2d_s();
+
   }
   LOG_ERROR("Should not rearch here");
   return 0x0;
@@ -37,6 +41,9 @@ data_manager_s::~data_manager_s() {
         break;
       case DT_GAME:
         delete static_cast<game_data_s*>(item);
+        break;
+      case DT_DRAWING_DATA_2D:
+        delete static_cast<drawing_data_2d_s*>(item);
         break;
     }
   };

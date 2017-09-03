@@ -6,7 +6,9 @@ namespace {
 const char* dso_array[] = {ROOT_PATH "game_context.so",
                            ROOT_PATH "game_catch_event.so",
                            ROOT_PATH "game_update.so",
-                           ROOT_PATH "game_render.so"};
+                           ROOT_PATH "game_render.so",
+                           ROOT_PATH "gl_text.so",
+                           ROOT_PATH "gl_render_2d_texture.so"};
 
 }
 
