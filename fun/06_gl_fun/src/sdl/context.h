@@ -1,5 +1,5 @@
-#ifndef GL_CONTEXT_H
-#define GL_CONTEXT_H
+#ifndef SDL_CONTEXT_H
+#define SDL_CONTEXT_H
 
 #include "app.h"
 
