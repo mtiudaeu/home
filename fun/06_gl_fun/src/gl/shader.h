@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 
+//FIXME should return Status instead
 GLuint shader_program_create_str(const char* vertex_source,
                                  const char* fragment_source);
 GLuint shader_program_create_file(const char* vertex_file_path,

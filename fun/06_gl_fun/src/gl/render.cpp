@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 
 Status gl_render() {
-  LOG_DEBUG("gl_render");
+  //MDTMP LOG_DEBUG("gl_render");
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);

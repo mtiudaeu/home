@@ -1,7 +1,6 @@
 #include "gl/render_2d_texture.h"
 
 #include "gl/shader.h"
-#include "gl/drawing_data_2d.h"
 
 #include <memory>
 
@@ -144,12 +143,17 @@ Status gl_render_2d_init() {
   return status;
 }
 
-Status render_2d_texture_step_cb() {
-  LOG_DEBUG("render_2d_texture_step_cb");
+Status gl_render_2d() {
+  //MDTMP LOG_DEBUG("gl_render_2d");
 
-  // MDTMP drawing_data_2d_s* drawing_data_2d = DM_GET_DATA(*data_manager,
-  // drawing_data_2d_s, "drawing_data_2d");
-  // MDTMP draw_textures_vertices(*drawing_data_2d);
+  drawing_data_2d_s* drawing_data_2d = &gl_render_2d_get_data();
+  draw_textures_vertices(*drawing_data_2d);
 
   return Status();
+}
+
+drawing_data_2d_s& gl_render_2d_get_data()
+{
+  static drawing_data_2d_s data;
+  return data;
 }
