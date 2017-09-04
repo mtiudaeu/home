@@ -5,15 +5,20 @@
 
 class Status {
 public:
-  enum Id { SUCCESS = 0, FAILURE };
+  enum Id { SUCCESS = 0, QUIT_EVENT, FAILURE };
 
   Status() {}
   Status(Id code, const std::string& msg) :
-    m_code(code),
+    m_id(code),
     m_msg(msg)
   {
   }
-  operator bool() const { return m_code >= FAILURE; }
+
+  Id getId() const {
+    return m_id;
+  }
+
+  operator bool() const { return m_id < FAILURE; }
 
   friend std::ostream &operator<<(std::ostream &os, const Status& status) {
     os << status.m_msg;
@@ -21,7 +26,7 @@ public:
   }
 
 private:
-  Id m_code;
+  Id m_id = SUCCESS;
   std::string m_msg;
 };
 

@@ -76,7 +76,8 @@ private:
 
 #define LOG_ERROR(...)                                             \
   (eh::Logger::log(App::Module(App::Module::Level::ERROR), \
-                   App::get().m_msgSeparator, __VA_ARGS__));
+                   App::get().m_msgSeparator, __VA_ARGS__,\
+                   EH_BUILD_FILE_INFO));
 
 #define LOG_INFO(...)                                             \
   (eh::Logger::log(App::Module(App::Module::Level::INFO), \
@@ -89,7 +90,7 @@ private:
 #define BUILD_ERROR(...) \
   ( App::buildStatus( App::get().m_msgSeparator, Status::FAILURE, __VA_ARGS__, EH_BUILD_FILE_INFO ) )
 
-#define BUILD_CUSTOM_STATUS(...) \
+#define BUILD_STATUS(...) \
   ( App::buildStatus( App::get().m_msgSeparator, __VA_ARGS__, EH_BUILD_FILE_INFO ) )
 
 
