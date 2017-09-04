@@ -8,7 +8,7 @@
 struct Imp {
   ~Imp();
 
-  SDL_Window* window = 0x0;
+  SDL_Window *window = 0x0;
   SDL_GLContext sdl_context = 0x0;
 };
 static std::unique_ptr<Imp> imp;
@@ -25,8 +25,7 @@ Imp::~Imp() {
   SDL_Quit();
 }
 
-Status sdl_context_init()
-{
+Status sdl_context_init() {
   imp.reset(new Imp());
 
   Status status;
@@ -35,9 +34,9 @@ Status sdl_context_init()
     return status;
   }
 
-  imp->window = SDL_CreateWindow(
-      "Default Parameter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024,
-      768, SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+  imp->window = SDL_CreateWindow("Default Parameter", SDL_WINDOWPOS_CENTERED,
+                                 SDL_WINDOWPOS_CENTERED, 1024, 768,
+                                 SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
   if (!imp->window) {
     status = BUILD_ERROR("SDL_CreateWindow %s", SDL_GetError());
     return status;
@@ -62,12 +61,10 @@ Status sdl_context_init()
   }
 
   return status;
-
 }
 
 Status sdl_context_swap_buffer() {
-  if( !imp )
-  {
+  if (!imp) {
     return BUILD_ERROR("!imp");
   }
 
@@ -85,30 +82,30 @@ Status sdl_context_catch_event() {
       status = BUILD_STATUS(Status::QUIT_EVENT);
       return status;
     }
-//MDTMP Save hotkey everywhere to consume later.
-/*
-    if (ev.type == SDL_KEYDOWN) {
-      game_data_s* game_data = DM_GET_DATA(*data_manager, game_data_s, "game");
-      assert(game_data);
-      std::map<std::string, int>& data = game_data->data;
-      switch (ev.key.keysym.sym) {
-        case SDLK_LEFT:
-          data["posx"] -= 1;
-          break;
-        case SDLK_RIGHT:
-          data["posx"] += 1;
-          break;
-        case SDLK_UP:
-          data["posy"] += 1;
-          break;
-        case SDLK_DOWN:
-          data["posy"] -= 1;
-          break;
-      }
-    }
-*/
+    // MDTMP Save hotkey everywhere to consume later.
+    /*
+        if (ev.type == SDL_KEYDOWN) {
+          game_data_s* game_data = DM_GET_DATA(*data_manager, game_data_s,
+       "game");
+          assert(game_data);
+          std::map<std::string, int>& data = game_data->data;
+          switch (ev.key.keysym.sym) {
+            case SDLK_LEFT:
+              data["posx"] -= 1;
+              break;
+            case SDLK_RIGHT:
+              data["posx"] += 1;
+              break;
+            case SDLK_UP:
+              data["posy"] += 1;
+              break;
+            case SDLK_DOWN:
+              data["posy"] -= 1;
+              break;
+          }
+        }
+    */
   }
 
   return status;
 }
-

@@ -9,4 +9,3 @@ Status sdl_context_swap_buffer();
 Status sdl_context_catch_event();
 
 #endif
-
