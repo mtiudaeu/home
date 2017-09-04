@@ -18,5 +18,12 @@ int main() {
     return 1;
   }
 
+  while (1) {
+    const Status status = gl_context_swap_buffer();
+    if (!status) {
+      LOG_ERROR(status);
+    }
+  }
+
   return 0;
 }

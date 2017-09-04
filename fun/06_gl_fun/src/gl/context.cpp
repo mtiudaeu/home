@@ -1,3 +1,5 @@
+#include "gl/context.h"
+
 #include "app.h"
 
 #include <GL/glew.h>
@@ -25,19 +27,7 @@ Imp::~Imp() {
   SDL_Quit();
 }
 
-
-
-/*
-static status_s context_step_cb() {
-  assert(imp);
-
-  SDL_GL_SwapWindow(imp->window);
-
-  return status_s();
-}
-*/
-
-static Status gl_context_init()
+Status gl_context_init()
 {
   imp.reset(new Imp());
 
@@ -77,3 +67,13 @@ static Status gl_context_init()
 
 }
 
+Status gl_context_swap_buffer() {
+  if( !imp )
+  {
+    return BUILD_ERROR("!imp");
+  }
+
+  SDL_GL_SwapWindow(imp->window);
+
+  return Status();
+}
