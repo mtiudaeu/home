@@ -1,13 +1,19 @@
 #include "app.h"
 
 #include "sdl/context.h"
+
 #include "gl/render.h"
+#include "gl/render_2d_texture.h"
+
 
 namespace {
 
 Status init() {
-  Status status;
-  status = sdl_context_init();
+  Status status = sdl_context_init();
+  if(!status){ return status; }
+
+  status = gl_render_2d_init();
+
   return status;
 }
 }
