@@ -7,7 +7,11 @@ class App {
  public:
   App();
   ~App();
+
   int run() noexcept;
+
+  App(const App&) = delete;
+  App& operator=(const App&) = delete;
 };
 
 #endif
