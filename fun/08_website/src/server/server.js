@@ -3,11 +3,18 @@
 // Dependency
 const fs = require('fs');
 const https = require('https');
-//MDTMP const WebSocketServer = require('ws').Server;
+
+// Path for publicly available files
+let CONFIG_PUBLIC_PATH = 'public';
+process.argv.forEach(function (val, index, array) {
+    if(index == 2) {
+        CONFIG_PUBLIC_PATH = val
+        console.log('Starting web server for path : ' + CONFIG_PUBLIC_PATH)
+    }
+});
 
 // Https server
 const HTTPS_PORT = 8888;
-const CONFIG_PUBLIC_PATH = 'public';
 let serverConfig = {
     key: fs.readFileSync('ssl_keys/key.pem'),
     cert: fs.readFileSync('ssl_keys/cert.pem'),
@@ -39,6 +46,7 @@ let serverRequestHandle = function(request, response) {
 let httpsServer = https.createServer(serverConfig, serverRequestHandle);
 httpsServer.listen(HTTPS_PORT, '0.0.0.0');
 
+//MDTMP const WebSocketServer = require('ws').Server;
 //MDTMP
 /*
 // WebSocket server
