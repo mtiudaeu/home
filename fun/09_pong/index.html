@@ -10,29 +10,7 @@
 	</head>
 	<body>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.js"></script>
-		<script>
-			"use strict"
-			let scene = new THREE.Scene();
-			let camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-
-			let renderer = new THREE.WebGLRenderer();
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			document.body.appendChild( renderer.domElement );
-
-			let geometry = new THREE.CircleGeometry( 0.5, 32 );
-			let material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
-			let circle = new THREE.Mesh( geometry, material );
-			scene.add( circle );
-
-			camera.position.z = 5;
-
-			let animate = function () {
-				requestAnimationFrame( animate );
-
-				renderer.render(scene, camera);
-			};
-
-			animate();
-		</script>
+		<script src="pong_engine.js"></script>
+		<script src="ui.js"></script>
 	</body>
 </html>
