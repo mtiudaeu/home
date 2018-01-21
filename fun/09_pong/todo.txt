@@ -3,6 +3,9 @@ Then training should be able to parallelized.
 Test case for a sharing processing pool framework.
 
 Who should own time??
+    Time is relative
+    The engine needs constant increment
+    Visual needs "time"
 
 -Visual
 	Real player option
