@@ -1,17 +1,21 @@
 "use strict"
 
-let c = document.getElementById("myCanvas");
-let ctx = c.getContext("2d");
-ctx.font = "10px Arial";
+let canva = document.getElementById("myCanvas");
 
-let drawEngine = new DrawEngine(ctx);
+let drawEngine = new DrawEngine(canva);
 
 window.onload = window.onresize = function() {
-    c.width = window.innerWidth;
-    c.height = window.innerHeight;
-    drawEngine.drawItems();
+    canva.width = window.innerWidth;
+    canva.height = window.innerHeight;
+    drawEngine.clearAndDrawAll();
 }
 
 document.onkeydown = function(event) {
-    console.log(event.keyCode)
+    drawEngine.keyPressed(event.keyCode)
 };
+canva.addEventListener('click', function(event) {
+    let x = event.pageX;
+    let y = event.pageY;
+    drawEngine.addItem(x,y);
+    drawEngine.clearAndDrawAll();
+}, false);
