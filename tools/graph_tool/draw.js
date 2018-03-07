@@ -12,18 +12,17 @@ constructor(canva) {
 clearAndDrawAll() {
     this.context2d.clearRect(0, 0, this.canva.width, this.canva.height);
     for (let i = 0; i < this.items.length; i++) {
-        this.drawItem(this.items[i].title,this.items[i].x, this.items[i].y)
+        this.drawItem(this.items[i]);
     }
 //FIXME
     this.drawString(this.currentText, 150, 150)
 }
 
-drawItem(text, x, y) {
-    let textDimensions = this.context2d.measureText(text)
+drawItem(item) {
     //FIXME
     const offset = 10
-    this.drawRectangle(x - offset, y, textDimensions.width + 2*offset, 10+2*offset);
-    this.drawString(text, x, y + 10 + offset);
+    this.drawRectangle(item.x - offset, item.y, item.width, item.height);
+    this.drawString(item.title, item.x, item.y + 10 + offset);
 }
 
 drawRectangle(x,y,width,height) {
@@ -35,7 +34,17 @@ drawString(text, x, y) {
 }
 
 addItem(title, x, y) {
-    this.items.push({title:title,x:x,y:y})
+    let textDimensions = this.context2d.measureText(title)
+    //FIXME
+    const offset = 10
+    let item = {
+        width:textDimensions.width + 2*offset, //FIXME
+        height:10+2*offset, //FIXME
+        title:title,
+        x:x,
+        y:y
+    }
+    this.items.push(item)
 }
 
 keyPressed(keyCode) {
