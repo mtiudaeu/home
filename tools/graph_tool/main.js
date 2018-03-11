@@ -14,8 +14,8 @@ document.onkeydown = function(event) {
     drawEngine.keyPressed(event.keyCode)
 };
 canva.addEventListener('click', function(event) {
-    let x = event.pageX;
-    let y = event.pageY;
+    let x = event.offsetX;
+    let y = event.offsetY;
     drawEngine.addItem("Hello World", x,y);
     drawEngine.clearAndDrawAll();
 }, false);

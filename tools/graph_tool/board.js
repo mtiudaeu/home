@@ -34,16 +34,12 @@ drawString(text, x, y) {
 }
 
 addItem(title, x, y) {
-    let textDimensions = this.context2d.measureText(title)
-    //FIXME
-    const offset = 10
-    let item = {
-        width:textDimensions.width + 2*offset, //FIXME
-        height:10+2*offset, //FIXME
-        title:title,
-        x:x,
-        y:y
-    }
+    let item = new Card(
+        this.canva,
+        title,
+        x,
+        y
+    )
     this.items.push(item)
 }
 
