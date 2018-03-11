@@ -2,7 +2,7 @@
 
 let canva = document.getElementById("myCanvas");
 
-let drawEngine = new DrawEngine(canva);
+let drawEngine = new BoardEngine(canva);
 
 window.onload = window.onresize = function() {
     canva.width = window.innerWidth;

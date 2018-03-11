@@ -1,6 +1,6 @@
 "use strict"
 
-class DrawEngine {
+class BoardEngine {
 constructor(canva) {
     this.canva = canva
     this.context2d = canva.getContext("2d");
