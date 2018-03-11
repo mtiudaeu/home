@@ -13,9 +13,16 @@ window.onload = window.onresize = function() {
 document.onkeydown = function(event) {
     drawEngine.keyPressed(event.keyCode)
 };
-canva.addEventListener('click', function(event) {
+canva.addEventListener('mousedown', function(event) {
     let x = event.offsetX;
     let y = event.offsetY;
-    drawEngine.addItem("Hello World", x,y);
-    drawEngine.clearAndDrawAll();
+    drawEngine.select(x, y);
+}, false);
+canva.addEventListener('mouseup', function(event) {
+    drawEngine.unSelect();
+}, false);
+canva.addEventListener('mousemove', function(event) {
+    let x = event.offsetX;
+    let y = event.offsetY;
+    drawEngine.move(x,y);
 }, false);

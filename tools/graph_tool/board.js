@@ -14,7 +14,7 @@ getCardBounds(card) {
 
     let textDimensions = this.context2d.measureText(card.title);
     let cardWidth = textDimensions.width + 2*TEXT_BORDER;
-    let cardHeight = 10+2*TEXT_BORDER; //FIXME
+    let cardHeight = 3*TEXT_BORDER;
     let cardX = card.x - cardWidth/2;
     let cardY = card.y - cardHeight/2;
 
@@ -32,6 +32,50 @@ getCardBounds(card) {
     return bounds;
 }
 
+isColliding(card, x,y) {
+    let bounds = this.getCardBounds(card);
+    if(x < bounds.x) {
+        return false;
+    }
+    else if(y < bounds.y) {
+        return false;
+    }
+    else if(x > (bounds.x + bounds.width)) {
+        return false;
+    }
+    else if(y > (bounds.y + bounds.height)) {
+        return false;
+    }
+
+    return true;
+}
+
+select(x,y) {
+    for (let i = 0; i < this.cards.length; i++) {
+        if(this.isColliding(this.cards[i], x, y)) {
+            this.cards[i].isSelected = true;
+        }
+    }
+    this.clearAndDrawAll(); //FIXME should be optional
+}
+
+move(x,y) {
+    for (let i = 0; i < this.cards.length; i++) {
+        if(this.cards[i].isSelected) {
+            this.cards[i].x = x;
+            this.cards[i].y = y;
+        }
+    }
+    this.clearAndDrawAll(); //FIXME should be optional
+}
+
+unSelect() {
+    for (let i = 0; i < this.cards.length; i++) {
+        this.cards[i].isSelected = false;
+    }
+    this.clearAndDrawAll(); //FIXME should be optional
+}
+
 clearAndDrawAll() {
     this.context2d.clearRect(0, 0, this.canva.width, this.canva.height);
     for (let i = 0; i < this.cards.length; i++) {
@@ -42,6 +86,15 @@ clearAndDrawAll() {
 }
 
 drawItem(card) {
+    if(card.isSelected) {
+        this.context2d.fillStyle = 'blue'; //FIXME should not change often I assume...
+        this.context2d.strokeStyle = 'blue'; //FIXME should not change often I assume...
+    }
+    else {
+        this.context2d.fillStyle = 'black'; //FIXME should not change often I assume...
+        this.context2d.strokeStyle = 'black'; //FIXME should not change often I assume...
+    }
+
     let bounds = this.getCardBounds(card);
     this.drawRectangle(bounds.x, bounds.y, bounds.width, bounds.height);
     this.drawString(card.title, bounds.textX, bounds.textY);
@@ -65,7 +118,6 @@ addItem(title, x, y) {
 }
 
 keyPressed(keyCode) {
-    console.log(keyCode)
     if(keyCode === 27) {
         // Esc key
         this.currentText = ""

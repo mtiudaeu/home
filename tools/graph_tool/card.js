@@ -9,6 +9,7 @@ constructor(
     this.title = title;
     this.x = x;
     this.y = y;
+    this.isSelected = false;
 }
 }
 
