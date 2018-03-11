@@ -9,17 +9,27 @@ constructor(canva) {
     this.currentText = ""
 }
 
-getCardWidth(card) {
-    let textDimensions = this.context2d.measureText(card.title);
-    //FIXME
-    const offset = 10;
-    return textDimensions.width + 2*offset; //FIXME
-}
+getCardBounds(card) {
+    const TEXT_BORDER = 10; //FIXME
 
-getCardHeight() {
-//FIXME
-    const offset = 10
-    return 10+2*offset; //FIXME
+    let textDimensions = this.context2d.measureText(card.title);
+    let cardWidth = textDimensions.width + 2*TEXT_BORDER;
+    let cardHeight = 10+2*TEXT_BORDER; //FIXME
+    let cardX = card.x - cardWidth/2;
+    let cardY = card.y - cardHeight/2;
+
+    let textX = cardX + TEXT_BORDER;
+    let textY = cardY + 10 + TEXT_BORDER;
+
+    let bounds = {
+        x:cardX,
+        y:cardY,
+        width:cardWidth,
+        height:cardHeight,
+        textX:textX,
+        textY:textY
+    }
+    return bounds;
 }
 
 clearAndDrawAll() {
@@ -32,12 +42,9 @@ clearAndDrawAll() {
 }
 
 drawItem(card) {
-    let cardWidth = this.getCardWidth(card);
-    let cardHeight = this.getCardHeight();
-    //FIXME
-    const offset = 10
-    this.drawRectangle(card.x - cardWidth/2, card.y - cardHeight/2, cardWidth, cardHeight);
-    this.drawString(card.title, card.x- cardWidth/2 + offset, card.y  - cardHeight/2 + 10 + offset);
+    let bounds = this.getCardBounds(card);
+    this.drawRectangle(bounds.x, bounds.y, bounds.width, bounds.height);
+    this.drawString(card.title, bounds.textX, bounds.textY);
 }
 
 drawRectangle(x,y,width,height) {
