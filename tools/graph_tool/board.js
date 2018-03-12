@@ -50,18 +50,38 @@ isColliding(card, x,y) {
     return true;
 }
 
-select(x,y) {
+
+unSelectAll() {
     for (let i = 0; i < this.cards.length; i++) {
-        if(this.isColliding(this.cards[i], x, y)) {
-            this.cards[i].isSelected = true;
-        }
+        this.cards[i].isSelected = false;
     }
     this.clearAndDrawAll(); //FIXME should be optional
 }
 
-move(x,y) {
+beginDrag(x, y) {
     for (let i = 0; i < this.cards.length; i++) {
-        if(this.cards[i].isSelected) {
+        if(this.isColliding(this.cards[i], x, y)) {
+            this.cards[i].isSelected = true;
+            this.cards[i].isDragged = true;
+        }
+        else {
+            this.cards[i].isSelected = false;
+            this.cards[i].isDragged = false;
+        }
+    }
+    this.clearAndDrawAll(); //FIXME should be optional
+
+}
+
+stopDrag() {
+    for (let i = 0; i < this.cards.length; i++) {
+        this.cards[i].isDragged = false;
+    }
+}
+
+drag(x,y) {
+    for (let i = 0; i < this.cards.length; i++) {
+        if(this.cards[i].isDragged) {
             this.cards[i].x = x;
             this.cards[i].y = y;
         }
@@ -69,12 +89,6 @@ move(x,y) {
     this.clearAndDrawAll(); //FIXME should be optional
 }
 
-unSelect() {
-    for (let i = 0; i < this.cards.length; i++) {
-        this.cards[i].isSelected = false;
-    }
-    this.clearAndDrawAll(); //FIXME should be optional
-}
 
 clearAndDrawAll() {
     this.context2d.clearRect(0, 0, this.canva.width, this.canva.height);

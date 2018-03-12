@@ -16,13 +16,13 @@ document.onkeydown = function(event) {
 canva.addEventListener('mousedown', function(event) {
     let x = event.offsetX;
     let y = event.offsetY;
-    drawEngine.select(x, y);
+    drawEngine.beginDrag(x, y);
 }, false);
 canva.addEventListener('mouseup', function(event) {
-    drawEngine.unSelect();
+    drawEngine.stopDrag();
 }, false);
 canva.addEventListener('mousemove', function(event) {
     let x = event.offsetX;
     let y = event.offsetY;
-    drawEngine.move(x,y);
+    drawEngine.drag(x,y);
 }, false);

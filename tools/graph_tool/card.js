@@ -10,6 +10,7 @@ constructor(
     this.x = x;
     this.y = y;
     this.isSelected = false;
+    this.isDragged = false;
 }
 }
 
