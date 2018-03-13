@@ -7,6 +7,14 @@ constructor(canva) {
     this.context2d.font = "10px Arial";
     this.cards = []
     this.currentText = ""
+
+//FIXME
+    const DEFAULT_EDIT_FIELD_POS_X = 800;
+    const DEFAULT_EDIT_FIELD_POS_Y = 500;
+    this.editFieldPosition = {
+        x:DEFAULT_EDIT_FIELD_POS_X,
+        y:DEFAULT_EDIT_FIELD_POS_Y
+    }
 }
 
 getCardBounds(card) {
@@ -59,6 +67,11 @@ unSelectAll() {
 }
 
 beginDrag(x, y) {
+    this.editFieldPosition = {
+        x:x,
+        y:y
+    }
+
     for (let i = 0; i < this.cards.length; i++) {
         if(this.isColliding(this.cards[i], x, y)) {
             this.cards[i].isSelected = true;
@@ -95,8 +108,10 @@ clearAndDrawAll() {
     for (let i = 0; i < this.cards.length; i++) {
         this.drawItem(this.cards[i]);
     }
-//FIXME
-    this.drawString(this.currentText, 150, 150)
+    this.drawString(
+        this.currentText,
+        this.editFieldPosition.x,
+        this.editFieldPosition.y)
 }
 
 drawItem(card) {
@@ -139,8 +154,11 @@ keyPressed(keyCode) {
     }
     if(keyCode === 13) {
         // Enter key
-        //FIXME
-        this.addItem(this.currentText, 100, 100)
+        this.addItem(
+            this.currentText,
+            this.editFieldPosition.x,
+            this.editFieldPosition.y
+        )
         this.currentText = ""
         this.clearAndDrawAll()
     }
