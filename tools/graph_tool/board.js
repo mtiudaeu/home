@@ -2,18 +2,31 @@
 
 class BoardEngine {
 constructor(canva) {
-    this.canva = canva
+    this.canva = canva;
     this.context2d = canva.getContext("2d");
     this.context2d.font = "10px Arial";
-    this.cards = []
-    this.currentText = ""
+    this.cards = [];
 
+    this.currentEditText = "";
 //FIXME
     const DEFAULT_EDIT_FIELD_POS_X = 800;
     const DEFAULT_EDIT_FIELD_POS_Y = 500;
     this.editFieldPosition = {
         x:DEFAULT_EDIT_FIELD_POS_X,
         y:DEFAULT_EDIT_FIELD_POS_Y
+    }
+
+//MDTMP Current tool (Editing, Moving, Making link)
+    const TOOL_POINTER = "pointer";
+    const TOOL_EDIT = "edit";
+    const TOOL_LINK = "link";
+    this.currentToolText = TOOL_POINTER;
+//FIXME
+    const DEFAULT_TOOL_POS_X = 50;
+    const DEFAULT_TOOL_POS_Y = 50;
+    this.currentToolPosition = {
+        x:DEFAULT_TOOL_POS_X,
+        y:DEFAULT_TOOL_POS_Y
     }
 }
 
@@ -109,9 +122,13 @@ clearAndDrawAll() {
         this.drawItem(this.cards[i]);
     }
     this.drawString(
-        this.currentText,
+        this.currentEditText,
         this.editFieldPosition.x,
-        this.editFieldPosition.y)
+        this.editFieldPosition.y);
+    this.drawString(
+        this.currentToolText,
+        this.currentToolPosition.x,
+        this.currentToolPosition.y);
 }
 
 drawItem(card) {
@@ -149,22 +166,22 @@ addItem(title, x, y) {
 keyPressed(keyCode) {
     if(keyCode === 27) {
         // Esc key
-        this.currentText = ""
+        this.currentEditText = ""
         this.clearAndDrawAll()
     }
     if(keyCode === 13) {
         // Enter key
         this.addItem(
-            this.currentText,
+            this.currentEditText,
             this.editFieldPosition.x,
             this.editFieldPosition.y
         )
-        this.currentText = ""
+        this.currentEditText = ""
         this.clearAndDrawAll()
     }
     if(keyCode >= 65 && keyCode <= 90) {
         // A to Z key
-        this.currentText += String.fromCharCode(keyCode)
+        this.currentEditText += String.fromCharCode(keyCode)
         this.clearAndDrawAll()
     }
 }
