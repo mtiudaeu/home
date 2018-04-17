@@ -1,0 +1,5 @@
+JUCE
+	AnimationDemo.h 
+		(drag + ui box)
+	Hotkey...h
+		(hotkey)
