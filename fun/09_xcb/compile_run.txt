@@ -1,0 +1,2 @@
+gcc main.cpp -lxcb -o bin/a.out &&
+./bin/a.out
