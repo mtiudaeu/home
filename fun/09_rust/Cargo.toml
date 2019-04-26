@@ -1,0 +1,11 @@
+[package]
+name = "learn_rust"
+version = "0.0.1"
+authors = ["Mathieu"]
+
+
+
+[dependencies]
+serde = "1.0.90"
+serde_derive = "1.0.90"
+reqwest = "0.9.15"
