@@ -9,7 +9,7 @@ emcc : emcc_targets
 ifndef INCLUDE_TEST
 INCLUDE_TEST = -DINCLUDE_RUN_TEST
 endif
-EMCC = emcc -O2 -I. $(INCLUDE_TEST) -Werror -s USE_SDL=2 -s USE_SDL_IMAGE=2 --use-preload-plugins
+EMCC = emcc -O2 -I. $(INCLUDE_TEST) -Werror -s USE_SDL=2 -s USE_SDL_IMAGE=2
 GCC = gcc -I. -g $(INCLUDE_TEST) -Werror
 
 BUILD_PATH = bin/
@@ -29,7 +29,7 @@ RUN_TEST_DEP_EXEC_EMCC = $(RUN_TEST_DEP_EXEC:.o=.bc)
 $(BUILD_PATH)run_test.out : $(RUN_TEST_DEP_EXEC)
 	$(GCC) $^ -o $@ -lGL -lGLEW -lSDL2 -lSDL2_image
 $(BUILD_PATH)run_test.html : $(RUN_TEST_DEP_EXEC_EMCC)
-	$(EMCC) $^ -o $@ --preload-file common/assets/text/tileset.png --preload-file common/assets/tmp/tetris.png
+	$(EMCC) $^ -o $@ --use-preload-plugins --preload-file common 
 
 # ---- clean ----
 clean : 
