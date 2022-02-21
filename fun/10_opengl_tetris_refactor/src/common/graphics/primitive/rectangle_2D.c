@@ -203,7 +203,7 @@ static GLuint graphics_primitive_rectangle_2Dbo_texture = 0;
 //--------------------------------------------------------------------------------
 size_t test_graphics_primitive_rectangle_2D_init() {
   assert(graphics_primitive_rectangle_2D_init() == 0);
-  const char* tileset_filename = "common/assets/tmp/tetris.png";
+  const char* tileset_filename = "ressources/tetris/tetris.png";
   graphics_primitive_rectangle_2Dbo_texture =
       graphics_shader_texture_buffer_create(tileset_filename);
   assert(graphics_primitive_rectangle_2Dbo_texture);

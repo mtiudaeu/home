@@ -37,7 +37,7 @@ static void internal_rectangle_2D_set_texture(
 //--------------------------------------------------------------------------------
 size_t tetris_piece_init() {
   if (!internal_bo_texture) {
-    const char* tileset_filename = "common/assets/tmp/tetris.png";
+    const char* tileset_filename = "ressources/tetris/tetris.png";
     internal_bo_texture =
         graphics_shader_texture_buffer_create(tileset_filename);
   }

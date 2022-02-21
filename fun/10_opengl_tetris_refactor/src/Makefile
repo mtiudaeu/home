@@ -11,8 +11,8 @@ endif
 gcc : gcc_targets
 emcc : emcc_targets
 
-EMCC = emcc -O2 -I. $(OPTIONS) -Werror -s USE_SDL=2 -s USE_SDL_IMAGE=2
-GCC = gcc -I. $(OPTIONS) -g  -Werror
+EMCC = emcc -O2 -I. $(OPTIONS) -Werror -std=c11 -s USE_SDL=2 -s USE_SDL_IMAGE=2
+GCC = gcc -I. $(OPTIONS) -g  -Werror -std=c11
 
 all: gcc_targets emcc_targets
 gcc_targets : $(TETRIS_OUT)
