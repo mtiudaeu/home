@@ -8,4 +8,13 @@
   fprintf(stderr, __VA_ARGS__);                            \
   fprintf(stderr, "\n");
 
+#ifdef DEBUG_TRACE
+#define LOG_TRACE(...)                                     \
+  fprintf(stderr, "trace : %s:%d : ", __FILE__, __LINE__); \
+  fprintf(stderr, __VA_ARGS__);                            \
+  fprintf(stderr, "\n");
+#else
+#define LOG_TRACE(...) do { } while(0)
+#endif
+
 #endif // LOG_H

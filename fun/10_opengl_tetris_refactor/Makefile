@@ -1,14 +1,30 @@
-TARGETS_ALL = $(BUILD_PATH)tetris.out
-INCLUDE_TEST = -DNO_RUN_TEST
+BUILD_PATH = bin/
 
 include common/Makefile
+include tetris/Makefile
 
-TETRIS_DEP_EXEC = $(addprefix $(BUILD_PATH),tetris_tetris.o tetris_piece.o tetris_board.o common_ui_ui_text.o common_graphics_text_text.o  common_graphics_primitive_rectangle_2D.o common_graphics_shader.o common_graphics_context.o)
-TETRIS_DEP_EXEC_EMCC = $(TETRIS_DEP_EXEC:.o=.bc)
+OPTIONS = -DNO_RUN_TEST
+ifndef OPTIONS
+OPTIONS = -DINCLUDE_RUN_TEST
+endif
 
-$(BUILD_PATH)tetris.out : $(TETRIS_DEP_EXEC)
-	$(GCC) $^ -o $@ -lGL -lGLEW -lSDL2 -lSDL2_image
-$(BUILD_PATH)tetris.html : $(TETRIS_DEP_EXEC_EMCC)
-	$(EMCC) $^ -o $@ --use-preload-plugins --preload-file common
+gcc : gcc_targets
+emcc : emcc_targets
+
+EMCC = emcc -O2 -I. $(OPTIONS) -Werror -s USE_SDL=2 -s USE_SDL_IMAGE=2
+GCC = gcc -I. $(OPTIONS) -g  -Werror
+
+all: gcc_targets emcc_targets
+gcc_targets : $(TETRIS_OUT)
+emcc_targets : $(TETRIS_OUT:.out=.html)
+
+test : test_gcc test_emcc
+test_gcc : $(COMMON_TEST_OUT) 
+test_emcc : $(COMMON_TEST_OUT:.out=.html) 
+
+clean : 
+	rm -f $(addprefix $(BUILD_PATH), *.o *.out *.js *.html *.bc *.mem *.data *.c *.h)
 
 include Makefile_generated
+
+
