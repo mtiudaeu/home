@@ -1,4 +1,4 @@
-BUILD_PATH = bin/
+BUILD_PATH = ../bin/
 
 include common/Makefile
 include tetris/Makefile
@@ -23,7 +23,7 @@ test_gcc : $(COMMON_TEST_OUT)
 test_emcc : $(COMMON_TEST_OUT:.out=.html) 
 
 clean : 
-	rm -f $(addprefix $(BUILD_PATH), *.o *.out *.js *.html *.bc *.mem *.data *.c *.h)
+	rm -f $(addprefix $(BUILD_PATH), *.o *.out *.js *.html *.bc *.mem *.data *.c *.h *.wasm)
 
 include Makefile_generated
 

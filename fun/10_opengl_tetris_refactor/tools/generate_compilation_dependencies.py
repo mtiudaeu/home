@@ -1,13 +1,13 @@
 #!/usr/bin/env python2
 
 # Usage :
-# ./generate_compilation_dependencies.py . > Makefile_generated
+# ./generate_compilation_dependencies.py src > Makefile_generated
 #
 # Find all .h and .c file and extract compilation depedencies.
 
 import sys, subprocess
 
-BUILD_PATH="bin/"
+BUILD_PATH="../bin/"
 
 def main():
   dir_path = sys.argv[1]
