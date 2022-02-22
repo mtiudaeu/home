@@ -1,7 +1,7 @@
 #ifndef UI_TEXT_H
 #define UI_TEXT_H
 
-#include "common/graphics/coord.h"
+#include "graphics/coord.h"
 
 #include <stddef.h>
 

@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_TEXT_TEXT_H
 #define GRAPHICS_TEXT_TEXT_H
 
-#include "common/graphics/coord.h"
+#include "graphics/coord.h"
 
 #include <stddef.h>
 

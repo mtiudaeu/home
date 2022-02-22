@@ -1,10 +1,10 @@
-#include "common/graphics/text/text.h"
+#include "graphics/text/text.h"
 
-#include "common/graphics/context.h"
-#include "common/graphics/coord.h"
+#include "graphics/context.h"
+#include "graphics/coord.h"
 
-#include "common/graphics/primitive/rectangle_2D.h"
-#include "common/graphics/shader.h"
+#include "graphics/primitive/rectangle_2D.h"
+#include "graphics/shader.h"
 
 #include "common/test/test.h"
 
@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "common/graphics/text/text.private.h"
+#include "graphics/text/text.private.h"
 
 //--------------------------------------------------------------------------------
 struct graphics_text {

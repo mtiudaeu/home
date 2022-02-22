@@ -1,6 +1,6 @@
 COMMON_TEST_OUT = $(BUILD_PATH)run_test.out
 
-RUN_TEST_DEP_EXEC = $(addprefix $(BUILD_PATH),common_run_test.o common_graphics_text_text.o common_graphics_shader.o common_graphics_context.o common_graphics_primitive_rectangle_2D.o common_ui_ui_text.o)
+RUN_TEST_DEP_EXEC = $(addprefix $(BUILD_PATH),common_run_test.o graphics_text_text.o graphics_shader.o graphics_context.o graphics_primitive_rectangle_2D.o common_ui_ui_text.o)
 RUN_TEST_DEP_EXEC_EMCC = $(RUN_TEST_DEP_EXEC:.o=.bc)
 
 $(BUILD_PATH)run_test.out : $(RUN_TEST_DEP_EXEC)

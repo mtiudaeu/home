@@ -2,10 +2,10 @@
 
 #include "common/ui/ui_text.h"
 
-#include "common/graphics/context.h"
-#include "common/graphics/text/text.h"
+#include "graphics/context.h"
+#include "graphics/text/text.h"
 
-#include "common/graphics/primitive/rectangle_2D.h"
+#include "graphics/primitive/rectangle_2D.h"
 
 #include <GL/glew.h>
 

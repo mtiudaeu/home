@@ -1,7 +1,7 @@
 #include "tetris/board.h"
 
-#include "common/graphics/primitive/rectangle_2D.h"
-#include "common/graphics/context.h"
+#include "graphics/primitive/rectangle_2D.h"
+#include "graphics/context.h"
 
 #include "common/log/log.h"
 
