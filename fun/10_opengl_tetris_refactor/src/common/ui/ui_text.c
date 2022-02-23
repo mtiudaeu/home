@@ -1,6 +1,6 @@
 #include <common/ui/ui_text.h>
 
-#include "graphics/text/text.h"
+#include "graphics/primitive_text.h"
 
 #include "common/log/log.h"
 

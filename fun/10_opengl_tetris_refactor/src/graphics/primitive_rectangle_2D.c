@@ -1,4 +1,4 @@
-#include "graphics/primitive/rectangle_2D.h"
+#include "graphics/primitive_rectangle_2D.h"
 
 #include "graphics/shader.h"
 
@@ -9,7 +9,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "graphics/primitive/rectangle_2D.private.h"
+#include "graphics/primitive_rectangle_2D.private.h"
 
 //--------------------------------------------------------------------------------
 // static members

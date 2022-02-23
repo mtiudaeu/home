@@ -1,6 +1,6 @@
 #include "tetris/board.h"
 
-#include "graphics/primitive/rectangle_2D.h"
+#include "graphics/primitive_rectangle_2D.h"
 #include "graphics/context.h"
 
 #include "common/log/log.h"

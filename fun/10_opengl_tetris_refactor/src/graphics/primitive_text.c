@@ -1,9 +1,9 @@
-#include "graphics/text/text.h"
+#include "graphics/primitive_text.h"
 
 #include "graphics/context.h"
 #include "graphics/coord.h"
 
-#include "graphics/primitive/rectangle_2D.h"
+#include "graphics/primitive_rectangle_2D.h"
 #include "graphics/shader.h"
 
 #include "common/test/test.h"
@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "graphics/text/text.private.h"
+#include "graphics/primitive_text.private.h"
 
 //--------------------------------------------------------------------------------
 struct graphics_text {

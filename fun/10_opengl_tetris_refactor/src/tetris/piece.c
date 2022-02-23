@@ -3,7 +3,7 @@
 
 #include "tetris/piece.private.h"
 
-#include "graphics/primitive/rectangle_2D.h"
+#include "graphics/primitive_rectangle_2D.h"
 
 #include "graphics/shader.h"
 

@@ -3,9 +3,9 @@
 #include "common/ui/ui_text.h"
 
 #include "graphics/context.h"
-#include "graphics/text/text.h"
+#include "graphics/primitive_text.h"
 
-#include "graphics/primitive/rectangle_2D.h"
+#include "graphics/primitive_rectangle_2D.h"
 
 #include <GL/glew.h>
 
@@ -35,7 +35,7 @@ static size_t run_test_draw()
 static size_t run_test_sub_modules()
 {
   size_t ret= 0;
-  { // graphics_text_text
+  { // graphics_primitive_text
     ret = test_graphics_text_run();
     if (ret != 0) {
       TEST_ASSERT_MSG("test_graphics_text_run");
