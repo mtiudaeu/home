@@ -1,6 +1,6 @@
 #include "common/test/test.h"
 
-#include "common/ui/ui_text.h"
+#include "graphics/graphics_ui_text.h"
 
 #include "graphics/context.h"
 #include "graphics/primitive_text.h"
@@ -17,7 +17,7 @@ static void run_test_mainCallback(const float time_delta) {
   { // draw all test sub modules.
     test_graphics_text_draw();
     test_graphics_primitive_rectangle_2D_draw();
-    test_ui_text_draw();
+    test_graphics_ui_text_draw();
   }
 }
 
@@ -51,10 +51,10 @@ static size_t run_test_sub_modules()
     }
   }
 
-  { // ui_text
-    ret = test_ui_text_run();
+  { // graphics_ui_text
+    ret = test_graphics_ui_text_run();
     if (ret != 0) {
-      TEST_ASSERT_MSG("test_ui_text_run");
+      TEST_ASSERT_MSG("test_graphics_ui_text_run");
       return ret;
     }
   }
@@ -80,9 +80,9 @@ static size_t run_test_init()
     TEST_ASSERT_MSG("test_graphics_primitive_rectangle_2D_init");
     return ret;
   }
-  ret = test_ui_text_init();
+  ret = test_graphics_ui_text_init();
   if (ret != 0) {
-    TEST_ASSERT_MSG("test_ui_text_init");
+    TEST_ASSERT_MSG("test_graphics_ui_text_init");
     return ret;
   }
 
@@ -107,9 +107,9 @@ static size_t run_test_uninit()
     TEST_ASSERT_MSG("test_graphics_primitive_rectangle_2D_uninit");
     return ret;
   }
-  ret = test_ui_text_uninit();
+  ret = test_graphics_ui_text_uninit();
   if (ret != 0) {
-    TEST_ASSERT_MSG("test_ui_text_uninit");
+    TEST_ASSERT_MSG("test_graphics_ui_text_uninit");
     return ret;
   }
   return ret;

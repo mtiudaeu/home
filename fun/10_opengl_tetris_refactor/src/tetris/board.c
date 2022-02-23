@@ -2,7 +2,7 @@
 
 #include "tetris/piece.h"
 
-#include "common/ui/ui_text.h"
+#include "graphics/ui_text.h"
 
 #include "common/log/log.h"
 
@@ -13,9 +13,9 @@
 
 //--------------------------------------------------------------------------------
 // static members
-static struct ui_text* ui_text_next_piece = 0x0;
-static struct ui_text* ui_text_score = 0x0;
-static struct ui_text* ui_text_score_level = 0x0;
+static struct graphics_ui_text* graphics_ui_text_next_piece = 0x0;
+static struct graphics_ui_text* graphics_ui_text_score = 0x0;
+static struct graphics_ui_text* graphics_ui_text_score_level = 0x0;
 static size_t score = 0;
 static size_t score_level = 0;
 
@@ -65,36 +65,36 @@ size_t tetris_board_init() {
   {  // init text ui
     const float ui_scale = 0.8f;
 
-    ui_text_next_piece = ui_text_new();
-    if (!ui_text_next_piece) {
-      LOG_ERROR("!ui_text_next_piece");
+    graphics_ui_text_next_piece = graphics_ui_text_new();
+    if (!graphics_ui_text_next_piece) {
+      LOG_ERROR("!graphics_ui_text_next_piece");
       return 1;
     }
 
-    ui_text_set_scale(ui_text_next_piece, ui_scale);
+    graphics_ui_text_set_scale(graphics_ui_text_next_piece, ui_scale);
     struct graphics_coord_2d position = {0.05, 0.82};
-    ui_text_set_position(ui_text_next_piece, position);
-    ui_text_set_msg(ui_text_next_piece, "next piece");
+    graphics_ui_text_set_position(graphics_ui_text_next_piece, position);
+    graphics_ui_text_set_msg(graphics_ui_text_next_piece, "next piece");
 
-    ui_text_score = ui_text_new();
-    if (!ui_text_score) {
-      LOG_ERROR("!ui_text_score");
+    graphics_ui_text_score = graphics_ui_text_new();
+    if (!graphics_ui_text_score) {
+      LOG_ERROR("!graphics_ui_text_score");
       return 1;
     }
-    ui_text_set_scale(ui_text_score, ui_scale);
+    graphics_ui_text_set_scale(graphics_ui_text_score, ui_scale);
     position.y = 0.2f;
-    ui_text_set_position(ui_text_score, position);
-    ui_text_set_msg(ui_text_score, "score : 0");
+    graphics_ui_text_set_position(graphics_ui_text_score, position);
+    graphics_ui_text_set_msg(graphics_ui_text_score, "score : 0");
 
-    ui_text_score_level = ui_text_new();
-    if (!ui_text_score) {
-      LOG_ERROR("!ui_text_score");
+    graphics_ui_text_score_level = graphics_ui_text_new();
+    if (!graphics_ui_text_score) {
+      LOG_ERROR("!graphics_ui_text_score");
       return 1;
     }
-    ui_text_set_scale(ui_text_score_level, ui_scale);
+    graphics_ui_text_set_scale(graphics_ui_text_score_level, ui_scale);
     position.y = 0.1f;
-    ui_text_set_position(ui_text_score_level, position);
-    ui_text_set_msg(ui_text_score_level, "level : 0");
+    graphics_ui_text_set_position(graphics_ui_text_score_level, position);
+    graphics_ui_text_set_msg(graphics_ui_text_score_level, "level : 0");
   }
 
   {  // init game board pieces
@@ -113,14 +113,14 @@ size_t tetris_board_init() {
 //--------------------------------------------------------------------------------
 void tetris_board_uninit() {
 {
-    ui_text_delete(ui_text_next_piece);
-    ui_text_next_piece = 0x0;
+    graphics_ui_text_delete(graphics_ui_text_next_piece);
+    graphics_ui_text_next_piece = 0x0;
 
-    ui_text_delete(ui_text_score);
-    ui_text_score = 0x0;
+    graphics_ui_text_delete(graphics_ui_text_score);
+    graphics_ui_text_score = 0x0;
 
-    ui_text_delete(ui_text_score_level);
-    ui_text_score_level = 0x0;
+    graphics_ui_text_delete(graphics_ui_text_score_level);
+    graphics_ui_text_score_level = 0x0;
 }
  tetris_piece_uninit();
  }
@@ -247,7 +247,7 @@ void tetris_board_update(const float time_delta) {
            char score_text[1000];
            score_text[0] = 0;
            snprintf(score_text, 1000, "score : %zu", score);
-           ui_text_set_msg(ui_text_score, score_text);
+           graphics_ui_text_set_msg(graphics_ui_text_score, score_text);
 
            const size_t next_score_level = score / 10000;
            if (score_level != next_score_level) {
@@ -257,7 +257,7 @@ void tetris_board_update(const float time_delta) {
            char score_level_text[1000];
            score_level_text[0] = 0;
            snprintf(score_level_text, 1000, "level : %zu", score_level);
-           ui_text_set_msg(ui_text_score_level, score_level_text);
+           graphics_ui_text_set_msg(graphics_ui_text_score_level, score_level_text);
         }
 
         {  // remove all blocks of that line
@@ -315,13 +315,13 @@ void tetris_board_draw() {
 
   // draw text
   {
-    assert(ui_text_next_piece);
-    ui_text_draw(ui_text_next_piece);
+    assert(graphics_ui_text_next_piece);
+    graphics_ui_text_draw(graphics_ui_text_next_piece);
 
-    assert(ui_text_score);
-    ui_text_draw(ui_text_score);
+    assert(graphics_ui_text_score);
+    graphics_ui_text_draw(graphics_ui_text_score);
 
-    assert(ui_text_score_level);
-    ui_text_draw(ui_text_score_level);
+    assert(graphics_ui_text_score_level);
+    graphics_ui_text_draw(graphics_ui_text_score_level);
 }
 }
