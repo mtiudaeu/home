@@ -1,7 +1,7 @@
 #ifndef TETRIS_PIECE_H
 #define TETRIS_PIECE_H
 
-#include "graphics/coord.h"
+#include "math/vec.h"
 
 #include <stddef.h>
 #include <assert.h>

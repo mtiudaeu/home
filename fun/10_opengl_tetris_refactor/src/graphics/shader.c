@@ -1,6 +1,6 @@
 #include "graphics/shader.h"
 
-#include "common/log/log.h"
+#include "common/log.h"
 
 #include <GL/glew.h>
 #include <SDL2/SDL.h>

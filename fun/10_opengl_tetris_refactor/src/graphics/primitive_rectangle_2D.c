@@ -2,9 +2,9 @@
 
 #include "graphics/shader.h"
 
-#include "common/test/test.h"
+#include "common/test.h"
 
-#include "common/log/log.h"
+#include "common/log.h"
 
 #include <assert.h>
 #include <stdlib.h>

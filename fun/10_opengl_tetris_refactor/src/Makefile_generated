@@ -1,4 +1,4 @@
-../bin/graphics_ui_text.h: graphics/ui_text.h ../bin/graphics_coord.h
+../bin/graphics_ui_text.h: graphics/ui_text.h ../bin/math_vec.h
 	touch ../bin/graphics_ui_text.h
 ../bin/graphics_primitive_rectangle_2D.private.h: graphics/primitive_rectangle_2D.private.h 
 	touch ../bin/graphics_primitive_rectangle_2D.private.h
@@ -8,39 +8,39 @@
 	touch ../bin/graphics_context.h
 ../bin/graphics_shader.h: graphics/shader.h 
 	touch ../bin/graphics_shader.h
-../bin/graphics_primitive_text.h: graphics/primitive_text.h ../bin/graphics_coord.h
+../bin/graphics_primitive_text.h: graphics/primitive_text.h ../bin/math_vec.h
 	touch ../bin/graphics_primitive_text.h
 ../bin/graphics_primitive_rectangle_2D.h: graphics/primitive_rectangle_2D.h 
 	touch ../bin/graphics_primitive_rectangle_2D.h
-../bin/graphics_coord.h: graphics/coord.h 
-	touch ../bin/graphics_coord.h
 ../bin/tetris_board.h: tetris/board.h 
 	touch ../bin/tetris_board.h
-../bin/tetris_piece.h: tetris/piece.h ../bin/graphics_coord.h
+../bin/tetris_piece.h: tetris/piece.h ../bin/math_vec.h
 	touch ../bin/tetris_piece.h
 ../bin/tetris_piece.private.h: tetris/piece.private.h 
 	touch ../bin/tetris_piece.private.h
-../bin/common_test_test.h: common/test/test.h 
-	touch ../bin/common_test_test.h
-../bin/common_log_log.h: common/log/log.h 
-	touch ../bin/common_log_log.h
-../bin/graphics_shader.c: graphics/shader.c ../bin/graphics_shader.h ../bin/common_log_log.h
+../bin/common_test.h: common/test.h 
+	touch ../bin/common_test.h
+../bin/common_log.h: common/log.h 
+	touch ../bin/common_log.h
+../bin/math_vec.h: math/vec.h 
+	touch ../bin/math_vec.h
+../bin/graphics_shader.c: graphics/shader.c ../bin/graphics_shader.h ../bin/common_log.h
 	touch ../bin/graphics_shader.c
-../bin/graphics_primitive_rectangle_2D.c: graphics/primitive_rectangle_2D.c ../bin/graphics_primitive_rectangle_2D.h ../bin/graphics_shader.h ../bin/common_test_test.h ../bin/common_log_log.h ../bin/graphics_primitive_rectangle_2D.private.h
+../bin/graphics_primitive_rectangle_2D.c: graphics/primitive_rectangle_2D.c ../bin/graphics_primitive_rectangle_2D.h ../bin/graphics_shader.h ../bin/common_test.h ../bin/common_log.h ../bin/graphics_primitive_rectangle_2D.private.h
 	touch ../bin/graphics_primitive_rectangle_2D.c
-../bin/graphics_primitive_text.c: graphics/primitive_text.c ../bin/graphics_primitive_text.h ../bin/graphics_context.h ../bin/graphics_coord.h ../bin/graphics_primitive_rectangle_2D.h ../bin/graphics_shader.h ../bin/common_test_test.h ../bin/common_log_log.h ../bin/graphics_primitive_text.private.h
+../bin/graphics_primitive_text.c: graphics/primitive_text.c ../bin/graphics_primitive_text.h ../bin/graphics_context.h ../bin/math_vec.h ../bin/graphics_primitive_rectangle_2D.h ../bin/graphics_shader.h ../bin/common_test.h ../bin/common_log.h ../bin/graphics_primitive_text.private.h
 	touch ../bin/graphics_primitive_text.c
-../bin/graphics_ui_text.c: graphics/ui_text.c ../bin/graphics_primitive_text.h ../bin/common_log_log.h ../bin/common_test_test.h
+../bin/graphics_ui_text.c: graphics/ui_text.c ../bin/graphics_primitive_text.h ../bin/common_log.h ../bin/common_test.h
 	touch ../bin/graphics_ui_text.c
-../bin/graphics_context.c: graphics/context.c ../bin/graphics_context.h ../bin/common_test_test.h ../bin/common_log_log.h
+../bin/graphics_context.c: graphics/context.c ../bin/graphics_context.h ../bin/common_test.h ../bin/common_log.h
 	touch ../bin/graphics_context.c
 ../bin/tetris_piece.c: tetris/piece.c ../bin/tetris_piece.h ../bin/tetris_piece.private.h ../bin/graphics_primitive_rectangle_2D.h ../bin/graphics_shader.h
 	touch ../bin/tetris_piece.c
-../bin/tetris_board.c: tetris/board.c ../bin/tetris_board.h ../bin/tetris_piece.h ../bin/graphics_ui_text.h ../bin/common_log_log.h
+../bin/tetris_board.c: tetris/board.c ../bin/tetris_board.h ../bin/tetris_piece.h ../bin/graphics_ui_text.h ../bin/common_log.h
 	touch ../bin/tetris_board.c
-../bin/tetris_tetris.c: tetris/tetris.c ../bin/tetris_board.h ../bin/graphics_primitive_rectangle_2D.h ../bin/graphics_context.h ../bin/common_log_log.h
+../bin/tetris_tetris.c: tetris/tetris.c ../bin/tetris_board.h ../bin/graphics_primitive_rectangle_2D.h ../bin/graphics_context.h ../bin/common_log.h
 	touch ../bin/tetris_tetris.c
-../bin/common_run_test.c: common/run_test.c ../bin/common_test_test.h ../bin/graphics_graphics_ui_text.h ../bin/graphics_context.h ../bin/graphics_primitive_text.h ../bin/graphics_primitive_rectangle_2D.h
+../bin/common_run_test.c: common/run_test.c ../bin/common_test.h ../bin/graphics_graphics_ui_text.h ../bin/graphics_context.h ../bin/graphics_primitive_text.h ../bin/graphics_primitive_rectangle_2D.h
 	touch ../bin/common_run_test.c
 ../bin/graphics_shader.o: graphics/shader.c ../bin/graphics_shader.c
 	$(GCC) -c $< -o $@

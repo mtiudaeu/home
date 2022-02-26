@@ -3,7 +3,7 @@
 #include "graphics/primitive_rectangle_2D.h"
 #include "graphics/context.h"
 
-#include "common/log/log.h"
+#include "common/log.h"
 
 #include <GL/glew.h>
 

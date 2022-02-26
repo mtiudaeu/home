@@ -6,7 +6,7 @@ static float graphics_text_square_vertices_width(float scale) {
 
 //--------------------------------------------------------------------------------
 static void graphics_text_rectangle_2D(struct rectangle_2d* rectangle_2D, float scale,
-                             struct graphics_coord_2d position) {
+                             struct math_vec2 position) {
   assert(rectangle_2D);
 
   rectangle_2D->x = position.x;

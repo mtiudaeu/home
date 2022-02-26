@@ -1,8 +1,8 @@
 #include "graphics/context.h"
 
-#include "common/test/test.h"
+#include "common/test.h"
 
-#include "common/log/log.h"
+#include "common/log.h"
 
 #include <stdlib.h>
 #include <assert.h>

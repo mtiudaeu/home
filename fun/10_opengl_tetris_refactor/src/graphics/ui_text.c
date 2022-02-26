@@ -2,9 +2,9 @@
 
 #include "graphics/primitive_text.h"
 
-#include "common/log/log.h"
+#include "common/log.h"
 
-#include "common/test/test.h"
+#include "common/test.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -13,7 +13,7 @@
 //--------------------------------------------------------------------------------
 struct graphics_ui_text {
   struct graphics_text* graphics_text;
-  struct graphics_coord_2d position;
+  struct math_vec2 position;
   float scale;
   char* msg;
 };
@@ -48,7 +48,7 @@ void graphics_ui_text_set_scale(struct graphics_ui_text* graphics_ui_text, float
 }
 
 //--------------------------------------------------------------------------------
-void graphics_ui_text_set_position(struct graphics_ui_text* graphics_ui_text, struct graphics_coord_2d position) {
+void graphics_ui_text_set_position(struct graphics_ui_text* graphics_ui_text, struct math_vec2 position) {
   assert(graphics_ui_text);
   graphics_ui_text->position = position;
 }
@@ -89,7 +89,7 @@ size_t test_graphics_ui_text_init()
   assert(test_graphics_ui_text );
 
   graphics_ui_text_set_scale(test_graphics_ui_text, 1.2f);
-  struct graphics_coord_2d position = {-0.8f, 0.2};
+  struct math_vec2 position = {-0.8f, 0.2};
   graphics_ui_text_set_position(test_graphics_ui_text, position);
   graphics_ui_text_set_msg(test_graphics_ui_text, "ui_test_ whoo!");
 

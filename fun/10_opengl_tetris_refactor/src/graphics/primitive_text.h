@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_TEXT_TEXT_H
 #define GRAPHICS_TEXT_TEXT_H
 
-#include "graphics/coord.h"
+#include "math/vec.h"
 
 #include <stddef.h>
 
@@ -11,7 +11,7 @@ struct graphics_text* graphics_text_new();
 void graphics_text_delete(struct graphics_text* graphics_text);
 
 void graphics_text_draw(const struct graphics_text* graphics_text, float scale,
-                        struct graphics_coord_2d position, const char* msg);
+                        struct math_vec2 position, const char* msg);
 
 #ifdef INCLUDE_RUN_TEST
 size_t test_graphics_text_init();

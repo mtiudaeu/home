@@ -4,7 +4,7 @@
 
 #include "graphics/ui_text.h"
 
-#include "common/log/log.h"
+#include "common/log.h"
 
 #include <string.h>
 #include <assert.h>
@@ -72,7 +72,7 @@ size_t tetris_board_init() {
     }
 
     graphics_ui_text_set_scale(graphics_ui_text_next_piece, ui_scale);
-    struct graphics_coord_2d position = {0.05, 0.82};
+    struct math_vec2 position = {0.05, 0.82};
     graphics_ui_text_set_position(graphics_ui_text_next_piece, position);
     graphics_ui_text_set_msg(graphics_ui_text_next_piece, "next piece");
 

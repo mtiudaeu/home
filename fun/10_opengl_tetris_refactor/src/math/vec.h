@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_POINT_H
 #define GRAPHICS_POINT_H
 
-struct graphics_coord_2d {
+struct math_vec2 {
   float x;
   float y;
 };

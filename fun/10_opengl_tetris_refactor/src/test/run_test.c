@@ -1,4 +1,4 @@
-#include "common/test/test.h"
+#include "common/test.h"
 
 #include "graphics/graphics_ui_text.h"
 

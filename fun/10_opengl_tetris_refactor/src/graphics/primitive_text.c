@@ -1,14 +1,14 @@
 #include "graphics/primitive_text.h"
 
 #include "graphics/context.h"
-#include "graphics/coord.h"
+#include "math/vec.h"
 
 #include "graphics/primitive_rectangle_2D.h"
 #include "graphics/shader.h"
 
-#include "common/test/test.h"
+#include "common/test.h"
 
-#include "common/log/log.h"
+#include "common/log.h"
 
 #include <GL/glew.h>
 
@@ -53,7 +53,7 @@ void graphics_text_delete(struct graphics_text* graphics_text) {
 //--------------------------------------------------------------------------------
 // FIXME  Could accumulate all text to draw on screen and call glDrawArray once.
 void graphics_text_draw(const struct graphics_text* graphics_text, float scale,
-                        struct graphics_coord_2d position, const char* msg) {
+                        struct math_vec2 position, const char* msg) {
   assert(graphics_text);
   if (!msg || !msg[0]) {
     LOG_ERROR("graphics_text_draw : invalid msg");
@@ -107,7 +107,7 @@ size_t test_graphics_text_uninit() {
 void test_graphics_text_draw() {
   assert(graphics_text_graphics_text);
   const float scale = 1.0f;
-  const struct graphics_coord_2d position = {0.1, 0.5};
+  const struct math_vec2 position = {0.1, 0.5};
   graphics_text_draw(graphics_text_graphics_text, scale, position, "test");
 }
 
