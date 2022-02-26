@@ -3,7 +3,6 @@
 #include "graphics/context.h"
 #include "math/vec.h"
 
-#include "graphics/primitive_rectangle_2D.h"
 #include "graphics/shader.h"
 
 #include "common/test.h"
@@ -12,7 +11,6 @@
 
 #include <GL/glew.h>
 
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -65,16 +63,16 @@ void graphics_text_draw(const struct graphics_text* graphics_text, float scale,
   struct rectangle_2d* const array_context_position =
       (struct rectangle_2d*)malloc(rectangle_2D_sizeof);
   size_t i;
-  const float width_offset = graphics_text_square_vertices_width(scale) * 0.5;
+  const float width_offset = _graphics_text_square_vertices_width(scale) * 0.5;
   for (i = 0; i < length_msg; ++i, position.x += width_offset) {
-    graphics_text_rectangle_2D(array_context_position + i, scale,
+    _graphics_text_rectangle_2D(array_context_position + i, scale,
                                     position);
   }
 
   struct rectangle_2d* const array_texture_position =
       (struct rectangle_2d*)malloc(rectangle_2D_sizeof);
   for (i = 0; i < length_msg; ++i) {
-    graphics_text_rectangle_2D_texture(array_texture_position + i, msg[i]);
+    _graphics_text_rectangle_2D_texture(array_texture_position + i, msg[i]);
   }
 
   graphics_primitive_rectangle_2D_draw(graphics_text->tbo_texture_tileset,
@@ -84,54 +82,3 @@ void graphics_text_draw(const struct graphics_text* graphics_text, float scale,
   free(array_context_position);
   free(array_texture_position);
 }
-
-#ifdef INCLUDE_RUN_TEST
-static struct graphics_text* graphics_text_graphics_text = 0x0;
-
-//--------------------------------------------------------------------------------
-size_t test_graphics_text_init() {
-  graphics_text_graphics_text = graphics_text_new();
-  assert(graphics_text_graphics_text);
-  return 0;
-}
-
-//--------------------------------------------------------------------------------
-size_t test_graphics_text_uninit() {
-  assert(graphics_text_graphics_text);
-  graphics_text_delete(graphics_text_graphics_text);
-  graphics_text_graphics_text = 0x0;
-  return 0;
-}
-
-//--------------------------------------------------------------------------------
-void test_graphics_text_draw() {
-  assert(graphics_text_graphics_text);
-  const float scale = 1.0f;
-  const struct math_vec2 position = {0.1, 0.5};
-  graphics_text_draw(graphics_text_graphics_text, scale, position, "test");
-}
-
-//--------------------------------------------------------------------------------
-size_t test_graphics_text_run() {
-  {  // Test graphics_text_char_to_grid_coord
-    struct grid_16x16 coord = graphics_text_char_to_grid_coord((char)0);
-    TEST_ASSERT_TRUE(coord.x == 0);
-    TEST_ASSERT_TRUE(coord.y == 0);
-
-    coord = graphics_text_char_to_grid_coord((char)16);
-    TEST_ASSERT_TRUE(coord.x == 0);
-    TEST_ASSERT_TRUE(coord.y == 1);
-
-    // Overflow
-    coord = graphics_text_char_to_grid_coord((char)256);
-    TEST_ASSERT_TRUE(coord.x == 0);
-    TEST_ASSERT_TRUE(coord.y == 0);
-
-    coord = graphics_text_char_to_grid_coord((char)34);
-    TEST_ASSERT_TRUE(coord.x == 2);
-    TEST_ASSERT_TRUE(coord.y == 2);
-  }
-
-  return 0;
-}
-#endif  // INCLUDE_RUN_TEST

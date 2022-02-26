@@ -13,13 +13,5 @@ void graphics_text_delete(struct graphics_text* graphics_text);
 void graphics_text_draw(const struct graphics_text* graphics_text, float scale,
                         struct math_vec2 position, const char* msg);
 
-#ifdef INCLUDE_RUN_TEST
-size_t test_graphics_text_init();
-size_t test_graphics_text_uninit();
-void test_graphics_text_draw();
-
-size_t test_graphics_text_run();
-#endif  // INCLUDE_RUN_TEST
-
 #endif // GRAPHICS_TEXT_TEXT_H
 

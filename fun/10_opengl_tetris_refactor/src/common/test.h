@@ -1,7 +1,7 @@
 #ifndef TEST_H
 #define TEST_H
 
-#ifdef INCLUDE_RUN_TEST
+#include <stdio.h>
 
 #define TEST_ASSERT_MSG(msg)                                    \
   printf("Test Error : %s, %s:%d\n", msg, __FILE__, __LINE__); \
@@ -13,6 +13,5 @@
     printf("Test Error : %s, %s:%d\n", #expr, __FILE__, __LINE__); \
   }
 
-#endif // INCLUDE_RUN_TEST
 
 #endif  // TEST_H
