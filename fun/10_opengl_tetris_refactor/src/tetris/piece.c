@@ -95,25 +95,25 @@ void tetris_piece_generate_piece(
 
   switch (tetris_piece_desc.type) {
     case PIECE_LINE: {
-      draw_piece_line(tetris_piece_blocks, tetris_piece_desc);
+      _draw_piece_line(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_L_LEFT: {
-      draw_piece_l_left(tetris_piece_blocks, tetris_piece_desc);
+      _draw_piece_l_left(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_L_RIGHT: {
-      draw_piece_l_right(tetris_piece_blocks, tetris_piece_desc);
+      _draw_piece_l_right(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_SQUARE: {
-      draw_piece_square(tetris_piece_blocks, tetris_piece_desc);
+      _draw_piece_square(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_Z_LEFT: {
-      draw_piece_z_left(tetris_piece_blocks, tetris_piece_desc);
+      _draw_piece_z_left(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_T: {
-      draw_piece_t(tetris_piece_blocks, tetris_piece_desc);
+      _draw_piece_t(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_Z_RIGHT: {
-      draw_piece_z_right(tetris_piece_blocks, tetris_piece_desc);
+      _draw_piece_z_right(tetris_piece_blocks, tetris_piece_desc);
     } break;
     case PIECE_NB:
       assert(0);  // invalid case

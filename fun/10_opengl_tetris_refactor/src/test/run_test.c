@@ -1,11 +1,11 @@
 #include "common/test.h"
 
-#include "graphics/ui_text.h"
+#include "test/test_ui_text.h"
 #include "graphics/context.h"
 
 #include "test/test_primitive_text.h"
 
-#include "graphics/primitive_rectangle_2D.h"
+#include "test/test_primitive_rectangle_2D.h"
 
 #include <GL/glew.h>
 

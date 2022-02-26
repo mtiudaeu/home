@@ -16,12 +16,4 @@ void graphics_ui_text_set_msg(struct graphics_ui_text* graphics_ui_text, const c
 
 void graphics_ui_text_draw(const struct graphics_ui_text* graphics_ui_text);
 
-#ifdef INCLUDE_RUN_TEST
-size_t test_graphics_ui_text_init();
-size_t test_graphics_ui_text_uninit();
-void test_graphics_ui_text_draw();
-
-size_t test_graphics_ui_text_run();
-#endif  // INCLUDE_RUN_TEST
-
 #endif  // UI_TEXT_H

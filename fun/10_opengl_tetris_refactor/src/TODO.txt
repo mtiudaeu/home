@@ -1,9 +1,5 @@
-Add math directory.
- move coord to math directory
- rename coord to vec2. 
-move log to common,
-add test directory,
- implement a simple test example stuff...
+
+
 
 Remove slowly all static stuff.
 finish app refactor

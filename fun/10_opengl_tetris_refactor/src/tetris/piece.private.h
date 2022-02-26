@@ -1,7 +1,8 @@
 //--------------------------------------------------------------------------------
-static void draw_piece_line(
-    struct tetris_piece_blocks* const tetris_piece_blocks,
-    const struct tetris_piece_desc tetris_piece_desc) {
+static void _draw_piece_line(
+  struct tetris_piece_blocks* const tetris_piece_blocks,
+  const struct tetris_piece_desc tetris_piece_desc)
+{
   size_t i;
   for (i = 0; i < tetris_piece_block_nb; ++i) {
     if (tetris_piece_desc.rotation % 2) {
@@ -15,9 +16,10 @@ static void draw_piece_line(
 }
 
 //--------------------------------------------------------------------------------
-static void draw_piece_l_left(
-    struct tetris_piece_blocks* const tetris_piece_blocks,
-    const struct tetris_piece_desc tetris_piece_desc) {
+static void _draw_piece_l_left(
+  struct tetris_piece_blocks* const tetris_piece_blocks,
+  const struct tetris_piece_desc tetris_piece_desc)
+{
   size_t i;
   for (i = 0; i < tetris_piece_block_nb - 1; ++i) {
     switch(tetris_piece_desc.rotation)
@@ -75,9 +77,10 @@ static void draw_piece_l_left(
 }
 
 //--------------------------------------------------------------------------------
-static void draw_piece_l_right(
-    struct tetris_piece_blocks* const tetris_piece_blocks,
-    const struct tetris_piece_desc tetris_piece_desc) {
+static void _draw_piece_l_right(
+  struct tetris_piece_blocks* const tetris_piece_blocks,
+  const struct tetris_piece_desc tetris_piece_desc)
+{
   size_t i;
   for (i = 0; i < tetris_piece_block_nb - 1; ++i) {
     switch(tetris_piece_desc.rotation)
@@ -135,9 +138,10 @@ static void draw_piece_l_right(
 }
 
 //--------------------------------------------------------------------------------
-static void draw_piece_square(
-    struct tetris_piece_blocks* const tetris_piece_blocks,
-    const struct tetris_piece_desc tetris_piece_desc) {
+static void _draw_piece_square(
+  struct tetris_piece_blocks* const tetris_piece_blocks,
+  const struct tetris_piece_desc tetris_piece_desc)
+{
   size_t i;
   for (i = 0; i < tetris_piece_block_nb; ++i) {
     tetris_piece_blocks->blocks[i].x = tetris_piece_desc.position.x;
@@ -151,9 +155,10 @@ static void draw_piece_square(
 }
 
 //--------------------------------------------------------------------------------
-static void draw_piece_z_left(
+static void _draw_piece_z_left(
     struct tetris_piece_blocks* const tetris_piece_blocks,
-    const struct tetris_piece_desc tetris_piece_desc) {
+    const struct tetris_piece_desc tetris_piece_desc)
+{
   switch(tetris_piece_desc.rotation)
   {
     case PIECE_ROT_0:
@@ -184,8 +189,10 @@ static void draw_piece_z_left(
 }
 
 //--------------------------------------------------------------------------------
-static void draw_piece_t(struct tetris_piece_blocks* const tetris_piece_blocks,
-                         const struct tetris_piece_desc tetris_piece_desc) {
+static void _draw_piece_t(
+  struct tetris_piece_blocks* const tetris_piece_blocks,
+  const struct tetris_piece_desc tetris_piece_desc)
+{
   switch(tetris_piece_desc.rotation)
   {
     case PIECE_ROT_0:
@@ -234,9 +241,10 @@ break;
 }
 
 //--------------------------------------------------------------------------------
-static void draw_piece_z_right(
-    struct tetris_piece_blocks* const tetris_piece_blocks,
-    const struct tetris_piece_desc tetris_piece_desc) {
+static void _draw_piece_z_right(
+  struct tetris_piece_blocks* const tetris_piece_blocks,
+  const struct tetris_piece_desc tetris_piece_desc)
+{
   switch(tetris_piece_desc.rotation)
   {
     case PIECE_ROT_0:

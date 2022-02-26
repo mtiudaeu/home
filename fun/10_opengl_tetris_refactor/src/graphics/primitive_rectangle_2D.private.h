@@ -1,3 +1,5 @@
+#include "graphics/shader.h"
+
 //--------------------------------------------------------------------------------
 struct triangle_verticles_2d {  // (-1.0,-1.0) is bottom left;
   GLfloat coord_1[2];
@@ -6,7 +8,7 @@ struct triangle_verticles_2d {  // (-1.0,-1.0) is bottom left;
 };
 
 //--------------------------------------------------------------------------------
-void graphics_primitive_triangle_vertices_from_rectangle_2D(
+void _graphics_primitive_triangle_vertices_from_rectangle_2D(
     struct triangle_verticles_2d triangle_vertices[2], const struct rectangle_2d rectangle_2D) {
   const GLfloat x_left = rectangle_2D.x;
   const GLfloat x_right = rectangle_2D.x + rectangle_2D.width;

@@ -3,11 +3,6 @@ BUILD_PATH = ../bin/
 include test/Makefile
 include tetris/Makefile
 
-OPTIONS = -DNO_RUN_TEST
-ifndef OPTIONS
-OPTIONS = -DINCLUDE_RUN_TEST
-endif
-
 gcc : gcc_targets
 emcc : emcc_targets
 
