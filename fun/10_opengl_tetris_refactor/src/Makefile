@@ -1,15 +1,15 @@
 BUILD_PATH = ../bin/
 
+all: slim test
+
 include test/Makefile
 include tetris/Makefile
-
-gcc : gcc_targets
-emcc : emcc_targets
 
 EMCC = emcc -O2 -I. $(OPTIONS) -Werror -std=c11 -s USE_SDL=2 -s USE_SDL_IMAGE=2
 GCC = gcc -I. $(OPTIONS) -g  -Werror -std=c11
 
-all: gcc_targets emcc_targets
+
+slim: gcc_targets emcc_targets
 gcc_targets : $(TETRIS_OUT)
 emcc_targets : $(TETRIS_OUT:.out=.html)
 

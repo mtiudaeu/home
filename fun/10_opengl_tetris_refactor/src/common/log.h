@@ -1,5 +1,5 @@
-#ifndef LOG_H
-#define LOG_H
+#ifndef COMMON_LOG_H
+#define COMMON_LOG_H
 
 #include <stdio.h>
 
@@ -17,4 +17,4 @@
 #define LOG_TRACE(...) do { } while(0)
 #endif
 
-#endif // LOG_H
+#endif // COMMON_LOG_H

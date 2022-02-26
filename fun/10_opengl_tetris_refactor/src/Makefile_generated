@@ -26,6 +26,8 @@
 	touch ../bin/test_test_primitive_text.h
 ../bin/common_test.h: common/test.h 
 	touch ../bin/common_test.h
+../bin/common_assert.h: common/assert.h 
+	touch ../bin/common_assert.h
 ../bin/common_log.h: common/log.h 
 	touch ../bin/common_log.h
 ../bin/math_vec.h: math/vec.h 
@@ -50,7 +52,7 @@
 	touch ../bin/test_test_primitive_text.c
 ../bin/test_run_test.c: test/run_test.c ../bin/common_test.h ../bin/test_test_ui_text.h ../bin/graphics_context.h ../bin/test_test_primitive_text.h ../bin/test_test_primitive_rectangle_2D.h
 	touch ../bin/test_run_test.c
-../bin/test_test_primitive_rectangle_2D.c: test/test_primitive_rectangle_2D.c ../bin/test_test_primitive_rectangle_2D.h ../bin/graphics_primitive_rectangle_2D.h ../bin/graphics_primitive_rectangle_2D.private.h
+../bin/test_test_primitive_rectangle_2D.c: test/test_primitive_rectangle_2D.c ../bin/test_test_primitive_rectangle_2D.h ../bin/graphics_primitive_rectangle_2D.h ../bin/graphics_shader.h
 	touch ../bin/test_test_primitive_rectangle_2D.c
 ../bin/test_test_ui_text.c: test/test_ui_text.c ../bin/test_test_ui_text.h ../bin/graphics_ui_text.h
 	touch ../bin/test_test_ui_text.c
