@@ -1,7 +1,6 @@
 #include "common/test.h"
 
-#include "graphics/graphics_ui_text.h"
-
+#include "graphics/ui_text.h"
 #include "graphics/context.h"
 #include "graphics/primitive_text.h"
 

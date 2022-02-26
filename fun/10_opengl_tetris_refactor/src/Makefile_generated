@@ -32,7 +32,7 @@
 	touch ../bin/graphics_primitive_text.c
 ../bin/graphics_ui_text.c: graphics/ui_text.c ../bin/graphics_primitive_text.h ../bin/common_log.h ../bin/common_test.h
 	touch ../bin/graphics_ui_text.c
-../bin/graphics_context.c: graphics/context.c ../bin/graphics_context.h ../bin/common_test.h ../bin/common_log.h
+../bin/graphics_context.c: graphics/context.c ../bin/graphics_context.h ../bin/common_log.h
 	touch ../bin/graphics_context.c
 ../bin/tetris_piece.c: tetris/piece.c ../bin/tetris_piece.h ../bin/tetris_piece.private.h ../bin/graphics_primitive_rectangle_2D.h ../bin/graphics_shader.h
 	touch ../bin/tetris_piece.c
@@ -40,8 +40,8 @@
 	touch ../bin/tetris_board.c
 ../bin/tetris_tetris.c: tetris/tetris.c ../bin/tetris_board.h ../bin/graphics_primitive_rectangle_2D.h ../bin/graphics_context.h ../bin/common_log.h
 	touch ../bin/tetris_tetris.c
-../bin/common_run_test.c: common/run_test.c ../bin/common_test.h ../bin/graphics_graphics_ui_text.h ../bin/graphics_context.h ../bin/graphics_primitive_text.h ../bin/graphics_primitive_rectangle_2D.h
-	touch ../bin/common_run_test.c
+../bin/test_run_test.c: test/run_test.c ../bin/common_test.h ../bin/graphics_context.h ../bin/graphics_primitive_text.h ../bin/graphics_primitive_rectangle_2D.h
+	touch ../bin/test_run_test.c
 ../bin/graphics_shader.o: graphics/shader.c ../bin/graphics_shader.c
 	$(GCC) -c $< -o $@
 ../bin/graphics_shader.bc: graphics/shader.c ../bin/graphics_shader.c
@@ -74,7 +74,7 @@
 	$(GCC) -c $< -o $@
 ../bin/tetris_tetris.bc: tetris/tetris.c ../bin/tetris_tetris.c
 	$(EMCC) -c $< -o $@
-../bin/common_run_test.o: common/run_test.c ../bin/common_run_test.c
+../bin/test_run_test.o: test/run_test.c ../bin/test_run_test.c
 	$(GCC) -c $< -o $@
-../bin/common_run_test.bc: common/run_test.c ../bin/common_run_test.c
+../bin/test_run_test.bc: test/run_test.c ../bin/test_run_test.c
 	$(EMCC) -c $< -o $@

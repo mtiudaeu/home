@@ -1,7 +1,5 @@
 #include "graphics/context.h"
 
-#include "common/test.h"
-
 #include "common/log.h"
 
 #include <stdlib.h>

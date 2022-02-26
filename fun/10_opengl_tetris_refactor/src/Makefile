@@ -1,6 +1,6 @@
 BUILD_PATH = ../bin/
 
-include common/Makefile
+include test/Makefile
 include tetris/Makefile
 
 OPTIONS = -DNO_RUN_TEST
