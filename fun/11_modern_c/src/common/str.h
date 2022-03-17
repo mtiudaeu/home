@@ -1,7 +1,8 @@
 #ifndef COMMON_STR_H
 #define COMMON_STR_H
 
-#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
 
 typedef void (*allocator_cb) (size_t size); 
 
@@ -27,7 +28,7 @@ bool str_match(str a, str b);
 bool str_contains(str haystack, str needle);
 str str_sub(str src, size_t begin, size_t end);
 str str_find_first(str haystack, str needle);
-strt str_find_last(str haystack, str needle);
+str str_find_last(str haystack, str needle);
 str str_remove_prefix(str src, str prefix);
 str str_remove_suffix(str src, str suffix);
 
