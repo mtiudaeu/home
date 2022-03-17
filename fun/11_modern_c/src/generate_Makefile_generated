@@ -1,0 +1,1 @@
+../tools/generate_compilation_dependencies.py . > Makefile_generated

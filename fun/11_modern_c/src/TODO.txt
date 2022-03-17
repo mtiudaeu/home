@@ -1,0 +1,10 @@
+
+
+
+Remove slowly all static stuff.
+finish app refactor
+
+
+implement logger with snprint (no null terminated string)
+implement str+str_buff
+implement vector...
