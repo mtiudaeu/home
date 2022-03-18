@@ -43,8 +43,26 @@ void str_buf_append(str_buf* str_buf_ptr, str str)
 }
 
 //--------------------
+// overwrite the deleted part with the rest of the buffer
 void str_buf_remove(str_buf* str_buf_ptr, size_t begin, size_t end)
 {
+ size_t prev_str_buf_size = str_buf_ptr->size;
+ size_t valid_end = MIN(end, prev_str_buf_size);
+
+ if(valid_end <= begin) {
+  return;
+ }
+ size_t valid_begin = begin;
+
+ size_t remove_size = valid_end - valid_begin;
+ size_t copy_size = valid_end - prev_str_buf_size;
+ size_t new_str_buf_size = prev_str_buf_size - remove_size;
+
+ char* dest_begin = str_buf_ptr->data + valid_begin;
+ char* src_begin = dest_begin + remove_size;
+ memcpy(dest_begin, src_begin, copy_size * sizeof(char));
+
+ str_buf_ptr->size = new_str_buf_size;
 }
 
 //--------------------
