@@ -50,7 +50,12 @@ void str_buf_remove(str_buf* str_buf_ptr, size_t begin, size_t end)
 //--------------------
 str str_buf_str(str_buf str_buf)
 {
- str str;
+ str str = 
+ {
+  .data = str_buf.data,
+  .size = str_buf.size,
+ };
+
  return str;
 }
 
