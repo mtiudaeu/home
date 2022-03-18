@@ -2,8 +2,12 @@
 	touch ../bin/test_test_common_str.h
 ../bin/common_test.h: common/test.h 
 	touch ../bin/common_test.h
-../bin/common_str.h: common/str.h 
+../bin/common_str.h: common/str.h ../bin/common_allocator_cbs.h
 	touch ../bin/common_str.h
+../bin/common_macros.h: common/macros.h 
+	touch ../bin/common_macros.h
+../bin/common_allocator_cbs.h: common/allocator_cbs.h 
+	touch ../bin/common_allocator_cbs.h
 ../bin/common_assert.h: common/assert.h 
 	touch ../bin/common_assert.h
 ../bin/common_log.h: common/log.h 
@@ -14,7 +18,7 @@
 	touch ../bin/test_run_test.c
 ../bin/test_test_common_str.c: test/test_common_str.c ../bin/test_test_common_str.h ../bin/common_str.h
 	touch ../bin/test_test_common_str.c
-../bin/common_str.c: common/str.c ../bin/common_str.h
+../bin/common_str.c: common/str.c ../bin/common_str.h ../bin/common_macros.h
 	touch ../bin/common_str.c
 ../bin/test_run_test.o: test/run_test.c ../bin/test_run_test.c
 	$(GCC) -c $< -o $@
