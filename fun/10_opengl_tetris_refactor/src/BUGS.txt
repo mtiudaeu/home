@@ -1,0 +1,3 @@
+- Ressources packaging doesn't work with empscripten
+
+
