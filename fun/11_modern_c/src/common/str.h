@@ -32,7 +32,7 @@ str str_find_first(str haystack, str needle);
 str str_find_last(str haystack, str needle);
 str str_remove_prefix(str src, str prefix);
 str str_remove_suffix(str src, str suffix);
-str str_cstr(const char* cstr);
+str cstr(const char* cstr);
 
 
 

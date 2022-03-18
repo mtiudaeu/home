@@ -1,10 +1,6 @@
+implement variadic print function accepting %s and %d
+ implement print_test
+  test print_test
+  implement str_find_first
+  
 
-
-
-Remove slowly all static stuff.
-finish app refactor
-
-
-implement logger with snprint (no null terminated string)
-implement str+str_buff
-implement vector...

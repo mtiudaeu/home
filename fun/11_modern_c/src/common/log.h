@@ -1,6 +1,8 @@
 #ifndef COMMON_LOG_H
 #define COMMON_LOG_H
 
+#include "common/str.h"
+
 #include <stdio.h>
 
 #define LOG_ERROR(...)                                     \
@@ -16,5 +18,8 @@
 #else
 #define LOG_TRACE(...) do { } while(0)
 #endif
+
+//#define PRINT(...) 
+void print_str(str str);
 
 #endif // COMMON_LOG_H

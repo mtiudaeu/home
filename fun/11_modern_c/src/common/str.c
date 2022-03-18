@@ -2,6 +2,11 @@
 #include "common/macros.h"
 #include <string.h>
 
+static const str invalid_str = {
+ .data = 0x0,
+ .size=0
+};
+
 //--------------------
 str_buf str_buf_create(size_t size, allocator_cbs allocator_cbs)
 {
@@ -80,7 +85,7 @@ str str_buf_str(str_buf str_buf)
 //--------------------
 bool str_valid(str str)
 {
- return false;
+ return str.data != 0x0;
 }
 
 //--------------------
@@ -98,8 +103,20 @@ bool str_contains(str haystack, str needle)
 //--------------------
 str str_sub(str src, size_t begin, size_t end)
 {
- str str;
- return str;
+ if(!str_valid(src)) {
+  return invalid_str; 
+ }
+ if(end > src.size || end >= begin) {
+  return invalid_str;
+ }
+
+ const char* begin_str = src.data + begin;
+ size_t new_size = end - begin;
+ str new_str = {
+  .data = begin_str,
+  .size = new_size
+ }; 
+ return new_str;
 }
 
 //--------------------
@@ -127,6 +144,17 @@ str str_remove_prefix(str src, str prefix)
 str str_remove_suffix(str src, str suffix)
 {
  str str;
+ return str;
+}
+
+//--------------------
+str cstr(const char* cstr)
+{
+ size_t size = strlen(cstr);
+ str str = {
+  .data = cstr,
+  .size = size
+ };
  return str;
 }
 
