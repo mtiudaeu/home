@@ -32,6 +32,9 @@ str_buf str_buf_destroy(str_buf str_buf)
 //--------------------
 void str_buf_append(str_buf* str_buf_ptr, str str)
 {
+ if(!str_valid(str)) {
+  return;
+ }
  const size_t new_size = str_buf_ptr->size + str.size;
  if(new_size > str_buf_ptr->capacity)
  {
@@ -124,7 +127,7 @@ str str_sub(str src, size_t begin, size_t end)
  if(!str_valid(src)) {
   return invalid_str; 
  }
- if(end > src.size || end >= begin) {
+ if(end > src.size || begin >= end) {
   return invalid_str;
  }
 
@@ -140,11 +143,15 @@ str str_sub(str src, size_t begin, size_t end)
 //--------------------
 str str_find_first(str haystack, str needle)
 {
+ if(!str_valid(haystack) || !str_valid(needle)) {
+  return invalid_str;
+ }
  size_t haystack_size = haystack.size;
  size_t needle_size = needle.size; 
- for(int i = 0; i < haystack.size; i++)
+ for(int begin = 0; begin < haystack.size; begin++)
  {
-  str haystack_part = str_sub(haystack, i, needle_size);
+  const size_t end = begin + needle_size;
+  str haystack_part = str_sub(haystack, begin, end);
   if(str_match(haystack_part, needle))
   {
    return haystack_part;

@@ -70,5 +70,6 @@ void test_common_log_run(allocator_cbs allocator)
 
  str_buf = str_buf_destroy(str_buf);
  
- print_test("%s", "test");
+ print_test("%s:%s:%s", "test", "hey", "sup");
+ print_test("hey : %d",1131);
 }
