@@ -91,13 +91,31 @@ bool str_valid(str str)
 //--------------------
 bool str_match(str a, str b)
 {
- return false;
+ if(!str_valid(a) || !str_valid(b)) {
+  return false;
+ }
+ if(a.size != b.size) {
+  return false;
+ }
+
+ const char* a_itr = a.data;
+ const char* a_end = a_itr + a.size; 
+ const char* b_itr = b.data;
+ for(; a_itr != a_end; a_itr++, b_itr++ )
+ {
+  if(*a_itr != *b_itr) {
+   return false;
+  }
+ }
+
+ return true;
 }
 
 //--------------------
 bool str_contains(str haystack, str needle)
 {
- return false;
+ str ret = str_find_first(haystack, needle);
+ return str_valid(ret);
 }
 
 //--------------------
@@ -122,8 +140,17 @@ str str_sub(str src, size_t begin, size_t end)
 //--------------------
 str str_find_first(str haystack, str needle)
 {
- str str;
- return str;
+ size_t haystack_size = haystack.size;
+ size_t needle_size = needle.size; 
+ for(int i = 0; i < haystack.size; i++)
+ {
+  str haystack_part = str_sub(haystack, i, needle_size);
+  if(str_match(haystack_part, needle))
+  {
+   return haystack_part;
+  }
+ }
+ return invalid_str;
 }
 
 //--------------------
