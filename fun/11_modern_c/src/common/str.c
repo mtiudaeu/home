@@ -1,6 +1,9 @@
 #include "common/str.h"
 #include "common/macros.h"
+#include "common/log.h"
+
 #include <string.h>
+#include <assert.h>
 
 static const str invalid_str = {
  .data = 0x0,
@@ -146,11 +149,14 @@ str str_find_first(str haystack, str needle)
  if(!str_valid(haystack) || !str_valid(needle)) {
   return invalid_str;
  }
+
  size_t haystack_size = haystack.size;
  size_t needle_size = needle.size; 
- for(int begin = 0; begin < haystack.size; begin++)
+
+ size_t begin = 0;
+ size_t end = begin + needle_size;
+ for(; end <= haystack_size; begin++, end = begin + needle_size)
  {
-  const size_t end = begin + needle_size;
   str haystack_part = str_sub(haystack, begin, end);
   if(str_match(haystack_part, needle))
   {
@@ -163,13 +169,37 @@ str str_find_first(str haystack, str needle)
 //--------------------
 str str_find_last(str haystack, str needle)
 {
- str str;
- return str;
+ if(!str_valid(haystack) || !str_valid(needle)) {
+  return invalid_str;
+ }
+ 
+ const size_t haystack_size = haystack.size;
+ const size_t needle_size = needle.size;
+ if(needle_size > haystack_size) {
+  return invalid_str;
+ }
+
+ size_t end = haystack_size;
+ size_t begin = haystack_size - needle_size;
+ for(;; end--, begin = haystack_size - needle_size) {
+  
+  str haystack_part = str_sub(haystack, begin, end);
+  if(str_match(haystack, needle)) {
+   return haystack_part;
+  }
+  if(begin == 0) {
+   break;
+  }
+ }
+
+ return invalid_str;
 }
 
 //--------------------
 str str_remove_prefix(str src, str prefix)
 {
+ LOG_ERROR("unimplemented");
+ assert(0);
  str str;
  return str;
 }
@@ -177,6 +207,8 @@ str str_remove_prefix(str src, str prefix)
 //--------------------
 str str_remove_suffix(str src, str suffix)
 {
+ LOG_ERROR("unimplemented");
+ assert(0);
  str str;
  return str;
 }
