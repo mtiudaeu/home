@@ -14,7 +14,7 @@ static struct allocator_cbs allocator =
 static void _print(int fd, const char* fmt, va_list* vl);
 
 //--------------------------------------------------
-static void _print_str_fd(int fd, str str) {
+static void _print_str_fd(int fd, struct str str) {
   write(fd, str.data, str.size);
 }
 
@@ -45,16 +45,16 @@ void print_fd(int fd, const char* fmt, ...)
 static void _print(int fd, const char* fmt, va_list* vl)
 {
  char buffer [33];
- str fmt_str_itr = cstr(fmt);
- str_buf str_buf = str_buf_create(10, allocator);
+ struct str fmt_str_itr = cstr(fmt);
+ struct str_buf str_buf = str_buf_create(10, allocator);
 
 
- str found = str_find_first(fmt_str_itr, cstr("%")); 
+ struct str found = str_find_first(fmt_str_itr, cstr("%")); 
 
  while(str_valid(found)) {
   size_t found_offset = found.data - fmt_str_itr.data;
 
-  const str prefix_to_append = str_sub(fmt_str_itr, 0, found_offset);
+  const struct str prefix_to_append = str_sub(fmt_str_itr, 0, found_offset);
   str_buf_append(&str_buf, prefix_to_append);
 
   fmt_str_itr = str_sub(fmt_str_itr, found_offset, fmt_str_itr.size);

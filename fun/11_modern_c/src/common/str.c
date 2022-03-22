@@ -5,17 +5,17 @@
 #include <string.h>
 #include <assert.h>
 
-static const str invalid_str = {
+static const struct str invalid_str = {
  .data = 0x0,
  .size=0
 };
 
 //--------------------
-str_buf str_buf_create(size_t size, struct allocator_cbs allocator_cbs)
+struct str_buf str_buf_create(size_t size, struct allocator_cbs allocator_cbs)
 {
  char* data = allocator_cbs.malloc(size*sizeof(char));
 
- str_buf str_buf = {
+ struct str_buf str_buf = {
   .allocator_cbs=allocator_cbs,
   .data=data,
   .size=0,
@@ -25,7 +25,7 @@ str_buf str_buf_create(size_t size, struct allocator_cbs allocator_cbs)
 }
 
 //--------------------
-str_buf str_buf_destroy(str_buf str_buf)
+struct str_buf str_buf_destroy(struct str_buf str_buf)
 {
  str_buf.allocator_cbs.free(str_buf.data);
  str_buf.data = 0x0;
@@ -33,7 +33,7 @@ str_buf str_buf_destroy(str_buf str_buf)
 }
 
 //--------------------
-void str_buf_append(str_buf* str_buf_ptr, str str)
+void str_buf_append(struct str_buf* str_buf_ptr, struct str str)
 {
  if(!str_valid(str)) {
   return;
@@ -55,7 +55,7 @@ void str_buf_append(str_buf* str_buf_ptr, str str)
 
 //--------------------
 // overwrite the deleted part with the rest of the buffer
-void str_buf_remove(str_buf* str_buf_ptr, size_t begin, size_t end)
+void str_buf_remove(struct str_buf* str_buf_ptr, size_t begin, size_t end)
 {
  size_t prev_str_buf_size = str_buf_ptr->size;
  size_t valid_end = MIN(end, prev_str_buf_size);
@@ -77,9 +77,9 @@ void str_buf_remove(str_buf* str_buf_ptr, size_t begin, size_t end)
 }
 
 //--------------------
-str str_buf_str(str_buf str_buf)
+struct str str_buf_str(struct str_buf str_buf)
 {
- str str = 
+ struct str str = 
  {
   .data = str_buf.data,
   .size = str_buf.size,
@@ -89,13 +89,13 @@ str str_buf_str(str_buf str_buf)
 }
 
 //--------------------
-bool str_valid(str str)
+bool str_valid(struct str str)
 {
  return str.data != 0x0;
 }
 
 //--------------------
-bool str_match(str a, str b)
+bool str_match(struct str a, struct str b)
 {
  if(!str_valid(a) || !str_valid(b)) {
   return false;
@@ -118,14 +118,14 @@ bool str_match(str a, str b)
 }
 
 //--------------------
-bool str_contains(str haystack, str needle)
+bool str_contains(struct str haystack, struct str needle)
 {
- str ret = str_find_first(haystack, needle);
+ struct str ret = str_find_first(haystack, needle);
  return str_valid(ret);
 }
 
 //--------------------
-str str_sub(str src, size_t begin, size_t end)
+struct str str_sub(struct str src, size_t begin, size_t end)
 {
  if(!str_valid(src)) {
   return invalid_str; 
@@ -136,7 +136,7 @@ str str_sub(str src, size_t begin, size_t end)
 
  const char* begin_str = src.data + begin;
  size_t new_size = end - begin;
- str new_str = {
+ struct str new_str = {
   .data = begin_str,
   .size = new_size
  }; 
@@ -144,7 +144,7 @@ str str_sub(str src, size_t begin, size_t end)
 }
 
 //--------------------
-str str_find_first(str haystack, str needle)
+struct str str_find_first(struct str haystack, struct str needle)
 {
  if(!str_valid(haystack) || !str_valid(needle)) {
   return invalid_str;
@@ -157,7 +157,7 @@ str str_find_first(str haystack, str needle)
  size_t end = begin + needle_size;
  for(; end <= haystack_size; begin++, end = begin + needle_size)
  {
-  str haystack_part = str_sub(haystack, begin, end);
+  struct str haystack_part = str_sub(haystack, begin, end);
   if(str_match(haystack_part, needle))
   {
    return haystack_part;
@@ -167,7 +167,7 @@ str str_find_first(str haystack, str needle)
 }
 
 //--------------------
-str str_find_last(str haystack, str needle)
+struct str str_find_last(struct str haystack, struct str needle)
 {
  if(!str_valid(haystack) || !str_valid(needle)) {
   return invalid_str;
@@ -183,7 +183,7 @@ str str_find_last(str haystack, str needle)
  size_t begin = haystack_size - needle_size;
  for(;; end--, begin = haystack_size - needle_size) {
   
-  str haystack_part = str_sub(haystack, begin, end);
+  struct str haystack_part = str_sub(haystack, begin, end);
   if(str_match(haystack, needle)) {
    return haystack_part;
   }
@@ -196,28 +196,28 @@ str str_find_last(str haystack, str needle)
 }
 
 //--------------------
-str str_remove_prefix(str src, str prefix)
+struct str str_remove_prefix(struct str src, struct str prefix)
 {
  LOG_ERROR("unimplemented");
  assert(0);
- str str;
+ struct str str;
  return str;
 }
 
 //--------------------
-str str_remove_suffix(str src, str suffix)
+struct str str_remove_suffix(struct str src, struct str suffix)
 {
  LOG_ERROR("unimplemented");
  assert(0);
- str str;
+ struct str str;
  return str;
 }
 
 //--------------------
-str cstr(const char* cstr)
+struct str cstr(const char* cstr)
 {
  size_t size = strlen(cstr);
- str str = {
+ struct str str = {
   .data = cstr,
   .size = size
  };

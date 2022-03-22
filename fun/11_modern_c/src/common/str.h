@@ -6,33 +6,33 @@
 
 #include "common/allocator_cbs.h"
 
-typedef struct str {
+struct str {
  const char* data;
  size_t size;
-} str;
+};
 
-typedef struct str_buf {
+struct str_buf {
  struct allocator_cbs allocator_cbs;
  char* data;
  size_t size;
  size_t capacity;
-} str_buf;
+};
 
-str_buf str_buf_create(size_t size, struct allocator_cbs allocator_cbs);
-str_buf str_buf_destroy(str_buf str_buf);
-void str_buf_append(str_buf* str_buf_ptr, str str);
-void str_buf_remove(str_buf* str_buf_ptr, size_t begin, size_t end);
-str str_buf_str(str_buf str_buf);
+struct str_buf str_buf_create(size_t size, struct allocator_cbs allocator_cbs);
+struct str_buf str_buf_destroy(struct str_buf str_buf);
+void str_buf_append(struct str_buf* str_buf_ptr, struct str str);
+void str_buf_remove(struct str_buf* str_buf_ptr, size_t begin, size_t end);
+struct str str_buf_str(struct str_buf str_buf);
 
-bool str_valid(str str);
-bool str_match(str a, str b);
-bool str_contains(str haystack, str needle);
-str str_sub(str src, size_t begin, size_t end);
-str str_find_first(str haystack, str needle);
-str str_find_last(str haystack, str needle);
-str str_remove_prefix(str src, str prefix);
-str str_remove_suffix(str src, str suffix);
-str cstr(const char* cstr);
+bool str_valid(struct str str);
+bool str_match(struct str a, struct str b);
+bool str_contains(struct str haystack, struct str needle);
+struct str str_sub(struct str src, size_t begin, size_t end);
+struct str str_find_first(struct str haystack, struct str needle);
+struct str str_find_last(struct str haystack, struct str needle);
+struct str str_remove_prefix(struct str src, struct str prefix);
+struct str str_remove_suffix(struct str src, struct str suffix);
+struct str cstr(const char* cstr);
 
 
 

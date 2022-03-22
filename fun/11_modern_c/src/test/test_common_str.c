@@ -21,7 +21,7 @@ str str_remove_suffix(str src, str suffix);
 //--------------------------------------------------
 void _test_str_valid()
 {
- str str = {};
+ struct str str = {};
  assert(!str_valid(str));
 
  str = cstr("Hey");
@@ -31,12 +31,12 @@ void _test_str_valid()
 //--------------------------------------------------
 void _test_str_match()
 {
- str str1 = cstr("test");
- str str2 = cstr("test");
+ struct str str1 = cstr("test");
+ struct str str2 = cstr("test");
 
  assert(str_match(str1, str2));
 
- str str = {};
+ struct str str = {};
  assert(!str_match(str, str2));
 
  str2 = cstr("est");
@@ -46,8 +46,8 @@ void _test_str_match()
 //--------------------------------------------------
 void _test_str_contains()
 {
- str big = cstr("big small");
- str small = cstr("small");
+ struct str big = cstr("big small");
+ struct str small = cstr("small");
 
  assert(str_contains(big, small));
  assert(!str_contains(small, big));
@@ -56,12 +56,12 @@ void _test_str_contains()
 //--------------------------------------------------
 void _test_str_sub()
 {
- str str1 = cstr("heyaaa");
+ struct str str1 = cstr("heyaaa");
 
  assert(str_match(cstr("hey"), str_sub(str1,0,3)));
  assert(str_match(cstr("aaa"), str_sub(str1,3,6)));
 
- str ret = str_sub(str1,3,1);
+ struct str ret = str_sub(str1,3,1);
  assert(!str_valid(ret));
 
  ret = str_sub(str1, 1, 8);
