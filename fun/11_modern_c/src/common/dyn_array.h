@@ -3,13 +3,13 @@
 
 #include "common/allocator_cbs.h"
 /*
-typedef struct dyn_array_info
+struct dyn_array_info
 {
   size_t size;
   size_t capacity;
   size_t size_of_one;
   allocator_cbs allocator;
-} dyn_array_info;
+};
 
 #define dyn_array_create(capacity, size_of_one, allocator, type) \
  struct {\

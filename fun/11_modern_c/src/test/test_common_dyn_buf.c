@@ -3,7 +3,7 @@
 #include "common/dyn_buf.h"
 
 //--------------------------------------------------
-void test_common_dyn_buf(allocator_cbs allocator)
+void test_common_dyn_buf(struct allocator_cbs allocator)
 {
 //mdtmp
 }

@@ -3,10 +3,10 @@
 
 #include <stddef.h>
 
-typedef struct allocator_cbs {
+struct allocator_cbs {
 void* (*malloc) (size_t size); 
 void* (*realloc) (void* ptr, size_t size); 
 void (*free) (void* ptr); 
-} allocator_cbs;
+};
 
 #endif

@@ -5,7 +5,7 @@
 
 
 //--------------------
-void test_common_log_run(allocator_cbs allocator)
+void test_common_log_run(struct allocator_cbs allocator)
 {
  print("%s:%s:%s", "test", "hey", "sup");
  print("hey : %d",1131);

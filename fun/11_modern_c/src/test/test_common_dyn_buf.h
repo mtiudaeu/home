@@ -3,6 +3,6 @@
 
 #include "common/allocator_cbs.h"
 
-void test_common_dyn_buf(allocator_cbs allocator);
+void test_common_dyn_buf(struct allocator_cbs allocator);
 
 #endif

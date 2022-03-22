@@ -103,7 +103,7 @@ void _test_str_remove_suffix()
 }
 
 //--------------------------------------------------
-void test_common_str_run(allocator_cbs allocator)
+void test_common_str_run(struct allocator_cbs allocator)
 {
  _test_str_valid();
  _test_str_match();

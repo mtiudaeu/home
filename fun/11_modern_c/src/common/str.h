@@ -12,13 +12,13 @@ typedef struct str {
 } str;
 
 typedef struct str_buf {
- allocator_cbs allocator_cbs;
+ struct allocator_cbs allocator_cbs;
  char* data;
  size_t size;
  size_t capacity;
 } str_buf;
 
-str_buf str_buf_create(size_t size, allocator_cbs allocator_cbs);
+str_buf str_buf_create(size_t size, struct allocator_cbs allocator_cbs);
 str_buf str_buf_destroy(str_buf str_buf);
 void str_buf_append(str_buf* str_buf_ptr, str str);
 void str_buf_remove(str_buf* str_buf_ptr, size_t begin, size_t end);

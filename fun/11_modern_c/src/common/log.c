@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-static allocator_cbs allocator =
+static struct allocator_cbs allocator =
 {
  .malloc=&malloc,
  .realloc=&realloc,
