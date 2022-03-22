@@ -13,8 +13,8 @@ typedef struct dyn_array_info
 
 #define dyn_array_create(capacity, size_of_one, allocator, type) \
  struct {\
-  type* data;\
-  dyn_array_info info;\  
+  dyn_array_info info;\ 
+  type* data;\ 
  }
 
 #define dyn_array_begin(dyn_array) \
@@ -22,6 +22,13 @@ dyn_array.data
 
 #define dyn_array_end(dyn_array) \
 dyn_array.date + dyn_array.header.size
+
+#define dyn_array_add(dyn_array, elem) \
+if(dyn_array.capacity <= dyn_array.size) {\
+ dyn_array.capacity * = 2;
+ dyn_array.data = realloc(dyn_array.data, dyn_array.capacity * dyn_array.size_of_one);
+}\
+
 
 
 
