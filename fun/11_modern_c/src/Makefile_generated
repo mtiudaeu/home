@@ -1,12 +1,12 @@
 ../bin/test_test_common_dyn_buf.h: test/test_common_dyn_buf.h ../bin/common_allocator_cbs.h
 	touch ../bin/test_test_common_dyn_buf.h
-../bin/test_test_common_str.h: test/test_common_str.h 
+../bin/test_test_common_str.h: test/test_common_str.h ../bin/common_allocator_cbs.h
 	touch ../bin/test_test_common_str.h
-../bin/test_test_common_log.h: test/test_common_log.h 
+../bin/test_test_common_log.h: test/test_common_log.h ../bin/common_allocator_cbs.h
 	touch ../bin/test_test_common_log.h
 ../bin/common_test.h: common/test.h 
 	touch ../bin/common_test.h
-../bin/common_str.h: common/str.h ../bin/common_allocator_cbs.h
+../bin/common_str.h: common/str.h ../bin/common_allocator_cbs.h ../bin/common_dyn_buf.h
 	touch ../bin/common_str.h
 ../bin/common_macros.h: common/macros.h 
 	touch ../bin/common_macros.h
@@ -34,6 +34,8 @@
 	touch ../bin/common_log.c
 ../bin/common_str.c: common/str.c ../bin/common_str.h ../bin/common_macros.h ../bin/common_log.h
 	touch ../bin/common_str.c
+../bin/common_dyn_buf.c: common/dyn_buf.c ../bin/common_dyn_buf.h
+	touch ../bin/common_dyn_buf.c
 ../bin/test_run_test.o: test/run_test.c ../bin/test_run_test.c
 	$(GCC) -c $< -o $@
 ../bin/test_run_test.bc: test/run_test.c ../bin/test_run_test.c
@@ -57,4 +59,8 @@
 ../bin/common_str.o: common/str.c ../bin/common_str.c
 	$(GCC) -c $< -o $@
 ../bin/common_str.bc: common/str.c ../bin/common_str.c
+	$(EMCC) -c $< -o $@
+../bin/common_dyn_buf.o: common/dyn_buf.c ../bin/common_dyn_buf.c
+	$(GCC) -c $< -o $@
+../bin/common_dyn_buf.bc: common/dyn_buf.c ../bin/common_dyn_buf.c
 	$(EMCC) -c $< -o $@

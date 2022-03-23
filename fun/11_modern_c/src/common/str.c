@@ -13,14 +13,15 @@ static const struct str invalid_str = {
 //--------------------
 struct str_buf str_buf_create(size_t size, struct allocator_cbs allocator_cbs)
 {
- char* data = allocator_cbs.malloc(size*sizeof(char));
+ const size_t size_of_one = sizeof(char);
+ char* data = allocator_cbs.malloc(size*size_of_one);
 
  struct str_buf str_buf = {
   .dyn_buf_info = {
    .allocator_cbs=allocator_cbs,
    .size=0,
    .capacity=size,
-   .size_of_one=sizeof(*data)
+   .size_of_one=size_of_one
   },
   .data=data
  };
@@ -45,7 +46,7 @@ void str_buf_append(struct str_buf* str_buf_ptr, struct str str)
  if(new_size > str_buf_ptr->dyn_buf_info.capacity)
  {
   size_t new_capacity = MAX((2 * str_buf_ptr->dyn_buf_info.capacity), new_size);
-  str_buf_ptr->data = str_buf_ptr->dyn_buf_info.allocator_cbs.realloc(str_buf_ptr->data, new_capacity * sizeof(char));
+  str_buf_ptr->data = str_buf_ptr->dyn_buf_info.allocator_cbs.realloc(str_buf_ptr->data, new_capacity * str_buf_ptr->dyn_buf_info.size_of_one);
 
   str_buf_ptr->dyn_buf_info.capacity = new_capacity;
  }
@@ -74,7 +75,7 @@ void str_buf_remove(struct str_buf* str_buf_ptr, size_t begin, size_t end)
 
  char* dest_begin = str_buf_ptr->data + valid_begin;
  char* src_begin = dest_begin + remove_size;
- memcpy(dest_begin, src_begin, copy_size * sizeof(char));
+ memcpy(dest_begin, src_begin, copy_size * str_buf_ptr->dyn_buf_info.size_of_one);
 
  str_buf_ptr->dyn_buf_info.size = new_str_buf_size;
 }
