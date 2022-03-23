@@ -5,18 +5,14 @@
 #include <stdbool.h>
 
 #include "common/allocator_cbs.h"
+#include "common/dyn_buf.h"
 
 struct str {
  const char* data;
  size_t size;
 };
+struct str_buf generic_dyn_buf(char);
 
-struct str_buf {
- struct allocator_cbs allocator_cbs;
- char* data;
- size_t size;
- size_t capacity;
-};
 
 struct str_buf str_buf_create(size_t size, struct allocator_cbs allocator_cbs);
 struct str_buf str_buf_destroy(struct str_buf str_buf);
