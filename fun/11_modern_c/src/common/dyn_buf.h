@@ -16,14 +16,36 @@ struct dyn_buf_info {
  type* data;                      \
 }
 
+#define dyn_buf_create(type, param_capacity, param_allocator_cbs) \
+{                                                                  \
+ .dyn_buf_info = {                                                 \
+  .allocator_cbs=param_allocator_cbs,                            \
+  .size = 0,                                                       \
+  .capacity = param_capacity,                                      \
+  .size_of_one= sizeof(type)                                       \
+ },                                                                \
+ .data=param_allocator_cbs.malloc(sizeof(type)*param_capacity)    \
+}
+
 #define dyn_buf_add(dyn_buf, element)                                    \
 do {                                                                      \
- _dyn_buf_ensure_capacity_for_add(&dyn_buf.dyn_buf_info, &dyn_buf.data);         \
+ _dyn_buf_ensure_capacity_for_add(&dyn_buf.dyn_buf_info, (void**)&dyn_buf.data);         \
  dyn_buf.data[dyn_buf.dyn_buf_info.size] = element;                    \
  dyn_buf.dyn_buf_info.size++;                                           \
 }                                                                         \
 while(0)
 
-void _dyn_buf_ensure_capacity_for_add(struct dyn_buf_info* dyn_buf_info, void* data);
+void _dyn_buf_ensure_capacity_for_add(struct dyn_buf_info* dyn_buf_info, void** data);
 
+#define dyn_buf_begin(dyn_buf) \
+dyn_buf.data
+
+#define dyn_buf_end(dyn_buf) \
+dyn_buf.data + dyn_buf.dyn_buf_info.size
+
+/*
+void dyn_array_pop_back(dyn_array dyn_array);
+void dyn_array_clear(dyn_array dyn_array);
+
+*/
 #endif
