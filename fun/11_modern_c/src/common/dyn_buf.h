@@ -44,8 +44,8 @@ dyn_buf.data
 dyn_buf.data + dyn_buf.dyn_buf_info.size
 
 /*
-void dyn_array_pop_back(dyn_array dyn_array);
-void dyn_array_clear(dyn_array dyn_array);
-
+void dyn_buf_pop_back(dyn_buf dyn_buf);
+void dyn_buf_clear(dyn_buf dyn_buf);
 */
+
 #endif
