@@ -10,7 +10,7 @@
 void test_common_dyn_buf(struct allocator_cbs allocator)
 {
  struct generic_dyn_buf(int) dyn_buf = dyn_buf_create(int, 4, allocator);
- SCOPE(dyn_buf_destroy(dyn_buf))
+ SCOPE(dyn_buf_destroy(&dyn_buf))
  {
   int tmp = 1;
   dyn_buf_add(dyn_buf, tmp);

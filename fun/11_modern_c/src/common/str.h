@@ -15,7 +15,7 @@ struct str_buf generic_dyn_buf(char);
 
 
 struct str_buf str_buf_create(size_t size, struct allocator_cbs allocator_cbs);
-struct str_buf str_buf_destroy(struct str_buf str_buf);
+void str_buf_destroy(struct str_buf* str_buf_ptr);
 void str_buf_append(struct str_buf* str_buf_ptr, struct str str);
 void str_buf_remove(struct str_buf* str_buf_ptr, size_t begin, size_t end);
 struct str str_buf_str(struct str_buf str_buf);

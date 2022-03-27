@@ -28,7 +28,7 @@ struct dyn_buf_info {
 }
 
 #define dyn_buf_destroy(dyn_buf)                          \
-_dyn_buf_destroy(&dyn_buf.dyn_buf_info, (void**)&dyn_buf.data)
+_dyn_buf_destroy(&((dyn_buf)->dyn_buf_info), (void**)&((dyn_buf)->data))
 
 void _dyn_buf_destroy(struct dyn_buf_info* dyn_buf_info, void** data);
 

@@ -32,11 +32,10 @@ struct str_buf str_buf_create(size_t size, struct allocator_cbs allocator_cbs)
 }
 
 //--------------------
-struct str_buf str_buf_destroy(struct str_buf str_buf)
+void str_buf_destroy(struct str_buf* str_buf_ptr)
 {
- str_buf.dyn_buf_info.allocator_cbs.free(str_buf.data);
- str_buf.data = 0x0;
- return str_buf;
+ str_buf_ptr->dyn_buf_info.allocator_cbs.free(str_buf_ptr->data);
+ str_buf_ptr->data = 0x0;
 }
 
 //--------------------
