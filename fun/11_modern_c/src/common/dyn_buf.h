@@ -27,6 +27,12 @@ struct dyn_buf_info {
  .data=param_allocator_cbs.malloc(sizeof(type)*param_capacity)    \
 }
 
+#define dyn_buf_destroy(dyn_buf)                          \
+_dyn_buf_destroy(&dyn_buf.dyn_buf_info, (void**)&dyn_buf.data)
+
+void _dyn_buf_destroy(struct dyn_buf_info* dyn_buf_info, void** data);
+
+
 #define dyn_buf_add(dyn_buf, element)                                    \
 do {                                                                      \
  _dyn_buf_ensure_capacity_for_add(&dyn_buf.dyn_buf_info, (void**)&dyn_buf.data);         \
@@ -47,7 +53,6 @@ dyn_buf.data + dyn_buf.dyn_buf_info.size
 void dyn_buf_pop_back(dyn_buf dyn_buf);
 void dyn_buf_clear(dyn_buf dyn_buf);
 
-#define dyn_buf_destroy
 */
 
 #endif

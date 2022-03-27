@@ -11,3 +11,11 @@ void _dyn_buf_ensure_capacity_for_add(struct dyn_buf_info* dyn_buf_info, void** 
   dyn_buf_info->capacity = new_capacity;
  }
 }
+
+void _dyn_buf_destroy(struct dyn_buf_info* dyn_buf_info, void** data)
+{
+ dyn_buf_info->allocator_cbs.free(*data);
+ *data = 0x0;
+ dyn_buf_info->size = 0;
+ dyn_buf_info->capacity = 0;
+}
