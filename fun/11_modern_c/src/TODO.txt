@@ -1,6 +1,0 @@
-implement variadic print function accepting %s and %d
- implement print_test
-  test print_test
-  implement str_find_first
-  
-
