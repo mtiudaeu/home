@@ -1,13 +1,17 @@
 BUILD_PATH = ../bin/
 
-default: test_gcc
-all: test
+default: test_gcc main_gcc
+all: test main
 
 include test/Makefile
+include main/Makefile
 
-EMCC = emcc -O2 -I. $(OPTIONS) -Werror -std=c11 
+EMCC = emcc -O2 -I. $(OPTIONS) -Werror -std=c11 -s USE_SDL=2
 GCC = gcc -I. $(OPTIONS) -g  -Werror -std=c11
 
+main : main_gcc main_emcc
+main_gcc : $(MAIN_OUT)
+main_emcc : $(MAIN_OUT:.out=.html)
 
 test : test_gcc test_emcc
 test_gcc : $(COMMON_TEST_OUT) 

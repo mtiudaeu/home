@@ -21,9 +21,9 @@ void test_common_dyn_buf_add(struct allocator_cbs allocator)
   dyn_buf_add(dyn_buf, 2);
   dyn_buf_add(dyn_buf, 2);
 
-  const int const* ref_begin = dyn_buf_begin(dyn_buf);
+  const int* const ref_begin = dyn_buf_begin(dyn_buf);
   const int* begin = dyn_buf_begin(dyn_buf);
-  const int const* end = dyn_buf_end(dyn_buf);
+  const int* const end = dyn_buf_end(dyn_buf);
   for(;begin < end; begin++) {
    if(begin == ref_begin) {
     assert(*begin == 1);
@@ -53,7 +53,7 @@ void test_common_dyn_buf_sort(struct allocator_cbs allocator)
   generic_dyn_buf_sort(dyn_buf);
 
   const int* begin = dyn_buf_begin(dyn_buf);
-  const int const * end = dyn_buf_end(dyn_buf);
+  const int* const end = dyn_buf_end(dyn_buf);
   int test = 0;
   for(;begin < end; test++,  begin++) {
    assert(*begin == test);
