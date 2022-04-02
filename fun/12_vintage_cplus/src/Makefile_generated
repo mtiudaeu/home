@@ -1,0 +1,76 @@
+../bin/common_str.h: common/str.h ../bin/common_allocator_cbs.h ../bin/common_dyn_buf.h
+	touch ../bin/common_str.h
+../bin/common_allocator_cbs.h: common/allocator_cbs.h 
+	touch ../bin/common_allocator_cbs.h
+../bin/common_dyn_buf.h: common/dyn_buf.h ../bin/common_allocator_cbs.h
+	touch ../bin/common_dyn_buf.h
+../bin/common_test.h: common/test.h 
+	touch ../bin/common_test.h
+../bin/common_macros.h: common/macros.h 
+	touch ../bin/common_macros.h
+../bin/common_log.h: common/log.h ../bin/common_str.h
+	touch ../bin/common_log.h
+../bin/test_test_common_log.h: test/test_common_log.h ../bin/common_allocator_cbs.h
+	touch ../bin/test_test_common_log.h
+../bin/test_test_common_str.h: test/test_common_str.h ../bin/common_allocator_cbs.h
+	touch ../bin/test_test_common_str.h
+../bin/test_test_common_dyn_buf.h: test/test_common_dyn_buf.h ../bin/common_allocator_cbs.h
+	touch ../bin/test_test_common_dyn_buf.h
+../bin/graphic_context.h: graphic/context.h 
+	touch ../bin/graphic_context.h
+../bin/math_vec.h: math/vec.h 
+	touch ../bin/math_vec.h
+../bin/main_main.c: main/main.c ../bin/graphic_context.h ../bin/common_log.h
+	touch ../bin/main_main.c
+../bin/common_log.c: common/log.c ../bin/common_log.h
+	touch ../bin/common_log.c
+../bin/common_dyn_buf.c: common/dyn_buf.c ../bin/common_dyn_buf.h ../bin/common_macros.h
+	touch ../bin/common_dyn_buf.c
+../bin/common_str.c: common/str.c ../bin/common_str.h ../bin/common_macros.h ../bin/common_log.h
+	touch ../bin/common_str.c
+../bin/test_test_common_dyn_buf.c: test/test_common_dyn_buf.c ../bin/test_test_common_dyn_buf.h ../bin/common_dyn_buf.h ../bin/common_macros.h ../bin/common_log.h
+	touch ../bin/test_test_common_dyn_buf.c
+../bin/test_run_test.c: test/run_test.c ../bin/common_test.h ../bin/common_allocator_cbs.h ../bin/test_test_common_str.h ../bin/test_test_common_log.h ../bin/test_test_common_dyn_buf.h
+	touch ../bin/test_run_test.c
+../bin/test_test_common_log.c: test/test_common_log.c ../bin/test_test_common_log.h ../bin/common_str.h ../bin/common_log.h
+	touch ../bin/test_test_common_log.c
+../bin/test_test_common_str.c: test/test_common_str.c ../bin/test_test_common_str.h ../bin/common_allocator_cbs.h ../bin/common_str.h ../bin/common_log.h
+	touch ../bin/test_test_common_str.c
+../bin/graphic_context.c: graphic/context.c ../bin/graphic_context.h ../bin/common_log.h
+	touch ../bin/graphic_context.c
+../bin/main_main.o: main/main.c ../bin/main_main.c
+	$(GCC) -c $< -o $@
+../bin/main_main.bc: main/main.c ../bin/main_main.c
+	$(EMCC) -c $< -o $@
+../bin/common_log.o: common/log.c ../bin/common_log.c
+	$(GCC) -c $< -o $@
+../bin/common_log.bc: common/log.c ../bin/common_log.c
+	$(EMCC) -c $< -o $@
+../bin/common_dyn_buf.o: common/dyn_buf.c ../bin/common_dyn_buf.c
+	$(GCC) -c $< -o $@
+../bin/common_dyn_buf.bc: common/dyn_buf.c ../bin/common_dyn_buf.c
+	$(EMCC) -c $< -o $@
+../bin/common_str.o: common/str.c ../bin/common_str.c
+	$(GCC) -c $< -o $@
+../bin/common_str.bc: common/str.c ../bin/common_str.c
+	$(EMCC) -c $< -o $@
+../bin/test_test_common_dyn_buf.o: test/test_common_dyn_buf.c ../bin/test_test_common_dyn_buf.c
+	$(GCC) -c $< -o $@
+../bin/test_test_common_dyn_buf.bc: test/test_common_dyn_buf.c ../bin/test_test_common_dyn_buf.c
+	$(EMCC) -c $< -o $@
+../bin/test_run_test.o: test/run_test.c ../bin/test_run_test.c
+	$(GCC) -c $< -o $@
+../bin/test_run_test.bc: test/run_test.c ../bin/test_run_test.c
+	$(EMCC) -c $< -o $@
+../bin/test_test_common_log.o: test/test_common_log.c ../bin/test_test_common_log.c
+	$(GCC) -c $< -o $@
+../bin/test_test_common_log.bc: test/test_common_log.c ../bin/test_test_common_log.c
+	$(EMCC) -c $< -o $@
+../bin/test_test_common_str.o: test/test_common_str.c ../bin/test_test_common_str.c
+	$(GCC) -c $< -o $@
+../bin/test_test_common_str.bc: test/test_common_str.c ../bin/test_test_common_str.c
+	$(EMCC) -c $< -o $@
+../bin/graphic_context.o: graphic/context.c ../bin/graphic_context.c
+	$(GCC) -c $< -o $@
+../bin/graphic_context.bc: graphic/context.c ../bin/graphic_context.c
+	$(EMCC) -c $< -o $@
