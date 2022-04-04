@@ -6,7 +6,7 @@ all: test main
 include test/Makefile
 include main/Makefile
 
-EMCC = emcc -O2 -I. $(OPTIONS) -Werror -std=c++2a -fpermissive -s USE_SDL=2
+EMCC = em++ -O2 -I. $(OPTIONS) -Werror -std=c++2a -fpermissive -s USE_SDL=2
 GCC = g++ -I. $(OPTIONS) -g  -Werror -std=c++2a -fpermissive  
 
 main : main_gcc main_emcc
@@ -18,7 +18,7 @@ test_gcc : $(COMMON_TEST_OUT)
 test_emcc : $(COMMON_TEST_OUT:.out=.html) 
 
 clean : 
-	rm -f $(addprefix $(BUILD_PATH), *.o *.out *.js *.html *.bc *.mem *.data *.c *.h *.wasm)
+	rm -f $(addprefix $(BUILD_PATH), *.o *.out *.js *.html *.bc *.mem *.data *.cpp *.h *.wasm)
 
 include Makefile_generated
 

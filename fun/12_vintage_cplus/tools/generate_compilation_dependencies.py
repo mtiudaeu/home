@@ -3,7 +3,7 @@
 # Usage :
 # ./generate_compilation_dependencies.py src > Makefile_generated
 #
-# Find all .h and .c file and extract compilation depedencies.
+# Find all .h and .cpp file and extract compilation depedencies.
 
 import sys, subprocess
 
@@ -20,7 +20,7 @@ def main():
   build_extract_rules(h_files)
 
   # Get all .c files
-  output = subprocess.check_output(["find", dir_path, "-name", "*.c"])
+  output = subprocess.check_output(["find", dir_path, "-name", "*.cpp"])
   output = output.replace("./","")
   c_files = output.split()
   # Extract dependencies
@@ -35,10 +35,10 @@ def file_path_to_target(file_path):
 def build_object_rules(c_file_path_list):
   for c_file_path in c_file_path_list:
     c_file_target = file_path_to_target(c_file_path)
-    o_file_target = c_file_target.replace(".c", ".o")
+    o_file_target = c_file_target.replace(".cpp", ".o")
     print(o_file_target + ": " + c_file_path + " " + c_file_target )
     print("\t$(GCC) -c $< -o $@")
-    bc_file_target = c_file_target.replace(".c", ".bc")
+    bc_file_target = c_file_target.replace(".cpp", ".bc")
     print(bc_file_target + ": " + c_file_path + " " + c_file_target )
     print("\t$(EMCC) -c $< -o $@")
     
