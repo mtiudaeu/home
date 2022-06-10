@@ -20,6 +20,7 @@ RUN apt install -y ca-certificates
 RUN apt update
 
 RUN apt install -y vim wget git build-essential python2.7
+RUN apt install -y libsdl2-dev libsdl2-image-dev
 
 RUN git clone https://github.com/emscripten-core/emsdk.git
 RUN git config --global user.name "Mathieu Drapeau"
@@ -32,4 +33,4 @@ WORKDIR /docker_install/emsdk
 
 RUN ./emsdk install latest
 RUN ./emsdk activate latest
-RUN echo '. "emsdk_env.sh"' >> $HOME/.bashrc
+RUN echo 'source "/docker_install/emsdk/emsdk_env.sh"' >> $HOME/.bashrc
