@@ -1,10 +1,7 @@
-// Copyright 2015 Red Blob Games <redblobgames@gmail.com>
-// License: Apache v2.0 <http://www.apache.org/licenses/LICENSE-2.0.html>
-
 #ifndef COMMON_H
 #define COMMON_H
 
-// I use this for debugging
+#include <stdio.h>
 #include <iostream>
 
 // Exit the program with an error message
@@ -16,5 +13,15 @@ struct nocopy {
   nocopy(const nocopy&) = delete;
   nocopy& operator = (const nocopy&) = delete;
 };
+
+#define LOG_ERROR(...)                                     \
+  fprintf(stderr, "error : %s:%d : ", __FILE__, __LINE__); \
+  fprintf(stderr, __VA_ARGS__);                            \
+  fprintf(stderr, "\n");
+
+#define LOG(...)                                     \
+  fprintf(stdout, "%s:%d : ", __FILE__, __LINE__); \
+  fprintf(stdout, __VA_ARGS__);                            \
+  fprintf(stdout, "\n");
 
 #endif

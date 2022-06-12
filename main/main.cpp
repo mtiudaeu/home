@@ -17,7 +17,7 @@
 
 #define SHOW_SPRITES 1
 #define SHOW_SHAPES 1
-#define SHOW_OVERLAY 0
+#define SHOW_OVERLAY 1
 
 std::unique_ptr<Window> window;
 std::unique_ptr<RenderSprites> sprite_layer;
@@ -39,6 +39,12 @@ void main_loop() {
     case SDL_KEYUP: {
       int sym = event.key.keysym.sym;
       if (sym == SDLK_ESCAPE) { main_loop_running = false; }
+      break;
+    }
+    case SDL_MOUSEBUTTONDOWN: {
+      LOG("Mouse have been cliked mdtmp!");
+      SDL_MouseButtonEvent& mouse_event = event.button;
+      LOG("x:%d,y:%d", mouse_event.x, mouse_event.y);
       break;
     }
     }
