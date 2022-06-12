@@ -34,3 +34,9 @@ WORKDIR /docker_install/emsdk
 RUN ./emsdk install latest
 RUN ./emsdk activate latest
 RUN echo 'source "/docker_install/emsdk/emsdk_env.sh"' >> $HOME/.bashrc
+
+RUN apt install -y cmake tmux
+
+COPY vimrc /root/.vimrc
+
+RUN git config --global --add safe.directory /srv/home
