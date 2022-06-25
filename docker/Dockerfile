@@ -39,4 +39,4 @@ RUN apt install -y cmake tmux
 
 COPY vimrc /root/.vimrc
 
-RUN git config --global --add safe.directory /srv/home
+RUN git config --global --add safe.directory /srv
