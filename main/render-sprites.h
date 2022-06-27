@@ -23,7 +23,7 @@ class RenderSprites: public IRenderLayer {
 public:
   RenderSprites();
   ~RenderSprites();
-  virtual void Render(SDL_Window* window, bool reset);
+  virtual void Render(SDL_Window* window, bool reset, float time_delta);
 
   void SetSprites(const std::vector<Sprite>& sprites);
   

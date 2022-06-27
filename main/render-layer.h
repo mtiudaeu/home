@@ -10,7 +10,7 @@ struct SDL_Window;
 union SDL_Event;
 
 struct IRenderLayer: nocopy {
-  virtual void Render(SDL_Window* window, bool reset) {}
+  virtual void Render(SDL_Window* window, bool reset, float time_delta) {}
   virtual void ProcessEvent(SDL_Event* event) {}
   virtual ~IRenderLayer();
 };

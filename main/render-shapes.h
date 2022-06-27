@@ -31,7 +31,7 @@ class RenderShapes: public IRenderLayer {
 public:
   RenderShapes();
   ~RenderShapes();
-  virtual void Render(SDL_Window* window, bool reset);
+  virtual void Render(SDL_Window* window, bool reset, float time_delta);
 
   void SetShapes(const std::vector<Shape>& shapes);
   

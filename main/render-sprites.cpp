@@ -150,7 +150,7 @@ void RenderSprites::SetSprites(const std::vector<Sprite>& sprites) {
 }
 
   
-void RenderSprites::Render(SDL_Window* window, bool reset) {
+void RenderSprites::Render(SDL_Window* window, bool reset, float time_delta) {
   glUseProgram(self->shader.id);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

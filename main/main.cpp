@@ -8,6 +8,7 @@
 #include "render-shapes.h"
 #include "render-surface.h"
 #include "font.h"
+#include "tetris.h"
 
 #include <SDL.h>
 
@@ -15,9 +16,10 @@
 #include <emscripten.h>
 #endif
 
-#define SHOW_SPRITES 1
-#define SHOW_SHAPES 1
-#define SHOW_OVERLAY 1
+#define SHOW_SPRITES 0
+#define SHOW_SHAPES 0
+#define SHOW_OVERLAY 0
+#define TETRIS 1
 
 std::unique_ptr<Window> window;
 std::unique_ptr<RenderSprites> sprite_layer;
@@ -134,6 +136,11 @@ int main(int, char**) {
 #if SHOW_OVERLAY
   std::unique_ptr<RenderSurface> overlay_layer(new RenderSurface(overlay_surface));
   window->AddLayer(overlay_layer.get());
+#endif
+
+#if TETRIS
+  std::unique_ptr<Tetris> tetris_layer(new Tetris());
+  window->AddLayer(tetris_layer.get());
 #endif
   
 #ifdef __EMSCRIPTEN__

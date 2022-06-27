@@ -18,6 +18,8 @@ struct WindowImpl {
   bool context_initialized;
   GlContext context;
   std::vector<IRenderLayer*> layers;
+  int time_current;
+  int time_last;
   
   WindowImpl(SDL_Window* window_);
   ~WindowImpl();
@@ -54,10 +56,14 @@ void Window::HandleResize() {
 
 
 void Window::Render() {
+  self->time_current = SDL_GetTicks();
+  const float time_delta = (float)(self->time_current - self->time_last) / 1000.0f;
+  self->time_last = self->time_current;
+
   if (visible) {
     glClear(GL_COLOR_BUFFER_BIT);
     for (auto layer : self->layers) {
-      layer->Render(self->window, !self->context_initialized);
+      layer->Render(self->window, !self->context_initialized, time_delta);
     }
     self->context_initialized = true;
     SDL_GL_SwapWindow(self->window);

@@ -7,7 +7,7 @@
 # For native (Mac OS X, Linux) builds, $(BINDIR)/ and assets/ are needed
 # For emscripten builds, $(WWWDIR)/ is needed
 
-MODULES = main glwrappers window atlas font render-sprites render-shapes render-surface 
+MODULES = main glwrappers window atlas font render-sprites render-shapes render-surface tetris
 ASSETS = assets/red-blob.png assets/DroidSans.ttf
 
 UNAME = $(shell uname -s)
