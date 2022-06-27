@@ -37,6 +37,15 @@ RUN echo 'source "/docker_install/emsdk/emsdk_env.sh"' >> $HOME/.bashrc
 
 RUN apt install -y cmake tmux
 
+RUN apt install -y clang-format locate universal-ctags
+
 COPY vimrc /root/.vimrc
+COPY vimrc /root/.gdbinit
 
 RUN git config --global --add safe.directory /srv
+
+RUN echo 'export EDITOR=vim'
+RUN echo "alias sf='find -iname \"\$@\"'"
+
+
+
