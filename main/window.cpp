@@ -90,8 +90,8 @@ void Window::ProcessEvent(SDL_Event* event) {
 WindowImpl::WindowImpl(SDL_Window* window_)
   :window(window_), context_initialized(false), context(window)
 {
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-  glClearColor(1.0, 1.0, 1.0, 1.0);
+  //SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  //glClearColor(1.0, 1.0, 1.0, 1.0);
 }
 
 WindowImpl::~WindowImpl() {
