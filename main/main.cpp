@@ -18,7 +18,7 @@
 
 #define SHOW_SPRITES 0
 #define SHOW_SHAPES 0
-#define SHOW_OVERLAY 0
+#define SHOW_OVERLAY 1
 #define TETRIS 1
 
 std::unique_ptr<Window> window;
