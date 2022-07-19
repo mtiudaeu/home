@@ -1,13 +1,5 @@
-# Makefile with autodependencies and separate output directories
-# - $BUILDDIR/ is used for object and other build files
-# - $BINDIR/ is used for native binaries
-# - assets/ is used for assets needed when running native binaries
-# - $WWWDIR/ is used for emscripten output
-#
-# For native (Mac OS X, Linux) builds, $(BINDIR)/ and assets/ are needed
-# For emscripten builds, $(WWWDIR)/ is needed
 
-MODULES = main glwrappers window atlas font render-sprites render-shapes render-surface tetris shader_utils
+MODULES = main
 ASSETS = assets/red-blob.png assets/DroidSans.ttf
 
 UNAME = $(shell uname -s)
@@ -16,10 +8,9 @@ BINDIR = bin
 WWWDIR = www
 _MKDIRS := $(shell mkdir -p $(BINDIR) $(WWWDIR) $(BUILDDIR))
 
-COMMONFLAGS = -std=c++11 -MMD -MP -isystem .
+COMMONFLAGS = -std=c++14 -MMD -MP -isystem .
 LOCALFLAGS = -g -O2 $(COMMONFLAGS) $(shell pkg-config --cflags sdl2)
 
-# Choose the warnings I want, and disable when compiling third party code
 NOWARNDIRS = stb/
 LOCALWARN = -Wall -Wextra -pedantic -Wpointer-arith -Wshadow -Wfloat-conversion -Wfloat-equal -Wno-unused-function -Wno-unused-parameter
 # NOTE: also useful but noisy -Wconversion -Wshorten-64-to-32

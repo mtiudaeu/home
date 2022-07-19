@@ -4,9 +4,6 @@
 #include <stdio.h>
 #include <iostream>
 
-// Exit the program with an error message
-void FAIL(const char* label);
-
 // Put on classes that manage resources and aren't to be copied
 struct nocopy {
   nocopy() = default;
