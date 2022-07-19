@@ -4,10 +4,13 @@
 #include "shader_utils.h"
 #include "tetris.h"
 
+#include <vector>
+
 //--------------------------------------------------
 struct TetrisImpl {
   unsigned int buffer;
   unsigned int program;
+  std::vector<std::unique_ptr<IRenderLayer>> layers;
 };
 
 //--------------------------------------------------

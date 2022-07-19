@@ -111,17 +111,8 @@ int main(int, char**) {
 
   window = std::unique_ptr<Window>(new Window(800, 600));
 
-  Font font("assets/DroidSans.ttf", 32);
-
-  SDL_Surface* overlay_surface = CreateRGBASurface(window->width, window->height);
-  SDL_Rect fillarea;
-  fillarea.x = 0;
-  fillarea.y = 0;
-  fillarea.w = 2 + font.Width("Hello world");
-  fillarea.h = font.Height();
-  SDL_FillRect(overlay_surface, &fillarea, SDL_MapRGBA(overlay_surface->format, 64, 32, 0, 192));
-
-  font.Draw(overlay_surface, 1, font.Baseline(), "Hello world");
+  Font font("assets/DroidSans.ttf", 32, window.get());
+  font.Draw(1, font.Baseline(), "Hello world");
 
 #if SHOW_SPRITES
   sprite_layer = std::unique_ptr<RenderSprites>(new RenderSprites);
@@ -134,7 +125,7 @@ int main(int, char**) {
 #endif
 
 #if SHOW_OVERLAY
-  std::unique_ptr<RenderSurface> overlay_layer(new RenderSurface(overlay_surface));
+  std::unique_ptr<IRenderLayer> overlay_layer(font.createRenderLayer());
   window->AddLayer(overlay_layer.get());
 #endif
 

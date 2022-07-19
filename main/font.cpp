@@ -3,6 +3,10 @@
 
 #include "font.h"
 #include "common.h"
+#include "render-layer.h"
+#include "glwrappers.h"
+#include "window.h"
+#include "render-surface.h"
 
 #include <SDL.h>
 
@@ -31,10 +35,11 @@ struct FontImpl {
   int height;
   std::vector<unsigned char> rendered_font;
   std::vector<FontCharacter> mapping;
+  SDL_Surface* overlay_surface;
 };
 
 
-Font::Font(const char* filename, float ptsize, float xadvance_adjust): self(new FontImpl) {
+Font::Font(const char* filename, float ptsize, Window* window, float xadvance_adjust): self(new FontImpl) {
   // Load the font into memory
   std::vector<char> font_buffer;
   std::ifstream in(filename, std::ifstream::binary);
@@ -103,19 +108,29 @@ Font::Font(const char* filename, float ptsize, float xadvance_adjust): self(new 
                                            0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000
 #endif
                                            );
+
+  SDL_Surface* overlay_surface = CreateRGBASurface(window->width, window->height);
+  self->overlay_surface = overlay_surface;
 }
 
 
 Font::~Font() {}
 
 
-void Font::Draw(SDL_Surface* surface, int x, int y, const char* text) const {
+void Font::Draw(int x, int y, const char* text) const {
+  SDL_Rect fillarea;
+  fillarea.x = 0;
+  fillarea.y = 0;
+  fillarea.w = 2 + Width(text);
+  fillarea.h = Height();
+  SDL_FillRect(self->overlay_surface, &fillarea, SDL_MapRGBA(self->overlay_surface->format, 64, 32, 0, 192));
+
   SDL_Rect dest;
   dest.x = x;
   for (const char* s = text; *s != '\0'; s++) {
     FontCharacter loc = self->mapping[*s];
     dest.y = y - loc.ybaseline;
-    SDL_BlitSurface(self->surface, &loc.region, surface, &dest);
+    SDL_BlitSurface(self->overlay_surface, &loc.region, self->overlay_surface, &dest);
     dest.x += loc.xadvance;
     // TODO: kerning with stbtt_GetCodepointKernAdvance(&font, s[0], s[1])
   }
@@ -136,4 +151,7 @@ int Font::Width(const char* text) const {
     width += self->mapping[*s].xadvance;
   }
   return width;
+}
+IRenderLayer* Font::createRenderLayer() {
+  return new RenderSurface(self->overlay_surface);
 }
