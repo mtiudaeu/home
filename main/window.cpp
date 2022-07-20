@@ -61,6 +61,7 @@ void Window::Render() {
   self->time_last = self->time_current;
 
   if (visible) {
+    glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
     for (auto layer : self->layers) {
       layer->Render(self->window, !self->context_initialized, time_delta);

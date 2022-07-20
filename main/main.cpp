@@ -9,7 +9,7 @@
 
 static bool main_loop_running = true;
 static SDL_Window* window;
-static int width, height;
+static int width(800), height(600);
 static int FRAME;
 static bool visible = true;
 
@@ -61,9 +61,19 @@ void main_loop() {
 int main(int, char**) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     LOG_ERROR("SDL Init");
+    LOG_ERROR(SDL_GetError());
     return 1;
   }
-  SDL_GL_SetSwapInterval(1);
+
+/*
+window = SDL_CreateWindow("Hello World",
+                            SDL_WINDOWPOS_UNDEFINED,
+                            SDL_WINDOWPOS_UNDEFINED,
+                            width,
+                            height,
+                            SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
+                           );
+*/
 
 window = SDL_CreateWindow("Hello World",
                             SDL_WINDOWPOS_UNDEFINED,
@@ -72,7 +82,19 @@ window = SDL_CreateWindow("Hello World",
                             height,
                             SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
                            );
-HandleResize();
+  SDL_UpdateWindowSurface(window);
+  SDL_Delay(2000);
+  
+  SDL_DestroyWindow(window);
+  SDL_Quit();
+return 0;
+  SDL_GL_SetSwapInterval(1);
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+  glClearColor(1.0, 1.0, 1.0, 1.0);
+
+  HandleResize();
+
+
 #ifdef __EMSCRIPTEN__
   // 0 fps means to use requestAnimationFrame; non-0 means to use setTimeout.
   emscripten_set_main_loop(main_loop, 0, 1);
