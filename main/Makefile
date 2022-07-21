@@ -1,5 +1,5 @@
 
-MODULES = main
+MODULES = main ui
 ASSETS = assets/red-blob.png assets/DroidSans.ttf
 
 UNAME = $(shell uname -s)

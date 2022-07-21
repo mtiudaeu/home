@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+#include "ui.h"
+
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
@@ -14,8 +16,13 @@ struct GlobalContext {
   bool visible;
 };
 
+struct SideContext {
+  UiContext* ui_context;
+};
+
 struct MainContext {
   GlobalContext global_context;
+  SideContext side_context;
   SDL_GLContext context_id;
   bool running;
 };
@@ -65,55 +72,74 @@ static void main_process_event(MainContext& main_context) {
   }
 }
 
-static void main_render(const GlobalContext& global_context) {
+static void main_render(MainContext& main_context) {
+  const GlobalContext& global_context = main_context.global_context;
+  SideContext& side_context = main_context.side_context;
+
   glClear(GL_COLOR_BUFFER_BIT);
+
+
+  ui_render(*side_context.ui_context);
+
 
   SDL_GL_SwapWindow(global_context.window);
 }
 
 static void main_loop(void* context_ptr) {
-  MainContext& context = *((MainContext*)context_ptr);
+  MainContext& main_context = *((MainContext*)context_ptr);
 
-  main_process_event(context);
-  main_render(context.global_context);
+  main_process_event(main_context);
+  main_render(main_context);
 }
 
 static int main_init(MainContext& main_context) {
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    LOG_ERROR("SDL Init");
-    LOG_ERROR("%s", SDL_GetError());
-    return 1;
+  {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+      LOG_ERROR("SDL Init");
+      LOG_ERROR("%s", SDL_GetError());
+      return 1;
+    }
+
+    GlobalContext& global_context = main_context.global_context;
+    global_context.window = SDL_CreateWindow(
+        "Hello World", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        global_context.width, global_context.height,
+        SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    if (global_context.window == nullptr) {
+      LOG_ERROR("SDL_CreateWindow");
+      return 1;
+    }
+    main_context.context_id = SDL_GL_CreateContext(global_context.window);
+    if (main_context.context_id == nullptr) {
+      LOG_ERROR("SDL_GL_CreateContext");
+      return 1;
+    }
+    SDL_UpdateWindowSurface(global_context.window);
+
+    SDL_GL_SetSwapInterval(1);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+
+    HandleResize(global_context);
   }
 
-  GlobalContext& global_context = main_context.global_context;
-  global_context.window = SDL_CreateWindow(
-      "Hello World", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-      global_context.width, global_context.height,
-      SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-  if (global_context.window == nullptr) {
-    LOG_ERROR("SDL_CreateWindow");
-    return 1;
-  }
-  main_context.context_id = SDL_GL_CreateContext(global_context.window);
-  if (main_context.context_id == nullptr) {
-    LOG_ERROR("SDL_GL_CreateContext");
-    return 1;
-  }
-  SDL_UpdateWindowSurface(global_context.window);
+  SideContext& side_context = main_context.side_context; 
 
-  SDL_GL_SetSwapInterval(1);
-  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-  glClearColor(1.0, 1.0, 1.0, 1.0);
-
-  HandleResize(global_context);
+  ui_create(*side_context.ui_context);
 
   return 0;
 }
 
 static void main_uninit(MainContext& main_context) {
-  SDL_GL_DeleteContext(main_context.context_id);
-  SDL_DestroyWindow(main_context.global_context.window);
-  SDL_Quit();
+  SideContext& side_context = main_context.side_context;
+
+  ui_destroy(*side_context.ui_context);
+
+  {
+    SDL_GL_DeleteContext(main_context.context_id);
+    SDL_DestroyWindow(main_context.global_context.window);
+    SDL_Quit();
+  }
 }
 
 int main(int, char**) {
