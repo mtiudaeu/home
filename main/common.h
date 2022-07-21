@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <iostream>
 
-// Put on classes that manage resources and aren't to be copied
 struct nocopy {
   nocopy() = default;
   nocopy(const nocopy&) = delete;

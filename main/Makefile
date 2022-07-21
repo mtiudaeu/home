@@ -8,7 +8,7 @@ BINDIR = bin
 WWWDIR = www
 _MKDIRS := $(shell mkdir -p $(BINDIR) $(WWWDIR) $(BUILDDIR))
 
-COMMONFLAGS = -std=c++14 -MMD -MP -isystem .
+COMMONFLAGS = -std=c++2a -MMD -MP -isystem .
 LOCALFLAGS = -g -O2 $(COMMONFLAGS) $(shell pkg-config --cflags sdl2)
 
 NOWARNDIRS = stb/
