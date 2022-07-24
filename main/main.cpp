@@ -62,7 +62,6 @@ static void main_process_event(MainContext& main_context) {
             break;
           }
           case SDL_WINDOWEVENT_SIZE_CHANGED: {
-            LOG("SDL_WINDOWEVENT_SIZE_CHANGED");
             handle_resize(main_context);
             break;
           }
@@ -106,7 +105,7 @@ static int main_init(MainContext& main_context) {
       return 1;
     }
 
-/* FIXME
+/*
     SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute (SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute (SDL_GL_CONTEXT_MINOR_VERSION, 3);
