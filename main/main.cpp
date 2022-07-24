@@ -125,7 +125,7 @@ static int main_init(MainContext& main_context) {
 
   SideContext& side_context = main_context.side_context; 
 
-  ui_create(*side_context.ui_context);
+  side_context.ui_context = ui_create();
 
   return 0;
 }
@@ -133,7 +133,7 @@ static int main_init(MainContext& main_context) {
 static void main_uninit(MainContext& main_context) {
   SideContext& side_context = main_context.side_context;
 
-  ui_destroy(*side_context.ui_context);
+  side_context.ui_context = ui_destroy(side_context.ui_context);
 
   {
     SDL_GL_DeleteContext(main_context.context_id);

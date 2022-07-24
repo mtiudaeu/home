@@ -2,7 +2,8 @@
 #include <sstream>
 
 #include "common.h"
-#include "glwrappers.h"
+#include "shader_utils.h"
+#include "gl_wrapper.h"
 
 //--------------------------------------------------
 static unsigned int compile_shader(unsigned int type,
@@ -28,7 +29,7 @@ static unsigned int compile_shader(unsigned int type,
 }
 
 //--------------------------------------------------
-unsigned int create_program(const std::string& vertex_path,
+unsigned int shader_utils::create_program(const std::string& vertex_path,
                             const std::string& fragment_path) {
   std::string vertex_shader;
   std::string fragment_shader;
@@ -60,3 +61,10 @@ unsigned int create_program(const std::string& vertex_path,
 
   return program;
 }
+
+//----------------------------------------------
+void shader_utils::delete_program(unsigned int program) {
+  glDeleteProgram(program);
+}
+
+

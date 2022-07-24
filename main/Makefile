@@ -1,5 +1,5 @@
 
-MODULES = main ui
+MODULES = main ui shader_utils gl_wrapper
 ASSETS = assets/red-blob.png assets/DroidSans.ttf
 
 UNAME = $(shell uname -s)
