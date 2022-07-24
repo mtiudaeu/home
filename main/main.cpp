@@ -27,7 +27,8 @@ struct MainContext {
   bool running;
 };
 
-static void HandleResize(GlobalContext& global_context) {
+static void handle_resize(MainContext& main_context) {
+  GlobalContext& global_context = main_context.global_context;
   SDL_GL_GetDrawableSize(global_context.window, &global_context.width,
                          &global_context.height);
   glViewport(0, 0, global_context.width, global_context.height);
@@ -56,16 +57,21 @@ static void main_process_event(MainContext& main_context) {
         LOG("x:%d,y:%d", mouse_event.x, mouse_event.y);
         break;
       }
-      case SDL_WINDOWEVENT_SHOWN: {
-        global_context.visible = true;
-        break;
-      }
-      case SDL_WINDOWEVENT_HIDDEN: {
-        global_context.visible = false;
-        break;
-      }
-      case SDL_WINDOWEVENT_SIZE_CHANGED: {
-        HandleResize(global_context);
+      case SDL_WINDOWEVENT: {
+        switch (event.window.event) {
+          case SDL_WINDOWEVENT_SHOWN: {
+            global_context.visible = true;
+            break;
+          }
+          case SDL_WINDOWEVENT_HIDDEN: {
+            global_context.visible = false;
+            break;
+          }
+          case SDL_WINDOWEVENT_SIZE_CHANGED: {
+            handle_resize(main_context);
+            break;
+          }
+        }
         break;
       }
     }
@@ -120,12 +126,17 @@ static int main_init(MainContext& main_context) {
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     glClearColor(1.0, 1.0, 1.0, 1.0);
 
-    HandleResize(global_context);
+    SDL_GL_GetDrawableSize(global_context.window, &global_context.width,
+                         &global_context.height);
+    glViewport(0, 0, global_context.width, global_context.height);
+
   }
 
   SideContext& side_context = main_context.side_context; 
 
   side_context.ui_context = ui_create();
+
+  handle_resize(main_context);
 
   return 0;
 }
