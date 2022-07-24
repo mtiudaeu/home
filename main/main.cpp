@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 
+#include "global.h"
 #include "common.h"
 
 #include "ui.h"
@@ -8,13 +9,6 @@
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
-
-struct GlobalContext {
-  SDL_Window* window;
-  int width;
-  int height;
-  bool visible;
-};
 
 struct SideContext {
   UiContext* ui_context;
@@ -68,6 +62,7 @@ static void main_process_event(MainContext& main_context) {
             break;
           }
           case SDL_WINDOWEVENT_SIZE_CHANGED: {
+            LOG("SDL_WINDOWEVENT_SIZE_CHANGED");
             handle_resize(main_context);
             break;
           }
@@ -79,13 +74,18 @@ static void main_process_event(MainContext& main_context) {
 }
 
 static void main_render(MainContext& main_context) {
-  const GlobalContext& global_context = main_context.global_context;
+  GlobalContext& global_context = main_context.global_context;
+
+  unsigned int time_last = global_context.time_current;
+  global_context.time_current = SDL_GetTicks();
+  global_context.time_delta = (float)(global_context.time_current - time_last) / 1000.0f;
+
   SideContext& side_context = main_context.side_context;
 
   glClear(GL_COLOR_BUFFER_BIT);
 
 
-  ui_render(*side_context.ui_context);
+  ui_render(global_context, *side_context.ui_context);
 
 
   SDL_GL_SwapWindow(global_context.window);
@@ -105,6 +105,12 @@ static int main_init(MainContext& main_context) {
       LOG_ERROR("%s", SDL_GetError());
       return 1;
     }
+
+/* FIXME
+    SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute (SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute (SDL_GL_CONTEXT_MINOR_VERSION, 3);
+*/
 
     GlobalContext& global_context = main_context.global_context;
     global_context.window = SDL_CreateWindow(
@@ -131,6 +137,7 @@ static int main_init(MainContext& main_context) {
     glViewport(0, 0, global_context.width, global_context.height);
 
   }
+ printf ("glGetString (GL_VERSION) returns %s\n", glGetString (GL_VERSION));
 
   SideContext& side_context = main_context.side_context; 
 

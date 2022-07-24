@@ -36,7 +36,7 @@ UiContext* ui_create() {
 }
 
 //----------------------------------------
-void ui_render(UiContext& ui_context) {
+void ui_render(const GlobalContext& global_context, UiContext& ui_context) {
   glUseProgram(ui_context.program);
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }
