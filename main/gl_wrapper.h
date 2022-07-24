@@ -8,4 +8,7 @@
 
 #include "common.h"
 
+unsigned int create_texture(const char* path, int& width, int& height, int& nbChannels);
+void destroy_texture(unsigned int texture);
+
 #endif

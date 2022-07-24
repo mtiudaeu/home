@@ -6,6 +6,7 @@
 
 struct UiContext : nocopy {
   unsigned int program;
+  unsigned int vbo;
 };
 
 //----------------------------------------
@@ -15,9 +16,8 @@ static void init(UiContext& ui_context) {
 
   float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
 
-  unsigned int vbo;
-  glGenBuffers(1, &vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glGenBuffers(1, &ui_context.vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, ui_context.vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
   glUseProgram(ui_context.program);
@@ -38,6 +38,12 @@ UiContext* ui_create() {
 //----------------------------------------
 void ui_render(const GlobalContext& global_context, UiContext& ui_context) {
   glUseProgram(ui_context.program);
+
+  float green_color = ( sin( float(global_context.time_current)/1000.0f) / 2.0f ) + 0.5f;
+  unsigned int uniform_location = glGetUniformLocation(ui_context.program, "our_color");
+  glUniform3f(uniform_location, 0.0f, green_color, 0.0f);
+
+
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
@@ -46,5 +52,9 @@ UiContext* ui_destroy(UiContext* ui_context) {
   shader_utils::delete_program(ui_context->program);
   ui_context->program = 0;
 
-  return ui_context;
+  glDeleteBuffers(1, &ui_context->vbo);
+  ui_context->vbo = 0;
+
+  delete ui_context;
+  return nullptr;
 }
