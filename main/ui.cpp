@@ -13,7 +13,7 @@ struct UiContext : nocopy {
 //----------------------------------------
 static void init(UiContext& ui_context) {
   ui_context.program =
-      shader_utils::create_program(SHADER_UI_V_PATH, SHADER_UI_V_PATH);
+      shader_utils::create_program(SHADER_UI_V_PATH, SHADER_UI_F_PATH);
 
   float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
 
