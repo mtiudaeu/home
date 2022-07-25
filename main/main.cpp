@@ -5,6 +5,7 @@
 #include "common.h"
 
 #include "ui.h"
+#include "text.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -12,6 +13,7 @@
 
 struct SideContext {
   UiContext* ui_context;
+  text::Context* text_context;
 };
 
 struct MainContext {
@@ -85,6 +87,7 @@ static void main_render(MainContext& main_context) {
 
 
   ui_render(global_context, *side_context.ui_context);
+  text::render(*side_context.text_context);
 
 
   SDL_GL_SwapWindow(global_context.window);
@@ -141,6 +144,7 @@ static int main_init(MainContext& main_context) {
   SideContext& side_context = main_context.side_context; 
 
   side_context.ui_context = ui_create();
+  side_context.text_context = text::create();
 
   handle_resize(main_context);
 
@@ -151,6 +155,7 @@ static void main_uninit(MainContext& main_context) {
   SideContext& side_context = main_context.side_context;
 
   side_context.ui_context = ui_destroy(side_context.ui_context);
+  side_context.text_context = text::destroy(side_context.text_context);
 
   {
     SDL_GL_DeleteContext(main_context.context_id);

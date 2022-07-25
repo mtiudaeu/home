@@ -1,6 +1,6 @@
 
-MODULES = main ui shader_utils gl_wrapper
-ASSETS = assets/red-blob.png assets/DroidSans.ttf assets/ui.shader_f.txt assets/ui.shader_v.txt
+MODULES = main ui shader_utils text gl_wrapper
+ASSETS = assets/ui.shader_f.txt assets/ui.shader_v.txt assets/font.shader_f.txt assets/font.shader_v.txt assets/font.png
 
 UNAME = $(shell uname -s)
 BUILDDIR = build

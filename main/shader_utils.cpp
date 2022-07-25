@@ -7,7 +7,16 @@
 
 //--------------------------------------------------
 static unsigned int compile_shader(unsigned int type,
-                                   const std::string& source) {
+                                   const std::string& path) {
+
+  std::string source;
+  {
+    std::ifstream t(path);
+    std::stringstream buffer;
+    buffer << t.rdbuf();
+    source = buffer.str();
+  }
+
   unsigned int id = glCreateShader(type);
   const char* src = source.c_str();
   glShaderSource(id, 1, &src, nullptr);
@@ -20,7 +29,7 @@ static unsigned int compile_shader(unsigned int type,
     glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
     char* message = (char*)alloca(length * sizeof(char));
     glGetShaderInfoLog(id, length, &length, message);
-    LOG_ERROR("Failed to compile shader!");
+    LOG_ERROR("Failed to compile shader : %s", path.c_str());
     LOG_ERROR("%s", message);
     glDeleteShader(id);
     return 0;
@@ -31,25 +40,9 @@ static unsigned int compile_shader(unsigned int type,
 //--------------------------------------------------
 unsigned int shader_utils::create_program(const std::string& vertex_path,
                             const std::string& fragment_path) {
-  std::string vertex_shader;
-  std::string fragment_shader;
-
-  {
-    std::ifstream t(vertex_path);
-    std::stringstream buffer;
-    buffer << t.rdbuf();
-    vertex_shader = buffer.str();
-  }
-  {
-    std::ifstream t(fragment_path);
-    std::stringstream buffer;
-    buffer << t.rdbuf();
-    fragment_shader = buffer.str();
-  }
-
   unsigned int program = glCreateProgram();
-  unsigned int vs = compile_shader(GL_VERTEX_SHADER, vertex_shader);
-  unsigned int fs = compile_shader(GL_FRAGMENT_SHADER, fragment_shader);
+  unsigned int vs = compile_shader(GL_VERTEX_SHADER, vertex_path);
+  unsigned int fs = compile_shader(GL_FRAGMENT_SHADER, fragment_path);
 
   glAttachShader(program, vs);
   glAttachShader(program, fs);
