@@ -7,6 +7,10 @@
 
 namespace text {
 
+//--------------------------------------------------------------------------------
+static const float TEXTURE_CHARACTER_WIDTH  = 1.0f / 16.0f;
+static const float TEXTURE_CHARACTER_HEIGHT = 1.0f / 16.0f;
+
 struct Context {
   unsigned int texture;
   unsigned int program;
@@ -74,13 +78,35 @@ void render(Context& context) {
 //-----------------------------------------
 void set_value(Context& context, const std::string& value) {
   context.value = value;
+//WIP mdtmp
 
+  char c = 'a';
+  float x0 = (c % 16) * TEXTURE_CHARACTER_WIDTH;  
+  float y0 = 1.0f - ((c / 16) * TEXTURE_CHARACTER_HEIGHT) - TEXTURE_CHARACTER_HEIGHT; 
+  float x1 = x0 + TEXTURE_CHARACTER_WIDTH;
+  float y1 = y0 + TEXTURE_CHARACTER_HEIGHT;
+
+  LOG("x0 %f", x0);
+  LOG("y0 %f", y0);
+  LOG("x1 %f", x1);
+  LOG("y1 %f", y1);
+
+  float vertices[] = {
+  0.5f, 0.5f, 0.0f, x1, y1, // top right
+  0.5f, -0.5f, 0.0f, x1, y0, // bottom right
+  -0.5f, -0.5f, 0.0f, x0, y0, // bottom left
+  -0.5f, 0.5f, 0.0f, x0, y1 // top left
+  };
+
+/*
   float vertices[] = {
   0.5f, 0.5f, 0.0f,1.0f, 1.0f, // top right
   0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
   -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
   -0.5f, 0.5f, 0.0f, 0.0f, 1.0f // top left
   };
+*/
+//WIP mdtmp
   glBindBuffer(GL_ARRAY_BUFFER, context.vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
@@ -111,9 +137,6 @@ static struct grid_16x16 graphics_text_char_to_grid_coord(char value) {
   return coord;
 }
 
-//--------------------------------------------------------------------------------
-#define TEXTURE_CHARACTER_WIDTH 1.0f / 16.0f
-#define TEXTURE_CHARACTER_HEIGHT 1.0f / 16.0f
 
 //--------------------------------------------------------------------------------
 // rectangle_2D (0.0,0.0) is bottom left
