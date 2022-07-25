@@ -11,6 +11,7 @@ struct Context {
   unsigned int texture;
   unsigned int program;
   unsigned int vbo;
+  unsigned int ebo;
   std::string value;
 };
 
@@ -45,16 +46,9 @@ Context* create() {
 
 
   glGenBuffers(1, &context->vbo);
+  glGenBuffers(1, &context->ebo);
 
   return context;
-}
-
-//-----------------------------------------
-void render(Context& context) {
-  if(context.value.empty()) return;
-
-  glUseProgram(context.program);
-  glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 //-----------------------------------------
@@ -69,6 +63,15 @@ Context* destroy(Context* context) {
 }
 
 //-----------------------------------------
+void render(Context& context) {
+  if(context.value.empty()) return;
+
+  glUseProgram(context.program);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, context.ebo);
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
+//-----------------------------------------
 void set_value(Context& context, const std::string& value) {
   context.value = value;
 
@@ -76,12 +79,17 @@ void set_value(Context& context, const std::string& value) {
   0.5f, 0.5f, 0.0f,1.0f, 1.0f, // top right
   0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
   -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-  -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-  -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, // top left
-  0.5f, 0.5f, 0.0f,1.0f, 1.0f, // top right
+  -0.5f, 0.5f, 0.0f, 0.0f, 1.0f // top left
   };
   glBindBuffer(GL_ARRAY_BUFFER, context.vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+  unsigned int indices[] = {
+    0,1,2,
+    2,3,0
+  };
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, context.ebo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
   glUseProgram(context.program);
 
