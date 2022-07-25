@@ -2,6 +2,7 @@
 #include "common.h"
 #include "shader_utils.h"
 #include "gl_wrapper.h"
+#include "assets.h"
 #include <stb/stb_image.h>
 
 namespace text {
@@ -40,7 +41,7 @@ Context* create() {
    stbi_image_free(data);
   }
 
-  context->program = shader_utils::create_program("assets/font.shader_v.txt", "assets/font.shader_f.txt");
+  context->program = shader_utils::create_program(SHADER_FONT_V_PATH, SHADER_FONT_F_PATH);
 
 
   glGenBuffers(1, &context->vbo);
