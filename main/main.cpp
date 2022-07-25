@@ -108,12 +108,6 @@ static int main_init(MainContext& main_context) {
       return 1;
     }
 
-/*
-    SDL_GL_SetAttribute (SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute (SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute (SDL_GL_CONTEXT_MINOR_VERSION, 3);
-*/
-
     GlobalContext& global_context = main_context.global_context;
     global_context.window = SDL_CreateWindow(
         "Hello World", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
@@ -145,6 +139,7 @@ static int main_init(MainContext& main_context) {
 
   side_context.ui_context = ui_create();
   side_context.text_context = text::create();
+  text::set_value(*side_context.text_context, "test");
 
   handle_resize(main_context);
 
