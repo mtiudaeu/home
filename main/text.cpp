@@ -76,8 +76,19 @@ void render(Context& context) {
   if(context.value.empty()) return;
 
   glUseProgram(context.program);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, context.ebo);
-  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+  glm::mat4 trans = glm::mat4(1.0f);
+  trans = glm::scale(trans, glm::vec3(0.1f, 0.1f, 0.1f));
+
+  for(int i = 0; i < 2; i ++) {
+    trans = glm::translate(trans, glm::vec3(1.0f, 0.0f, 0.0f));
+    
+    glUniformMatrix4fv(context.transform, 1, GL_FALSE, glm::value_ptr(trans));
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, context.ebo);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+  }
+
 }
 
 //-----------------------------------------
@@ -122,9 +133,7 @@ void set_value(Context& context, const std::string& value) {
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
 
-  glm::mat4 trans = glm::mat4(1.0f);
-  trans = glm::scale(trans, glm::vec3(0.1f, 0.1f, 0.1f));
-  glUniformMatrix4fv(context.transform, 1, GL_FALSE, glm::value_ptr(trans));
+
 }
 
 }
