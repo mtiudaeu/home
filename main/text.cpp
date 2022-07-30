@@ -5,6 +5,10 @@
 #include "assets.h"
 #include <stb/stb_image.h>
 
+#include <glm/glm/glm.hpp>
+#include <glm/glm/gtc/matrix_transform.hpp>
+#include <glm/glm/gtc/type_ptr.hpp>
+
 namespace text {
 
 //--------------------------------------------------------------------------------
@@ -16,6 +20,7 @@ struct Context {
   unsigned int program;
   unsigned int vbo;
   unsigned int ebo;
+  unsigned int transform;
   std::string value;
 };
 
@@ -47,7 +52,7 @@ Context* create() {
   }
 
   context->program = shader_utils::create_program(SHADER_FONT_V_PATH, SHADER_FONT_F_PATH);
-
+  context->transform = glGetUniformLocation(context->program, "transform"); 
 
   glGenBuffers(1, &context->vbo);
   glGenBuffers(1, &context->ebo);
@@ -81,7 +86,6 @@ void set_value(Context& context, const std::string& value) {
 
   char c = 'b';
 
-  LOG("%d", c);
   float x0 = (c % 16) * TEXTURE_CHARACTER_WIDTH - (TEXTURE_CHARACTER_WIDTH / 10.0f);  
   float y0 = 1.0f - ((c / 16) * TEXTURE_CHARACTER_HEIGHT) - TEXTURE_CHARACTER_HEIGHT; 
   //float y0 = (c / 16) * TEXTURE_CHARACTER_HEIGHT; 
@@ -118,6 +122,9 @@ void set_value(Context& context, const std::string& value) {
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
 
+  glm::mat4 trans = glm::mat4(1.0f);
+  trans = glm::scale(trans, glm::vec3(0.1f, 0.1f, 0.1f));
+  glUniformMatrix4fv(context.transform, 1, GL_FALSE, glm::value_ptr(trans));
 }
 
 }
