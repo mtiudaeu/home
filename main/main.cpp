@@ -133,13 +133,15 @@ static int main_init(MainContext& main_context) {
     glViewport(0, 0, global_context.width, global_context.height);
 
   }
- printf ("glGetString (GL_VERSION) returns %s\n", glGetString (GL_VERSION));
 
   SideContext& side_context = main_context.side_context; 
 
   side_context.ui_context = ui_create();
+
   side_context.text_context = text::create();
   text::set_value(*side_context.text_context, "test");
+  text::set_position(*side_context.text_context, 10.f, 10.f);
+  text::set_size(*side_context.text_context, 0.5f);
 
   handle_resize(main_context);
 
