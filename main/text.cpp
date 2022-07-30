@@ -9,7 +9,7 @@ namespace text {
 
 //--------------------------------------------------------------------------------
 static const float TEXTURE_CHARACTER_WIDTH  = 1.0f / 16.0f;
-static const float TEXTURE_CHARACTER_HEIGHT = 1.0f / 16.0f;
+static const float TEXTURE_CHARACTER_HEIGHT = 1.0f / 8.0f;
 
 struct Context {
   unsigned int texture;
@@ -78,12 +78,14 @@ void render(Context& context) {
 //-----------------------------------------
 void set_value(Context& context, const std::string& value) {
   context.value = value;
-//WIP mdtmp
 
-  char c = 'a';
-  float x0 = (c % 16) * TEXTURE_CHARACTER_WIDTH;  
+  char c = 'b';
+
+  LOG("%d", c);
+  float x0 = (c % 16) * TEXTURE_CHARACTER_WIDTH - (TEXTURE_CHARACTER_WIDTH / 10.0f);  
   float y0 = 1.0f - ((c / 16) * TEXTURE_CHARACTER_HEIGHT) - TEXTURE_CHARACTER_HEIGHT; 
-  float x1 = x0 + TEXTURE_CHARACTER_WIDTH;
+  //float y0 = (c / 16) * TEXTURE_CHARACTER_HEIGHT; 
+  float x1 = x0 + (TEXTURE_CHARACTER_WIDTH * 0.6f);
   float y1 = y0 + TEXTURE_CHARACTER_HEIGHT;
 
   LOG("x0 %f", x0);
@@ -98,15 +100,6 @@ void set_value(Context& context, const std::string& value) {
   -0.5f, 0.5f, 0.0f, x0, y1 // top left
   };
 
-/*
-  float vertices[] = {
-  0.5f, 0.5f, 0.0f,1.0f, 1.0f, // top right
-  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-  -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-  -0.5f, 0.5f, 0.0f, 0.0f, 1.0f // top left
-  };
-*/
-//WIP mdtmp
   glBindBuffer(GL_ARRAY_BUFFER, context.vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
