@@ -6,6 +6,7 @@
 
 #include "ui.h"
 #include "text.h"
+#include "menu.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -14,6 +15,7 @@
 struct SideContext {
   UiContext* ui_context;
   text::Context* text_context;
+  menu::Ctx* menu;
 };
 
 struct MainContext {
@@ -23,6 +25,7 @@ struct MainContext {
   bool running;
 };
 
+//--------------------------------------------------
 static void handle_resize(MainContext& main_context) {
   GlobalContext& global_context = main_context.global_context;
   SDL_GL_GetDrawableSize(global_context.window, &global_context.width,
@@ -30,6 +33,7 @@ static void handle_resize(MainContext& main_context) {
   glViewport(0, 0, global_context.width, global_context.height);
 }
 
+//--------------------------------------------------
 static void main_process_event(MainContext& main_context) {
   GlobalContext& global_context = main_context.global_context;
 
@@ -74,6 +78,7 @@ static void main_process_event(MainContext& main_context) {
   }
 }
 
+//--------------------------------------------------
 static void main_render(MainContext& main_context) {
   GlobalContext& global_context = main_context.global_context;
 
@@ -86,13 +91,14 @@ static void main_render(MainContext& main_context) {
   glClear(GL_COLOR_BUFFER_BIT);
 
 
-  ui_render(global_context, *side_context.ui_context);
-  text::render(*side_context.text_context);
-
+  //ui_render(global_context, *side_context.ui_context);
+  //text::render(*side_context.text_context);
+  menu::render(*side_context.menu);
 
   SDL_GL_SwapWindow(global_context.window);
 }
 
+//--------------------------------------------------
 static void main_loop(void* context_ptr) {
   MainContext& main_context = *((MainContext*)context_ptr);
 
@@ -100,6 +106,7 @@ static void main_loop(void* context_ptr) {
   main_render(main_context);
 }
 
+//--------------------------------------------------
 static int main_init(MainContext& main_context) {
   {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -143,16 +150,20 @@ static int main_init(MainContext& main_context) {
   text::set_position(*side_context.text_context, 10.f, 10.f);
   text::set_size(*side_context.text_context, 0.5f);
 
+  side_context.menu = menu::create();
+
   handle_resize(main_context);
 
   return 0;
 }
 
+//--------------------------------------------------
 static void main_uninit(MainContext& main_context) {
   SideContext& side_context = main_context.side_context;
 
   side_context.ui_context = ui_destroy(side_context.ui_context);
   side_context.text_context = text::destroy(side_context.text_context);
+  side_context.menu = menu::destroy(side_context.menu);
 
   {
     SDL_GL_DeleteContext(main_context.context_id);
@@ -161,6 +172,7 @@ static void main_uninit(MainContext& main_context) {
   }
 }
 
+//--------------------------------------------------
 int main(int, char**) {
   MainContext main_context = {.global_context =
                                   {
