@@ -2,12 +2,19 @@
 #define SQUARE_H
 
 namespace square {
-struct Ctx;
+struct Ctx {
+ float x;
+ float y;
+ float size;
+//color?
+};
 
-Ctx* create();
-Ctx* destroy(Ctx* ctx);
+void init();
+void uninit();
 
-void render(Ctx& ctx);
+
+//void render(Ctx& ctx);
+void render();
 
 }
 
