@@ -4,6 +4,8 @@
 namespace renderer {
 void init();
 void uninit();
+
+void render();
 }
 
 #endif

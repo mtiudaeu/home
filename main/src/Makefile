@@ -1,5 +1,5 @@
 
-MODULES = main ui shader_utils text gl_wrapper assets menu square
+MODULES = main shader_utils gl_wrapper assets renderer text menu
 ASSETS = assets/font.png assets/shaders/e_font_f.txt assets/shaders/e_font_v.txt assets/shaders/e_ui_f.txt assets/shaders/e_ui_v.txt
 
 UNAME = $(shell uname -s)

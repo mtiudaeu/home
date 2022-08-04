@@ -5,15 +5,17 @@
 
 namespace text {
 
-struct Context;
+void init();
+void uninit();
 
-Context* create();
-Context* destroy(Context* context);
+struct Context {
+  float x;
+  float y;
+  float size;
+  std::string value;
+};
 
 void render(Context& context);
-void set_value(Context& context, const std::string& value);
-void set_position(Context& context, float x, float y);
-void set_size(Context& context, float size);
 }
 
 #endif

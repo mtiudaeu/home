@@ -3,24 +3,15 @@
 
 #include "global.h"
 #include "common.h"
-
-#include "ui.h"
-#include "text.h"
-#include "menu.h"
+#include "renderer.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
 
-struct SideContext {
-  UiContext* ui_context;
-  text::Context* text_context;
-  menu::Ctx* menu;
-};
 
 struct MainContext {
   GlobalContext global_context;
-  SideContext side_context;
   SDL_GLContext context_id;
   bool running;
 };
@@ -86,14 +77,10 @@ static void main_render(MainContext& main_context) {
   global_context.time_current = SDL_GetTicks();
   global_context.time_delta = (float)(global_context.time_current - time_last) / 1000.0f;
 
-  SideContext& side_context = main_context.side_context;
 
   glClear(GL_COLOR_BUFFER_BIT);
 
-
-  //ui_render(global_context, *side_context.ui_context);
-  //text::render(*side_context.text_context);
-  menu::render(*side_context.menu);
+  renderer::render();
 
   SDL_GL_SwapWindow(global_context.window);
 }
@@ -141,16 +128,7 @@ static int main_init(MainContext& main_context) {
 
   }
 
-  SideContext& side_context = main_context.side_context; 
-
-  side_context.ui_context = ui_create();
-
-  side_context.text_context = text::create();
-  text::set_value(*side_context.text_context, "test");
-  text::set_position(*side_context.text_context, 10.f, 10.f);
-  text::set_size(*side_context.text_context, 0.5f);
-
-  side_context.menu = menu::create();
+  renderer::init();
 
   handle_resize(main_context);
 
@@ -159,17 +137,13 @@ static int main_init(MainContext& main_context) {
 
 //--------------------------------------------------
 static void main_uninit(MainContext& main_context) {
-  SideContext& side_context = main_context.side_context;
-
-  side_context.ui_context = ui_destroy(side_context.ui_context);
-  side_context.text_context = text::destroy(side_context.text_context);
-  side_context.menu = menu::destroy(side_context.menu);
 
   {
     SDL_GL_DeleteContext(main_context.context_id);
     SDL_DestroyWindow(main_context.global_context.window);
     SDL_Quit();
   }
+  renderer::uninit();
 }
 
 //--------------------------------------------------
