@@ -97,11 +97,13 @@ void init() {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glDisableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glDisableVertexAttribArray(1);
 
   }
 }
@@ -119,6 +121,14 @@ void render(Context& context) {
   if(context.value.empty()) return;
 
   glUseProgram(program);
+
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
   glm::mat4 trans = glm::mat4(1.0f);
   // default scale
@@ -146,6 +156,8 @@ void render(Context& context) {
     trans = glm::translate(trans, glm::vec3(1.0f, 0.0f, 0.0f));
   }
 
+  glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
 }
 
 }

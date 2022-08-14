@@ -5,7 +5,8 @@ namespace square {
 struct Ctx {
  float x;
  float y;
- float size;
+ float height;
+ float width;
 //color?
 };
 
@@ -13,8 +14,7 @@ void init();
 void uninit();
 
 
-//void render(Ctx& ctx);
-void render();
+void render(Ctx& ctx);
 
 }
 

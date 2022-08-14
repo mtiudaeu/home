@@ -1,7 +1,7 @@
 #include "menu.h"
 
 #include "text.h"
-//#include "square.h"
+#include "square.h"
 
 namespace menu {
 
@@ -13,18 +13,15 @@ enum EMenu {
 
 struct Ctx {
   EMenu e_menu;
-  //square::Ctx* selection;
   text::Context title;
   text::Context tetris;
+  square::Ctx selection;
 };
 
 //--------------------------------------------------
 Ctx* create() {
   Ctx* ctx = new Ctx();
   ctx->e_menu = Menu;
-
-  //ctx->selection = square::create();
-  //mdtmp set default position
 
   ctx->title = {
 .x = -8.0f,
@@ -39,17 +36,24 @@ Ctx* create() {
 .value = "Tetris"
 };
 
+ ctx->selection = {
+.x = -4.0f,
+.y = 1.5f,
+.height = 2.0f,
+.width = 2.0f,
+};
+
   return ctx;
 }
 //--------------------------------------------------
 Ctx* destroy(Ctx* ctx) {
   
-  //ctx->selection = square::destroy(ctx->selection);
   delete ctx;
   return nullptr;
 }
 //--------------------------------------------------
 void render(Ctx& context) {
+  square::render(context.selection);
   text::render(context.title);
   text::render(context.tetris);
 }

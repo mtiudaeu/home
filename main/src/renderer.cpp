@@ -9,14 +9,14 @@ namespace renderer {
 //--------------------------------------------------
 void init() {
 text::init();
-//square::init();
+square::init();
 menu_ctx = menu::create();
 }
 
 //--------------------------------------------------
 void uninit() {
 text::uninit();
-//square::uninit();
+square::uninit();
 menu_ctx = menu::destroy(menu_ctx);
 }
 
