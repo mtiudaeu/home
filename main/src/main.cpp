@@ -36,6 +36,11 @@ static void main_process_event(MainContext& main_context) {
         break;
       }
       case SDL_KEYUP: {
+        renderer::process_event(event);
+        break;
+      }
+/*
+      case SDL_KEYUP: {
         int sym = event.key.keysym.sym;
         if (sym == SDLK_ESCAPE) {
           main_context.running = false;
@@ -48,6 +53,7 @@ static void main_process_event(MainContext& main_context) {
         LOG("x:%d,y:%d", mouse_event.x, mouse_event.y);
         break;
       }
+*/
       case SDL_WINDOWEVENT: {
         switch (event.window.event) {
           case SDL_WINDOWEVENT_SHOWN: {
