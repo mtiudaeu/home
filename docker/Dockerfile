@@ -1,8 +1,8 @@
 FROM ubuntu:22.04
 
-#Useful command
+#How to use :
 #
-#sudo su
+#(optional) sudo su
 #docker build .
 #docker images
 #docker run -ti <image_id>
