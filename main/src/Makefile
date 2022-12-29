@@ -27,7 +27,10 @@ EMXXFLAGS = $(COMMONFLAGS) -Oz -s USE_SDL=2 -s USE_SDL_IMAGE=2
 # -s SAFE_HEAP=1 -s ASSERTIONS=2 --profiling  -s DEMANGLE_SUPPORT=1
 EMXXLINK = -s TOTAL_MEMORY=50331648 --use-preload-plugins
 
-all: $(BINDIR)/main
+all: gcc emcc
+
+gcc: $(BINDIR)/main
+emcc: $(WWWDIR)
 
 $(WWWDIR): $(WWWDIR)/index.html $(WWWDIR)/_main.js
 
