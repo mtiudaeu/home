@@ -19,7 +19,7 @@ WEB_DIR = web
 EXE = $(WEB_DIR)/index.html
 IMGUI_DIR = ../../imgui/
 BUILD_DIR = build
-SOURCES = main.cpp
+SOURCES = main.cpp dockspace.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
 OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(basename $(notdir $(SOURCES)))))
@@ -67,8 +67,6 @@ LDFLAGS += --shell-file shell_minimal.html $(EMS)
 ## BUILD RULES
 ##---------------------------------------------------------------------
 
-$(BUILD_DIR):
-	 mkdir -p $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o:%.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
@@ -81,6 +79,9 @@ $(BUILD_DIR)/%.o:$(IMGUI_DIR)/backends/%.cpp
 
 all: $(BUILD_DIR) $(EXE)
 	@echo Build complete for $(EXE)
+
+$(BUILD_DIR):
+	mkdir $@
 
 $(WEB_DIR):
 	mkdir $@
