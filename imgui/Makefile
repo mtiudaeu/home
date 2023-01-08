@@ -18,10 +18,11 @@ CXX = em++
 WEB_DIR = web
 EXE = $(WEB_DIR)/index.html
 IMGUI_DIR = ../../imgui/
+BUILD_DIR = build
 SOURCES = main.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_sdl.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
-OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
+OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(basename $(notdir $(SOURCES)))))
 UNAME_S := $(shell uname -s)
 CPPFLAGS =
 LDFLAGS =
@@ -66,16 +67,19 @@ LDFLAGS += --shell-file shell_minimal.html $(EMS)
 ## BUILD RULES
 ##---------------------------------------------------------------------
 
-%.o:%.cpp
+$(BUILD_DIR):
+	 mkdir -p $(BUILD_DIR)
+
+$(BUILD_DIR)/%.o:%.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
-%.o:$(IMGUI_DIR)/%.cpp
+$(BUILD_DIR)/%.o:$(IMGUI_DIR)/%.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
-%.o:$(IMGUI_DIR)/backends/%.cpp
+$(BUILD_DIR)/%.o:$(IMGUI_DIR)/backends/%.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
-all: $(EXE)
+all: $(BUILD_DIR) $(EXE)
 	@echo Build complete for $(EXE)
 
 $(WEB_DIR):
@@ -88,4 +92,4 @@ $(EXE): $(OBJS) $(WEB_DIR)
 	$(CXX) -o $@ $(OBJS) $(LDFLAGS)
 
 clean:
-	rm -rf $(OBJS) $(WEB_DIR)
+	rm -rf $(WEB_DIR) $(BUILD_DIR)
