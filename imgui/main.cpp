@@ -11,6 +11,7 @@
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 #include "dockspace.h"
+#include "tetris.h"
 #include <stdio.h>
 #include <emscripten.h>
 #include <SDL.h>
@@ -110,7 +111,7 @@ static void main_loop(void* arg)
 
     // Our state (make them static = more or less global) as a convenience to keep the example terse.
     static bool show_demo_window = true;
-    static bool show_another_window = false;
+    static bool show_another_window = true;
     static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Poll and handle events (inputs, window resize, etc.)
@@ -173,11 +174,7 @@ static void main_loop(void* arg)
     // 3. Show another simple window.
     if (show_another_window)
     {
-        ImGui::Begin("Another Window", &show_another_window);         // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-        ImGui::Text("Hello from another window!");
-        if (ImGui::Button("Close Me"))
-            show_another_window = false;
-        ImGui::End();
+        ShowTetris();
     }
 
     // Rendering
