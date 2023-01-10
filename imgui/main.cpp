@@ -144,6 +144,7 @@ static void main_loop(void* arg)
         ImGui::Begin("Hello, world!");                                // Create a window called "Hello, world!" and append into it.
 
         ImGui::Text("This is some useful text.");                     // Display some text (you can use a format strings too)
+        ImGui::Text("Test");
         ImGui::Checkbox("Demo Window", &show_demo_window);            // Edit bools storing our window open/close state
         ImGui::Checkbox("Another Window", &show_another_window);
 
@@ -155,7 +156,17 @@ static void main_loop(void* arg)
         ImGui::SameLine();
         ImGui::Text("counter = %d", counter);
 
+        ImGui::Text("Hola Carlos");
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::Text("Super Time %.1f", ImGui::GetTime());
+
+        ImDrawList* draw_list = ImGui::GetWindowDrawList();
+        ImVec4 colf = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+        const ImU32 col = ImColor(colf);
+
+        ImVec2 p0 = ImGui::GetCursorScreenPos();
+        ImVec2 p1 = ImVec2(p0.x + 200.0f, p0.y + 200.0f);
+        draw_list->AddRectFilled(p0, p1, col, 10.0f);
         ImGui::End();
     }
 
