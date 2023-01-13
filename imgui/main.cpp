@@ -161,6 +161,8 @@ static void main_loop(void* arg)
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
         ImGui::Text("Super Time %.1f", ImGui::GetTime());
 
+// Draw a Rectangle primitive
+/*
         ImDrawList* draw_list = ImGui::GetWindowDrawList();
         ImVec4 colf = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
         const ImU32 col = ImColor(colf);
@@ -168,13 +170,46 @@ static void main_loop(void* arg)
         ImVec2 p0 = ImGui::GetCursorScreenPos();
         ImVec2 p1 = ImVec2(p0.x + 200.0f, p0.y + 200.0f);
         draw_list->AddRectFilled(p0, p1, col, 10.0f);
+*/
+
+        static float values[] = { 0.6f, 0.1f, 1.0f, 0.5f, 0.92f, 0.1f, 0.2f };
+        ImGui::PlotLines("Lines", values, IM_ARRAYSIZE(values), 0.0f, nullptr, -1.0f, 1.0f, ImVec2(0, 80.0f));
+
+
+//mdtmp https://query1.finance.yahoo.com/v8/finance/chart/aapl?metrics=high?&interval=1d&range=5d 
+/*
+#include <stdio.h>
+#include <string.h>
+#include <emscripten/fetch.h>
+
+void downloadSucceeded(emscripten_fetch_t *fetch) {
+  printf("Finished downloading %llu bytes from URL %s.\n", fetch->numBytes, fetch->url);
+  // The data is now available at fetch->data[0] through fetch->data[fetch->numBytes-1];
+  emscripten_fetch_close(fetch); // Free data associated with the fetch.
+}
+
+void downloadFailed(emscripten_fetch_t *fetch) {
+  printf("Downloading %s failed, HTTP failure status code: %d.\n", fetch->url, fetch->status);
+  emscripten_fetch_close(fetch); // Also free data on failure.
+}
+
+int main() {
+  emscripten_fetch_attr_t attr;
+  emscripten_fetch_attr_init(&attr);
+  strcpy(attr.requestMethod, "GET");
+  attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+  attr.onsuccess = downloadSucceeded;
+  attr.onerror = downloadFailed;
+  emscripten_fetch(&attr, "myfile.dat");
+}
+*/
         ImGui::End();
     }
 
     // 3. Show another simple window.
     if (show_another_window)
     {
-        ShowTetris();
+        //mdtmp ShowTetris();
     }
 
     // Rendering
