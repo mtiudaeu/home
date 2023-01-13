@@ -11,7 +11,7 @@
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
 #include "dockspace.h"
-#include "tetris.h"
+#include "stocks.h"
 #include <stdio.h>
 #include <emscripten.h>
 #include <SDL.h>
@@ -24,9 +24,12 @@ SDL_GLContext   g_GLContext = NULL;
 
 // For clarity, our main loop code is declared at the end.
 static void main_loop(void*);
+static void test_function();
 
 int main(int, char**)
 {
+    test_function();
+
     // Setup SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
     {
@@ -176,6 +179,28 @@ static void main_loop(void* arg)
         ImGui::PlotLines("Lines", values, IM_ARRAYSIZE(values), 0.0f, nullptr, -1.0f, 1.0f, ImVec2(0, 80.0f));
 
 
+        ImGui::End();
+    }
+
+    // 3. Show another simple window.
+    if (show_another_window)
+    {
+        show_stocks();
+    }
+
+    // Rendering
+    ImGui::Render();
+    SDL_GL_MakeCurrent(g_Window, g_GLContext);
+    glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+    glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    SDL_GL_SwapWindow(g_Window);
+}
+
+static void test_function()
+{
+//mdtmp
 //mdtmp https://query1.finance.yahoo.com/v8/finance/chart/aapl?metrics=high?&interval=1d&range=5d 
 /*
 #include <stdio.h>
@@ -203,21 +228,4 @@ int main() {
   emscripten_fetch(&attr, "myfile.dat");
 }
 */
-        ImGui::End();
-    }
-
-    // 3. Show another simple window.
-    if (show_another_window)
-    {
-        //mdtmp ShowTetris();
-    }
-
-    // Rendering
-    ImGui::Render();
-    SDL_GL_MakeCurrent(g_Window, g_GLContext);
-    glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-    glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-    glClear(GL_COLOR_BUFFER_BIT);
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    SDL_GL_SwapWindow(g_Window);
 }
